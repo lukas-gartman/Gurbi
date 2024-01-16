@@ -1,0 +1,12 @@
+{
+  "name": "webup",
+  "version": "1.0.0",
+  "description": "There is a fungus amongus",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"hello\""
+  },
+  "author": "Rakarake",
+  "license": "MIT",
+  "start" : "node server.js"
+}
