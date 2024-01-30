@@ -1,14 +1,15 @@
 {
-  "name": "webup",
+  "name": "helloworld2",
   "version": "1.0.0",
-  "description": "There is a fungus amongus",
+  "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"hello\""
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile" : "npx tsc && node ./dist/main.js",
+    "dev": "node ./node_modules/nodemon/bin/nodemon.js -e ts --exec \"npm run compile\""
   },
-  "author": "Rakarake",
-  "license": "MIT",
-  "start": "node server.js",
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "^4.18.2"
   },
@@ -17,7 +18,5 @@
     "@types/node": "^20.11.4",
     "nodemon": "^3.0.2",
     "typescript": "^5.3.3"
-  },
-  "compile" : "npx tsc && node ./dist/main.js",
-  "dev": "node ./node_modules/nodemon/bin/nodemon.js -e ts --exec \"npm run compile\""
+  }
 }
