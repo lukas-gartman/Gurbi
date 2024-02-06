@@ -1,15 +1,13 @@
 
+//import
 import express from "express";
 import {UserRouter} from "./router/userRouter";
 
-//import { taskRouter } from "./router/task";
 
 export const app = express();
 
+//Router setup
 app.use(express.json());
-
-//app.use("/task", taskRouter);
-
 app.use("/user", UserRouter);
 
 /**
