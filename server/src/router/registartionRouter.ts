@@ -4,13 +4,12 @@ import {UserLogin } from "../model/dataModels";
 
 export const UserRegistartionRouter : Router = express.Router();
 
-UserRegistartionRouter.post( "/", async(
-    req: Request<{ id: string }, {}, { done: boolean }>,
+UserRegistartionRouter.get( "/", async(
+    req: Request<{}, {}, {}>,
     res: Response<string>
         ) => {
         try {
-           
-
+            res.status(200).send("works");
         } catch (e: any) {
             res.status(500).send(e.message);
         }
