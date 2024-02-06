@@ -1,6 +1,6 @@
 
 import express from "express";
-import {UserRegistartionRouter} from "./router/registartionRouter";
+import {UserRouter} from "./router/userRouter";
 
 //import { taskRouter } from "./router/task";
 
@@ -10,7 +10,7 @@ app.use(express.json());
 
 //app.use("/task", taskRouter);
 
-app.use("/user", UserRegistartionRouter);
+app.use("/user", UserRouter);
 
 /**
 * App Variables
