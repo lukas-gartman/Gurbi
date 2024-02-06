@@ -1,16 +1,11 @@
 
 import express from "express";
-import {UserRegistartionRouter} from "./router/registartionRouter";
-
-//import { taskRouter } from "./router/task";
+import { taskRouter } from "./router/task";
 
 export const app = express();
 
 app.use(express.json());
-
 //app.use("/task", taskRouter);
-
-app.use("/user", UserRegistartionRouter);
 
 /**
 * App Variables
