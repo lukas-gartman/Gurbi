@@ -1,19 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './App.css';
-import BingChilling from './BingChilling';
-import Header from './Header';
-import Main from './Main';
-import Footer from './Footer';
+import Events from './routes/Events';
+import Memberships from './routes/Memberships';
+
+const router = createBrowserRouter([
+	{
+		path: "/events",
+		element: <Events />
+	},
+	{
+		path: "/memberships",
+		element: <Memberships />
+	}
+]);
 
 function App() {
-  return (
-    <div className="App">
-      <Header />
-      <Main />
-      <Footer />
-    </div>
-  );
+	return (
+		<React.StrictMode>
+			<RouterProvider router={router} />
+		</React.StrictMode>
+	);
 }
 
 export default App;

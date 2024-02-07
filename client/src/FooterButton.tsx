@@ -1,7 +1,6 @@
-import React from 'react';
 import './Footer.css';
 
-function FooterButton(props: {url : string, icon : string}) {
+function FooterButton(props: { url: string, icon: string }) {
     return (
         <a className="footer-button" href={props.url}><i className={props.icon}></i></a>
     );
