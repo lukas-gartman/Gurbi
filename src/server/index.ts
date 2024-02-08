@@ -1,13 +1,5 @@
-<<<<<<< Updated upstream
-
-//import
-import express from "express";
-import {UserRouter} from "./router/userRouter";
-=======
 import express from "express";
 import {userRouter} from "./router/user";
->>>>>>> Stashed changes
-
 
 export const app = express();
 
