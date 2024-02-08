@@ -15,6 +15,8 @@ export interface Organisation{
 export interface UserData{
     id : string
     name : string
+    password : string
+    salt : string
     email : string
     regDate : Date
 }
