@@ -28,7 +28,7 @@ export class OrganisationService{
         const permissionEntries: Permission[] = this.getAvilabePermissionns()
         
         //admin role added per default
-        let admin : Role = {roleName : "admin", permission : permissionEntries};
+        let admin : Role = {roleName : "admin", permissions : permissionEntries};
         roles.push(admin);
 
         //creator added as admin per default
