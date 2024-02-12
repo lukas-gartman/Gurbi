@@ -1,27 +1,12 @@
 
-export enum Permission {
-    ChangeOrginsationName,
-    DeleteOrginsitaion,
-    CreateNewEvent,
-    ChangeMemberRole,
-    AddRole,
+export interface Permission {
+    permissionName : string;
   }
   
 
 export interface Role{
     roleName : string
-    permission : Permission[]
-}
-
-
-export interface NewOrganisationDTO{
-    creatorNickName : string;
-    orgName : string;
-    roles : Role[];
-}
-
-export interface NewOrganisation extends NewOrganisationDTO{
-    creatorId : string
+    permissions : Permission[]
 }
 
 export interface Member{
@@ -30,7 +15,6 @@ export interface Member{
     nickName : string;
 }
 
-
 export interface Organisation{
 
      members : Member[];
@@ -38,4 +22,14 @@ export interface Organisation{
      organisationName : string;
      id : string;
 
+}
+
+export interface NewOrganisationDTO{
+    creatorNickName : string;
+    orgName : string;
+    roles : Role[];
+}
+
+export interface NewOrganisationData extends NewOrganisationDTO{
+    creatorId : string
 }
