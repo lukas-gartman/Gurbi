@@ -6,10 +6,9 @@ export interface Event{
     dateTime : Date
 }
 
-export interface Organisation{
-    id : string
-    name : string
-}
+
+
+
 
 export class User {
     public id : string
