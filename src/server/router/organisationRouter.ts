@@ -1,6 +1,6 @@
 
 import express, { Request, Response, Router } from "express";
-import { NewOrganisation, NewOrganisationDTO } from "../model/organisationModels";
+import { NewOrganisationData, NewOrganisationDTO } from "../model/organisationModels";
 import {OrganisationService} from "../service/organisationService"
 
 
@@ -12,11 +12,9 @@ const organisationService : OrganisationService = new OrganisationService();
 organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDTO>, res : Response<{}> ) => {
 
     try {
-        
-        
         let userId : string = "e45t34234fwe" /// req.headers['UserId']).name
 
-        let newOrgData : NewOrganisation = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};
+        let newOrgData : NewOrganisationData = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};
         
         organisationService.addOrganisation(newOrgData);
 

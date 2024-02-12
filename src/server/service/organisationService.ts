@@ -1,5 +1,5 @@
 
-import { NewOrganisation, Permission, Role, Organisation, Member } from "../model/organisationModels";
+import { NewOrganisationData, Permission, Role, Organisation, Member } from "../model/organisationModels";
 
 
 
@@ -18,7 +18,7 @@ export class OrganisationService{
         return permissions;
     }
 
-    addOrganisation(newOrgData : NewOrganisation){
+    addOrganisation(newOrgData : NewOrganisationData){
         let roles : Role[] = newOrgData.roles;
         let creatorId : string = newOrgData.creatorId;
         let creatorNickName : string = newOrgData.creatorNickName;

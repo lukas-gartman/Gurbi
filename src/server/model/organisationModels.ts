@@ -30,6 +30,6 @@ export interface NewOrganisationDTO{
     roles : Role[];
 }
 
-export interface NewOrganisation extends NewOrganisationDTO{
+export interface NewOrganisationData extends NewOrganisationDTO{
     creatorId : string
 }
