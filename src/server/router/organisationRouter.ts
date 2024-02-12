@@ -9,7 +9,7 @@ export const organisationRouter : Router = express.Router();
 const organisationService : OrganisationService = new OrganisationService();
 
 
-organisationRouter.post("/protected/new/organisation", (req : Request<{},{},NewOrganisationDTO>, res : Response<boolean> ) => {
+organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDTO>, res : Response<boolean> ) => {
 
     try {
         
@@ -26,3 +26,5 @@ organisationRouter.post("/protected/new/organisation", (req : Request<{},{},NewO
         res.status(500).send(e.message);
     }
 });
+
+

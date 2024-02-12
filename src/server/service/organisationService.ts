@@ -5,7 +5,7 @@ import { NewOrganisation, Permission, Role, Organisation, Member } from "../mode
 
 export class OrganisationService{
 
-    private organisations : Organisation[];
+    private organisations : Organisation[] = [];
 
     addOrganisation(newOrgData : NewOrganisation){
         let roles : Role[] = newOrgData.roles;
@@ -14,7 +14,7 @@ export class OrganisationService{
         let organisationName : string = newOrgData.orgName;
 
         //some weird code to get all permissions from enum
-        const permissionEntries: Permission[] = Object.keys(Permission).filter(key => !isNaN(Number(Permission[key]))).map(key => Permission[key]);
+        const permissionEntries: Permission[] = [Permission.ChangeOrginsationName, Permission.DeleteOrginsitaion,Permission.CreateNewEvent,Permission.ChangeMemberRole,Permission.AddRole]
         
         //admin role added per default
         let admin : Role = {roleName : "admin", permission : permissionEntries};
