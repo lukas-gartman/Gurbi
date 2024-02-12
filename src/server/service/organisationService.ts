@@ -1,4 +1,5 @@
 
+import { error } from "console";
 import { NewOrganisationData, Permission, Role, Organisation, Member } from "../model/organisationModels";
 
 
@@ -9,6 +10,7 @@ export class OrganisationService{
 
     private permissions : string[] = ["ChangeOrginsationName", "DeleteOrginsitaion", "CreateNewEvent", "ChangeMemberRole", "AddRole"];
 
+    
 
     getAvilabePermissionns() : Permission[]{
         let permissions : Permission[] = [];
@@ -18,6 +20,13 @@ export class OrganisationService{
         return permissions;
     }
 
+    getMemberPermissionns(userId : string, organisationId : string) : Role | undefined{
+        let org : Organisation | undefined =  this.organisations.find(org => org.organisationId === organisationId);
+        return org?.organisationMembers.find(member => member.userId === userId)?.role;
+    }
+
+
+    //Create new organisation 
     addOrganisation(newOrgData : NewOrganisationData){
         let roles : Role[] = newOrgData.roles;
         let creatorId : string = newOrgData.creatorId;
@@ -32,11 +41,26 @@ export class OrganisationService{
         roles.push(admin);
 
         //creator added as admin per default
-        let members : Member[] = [{memberId : creatorId, role : admin, nickName : creatorNickName}];
+        let members : Member[] = [{userId : creatorId, role : admin, nickName : creatorNickName}];
 
 
-        this.organisations.push({members : members, roles : roles, organisationName : organisationName, id : "32e3d23dqwdw4et"});
+        this.organisations.push({organisationMembers : members, organisationRoles : roles, organisationName : organisationName, organisationId : "32e3d23dqwdw4et"});
+    }
 
+    //Organisation operation requset
+    deleteOrginsitaion(userId : string, organisationId : string) : boolean{
+        
+        //find user role
+        let memberRole : Role | undefined = this.getMemberPermissionns(userId, organisationId)
+        
+        //if user has a role that contains 'DeleteOrginsitaion' permissionn
+        if(memberRole?.permissions.some(permission => permission.permissionName === "DeleteOrginsitaion")){
+            //remove organisation from memmory
+            this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
+            return true
+        }
+
+        return false;
     }
 
 

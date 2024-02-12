@@ -10,26 +10,27 @@ export interface Role{
 }
 
 export interface Member{
-    memberId : string;
+    userId : string;
     role : Role;
     nickName : string;
 }
 
 export interface Organisation{
 
-     members : Member[];
-     roles : Role[];
+     organisationMembers : Member[];
+     organisationRoles : Role[];
      organisationName : string;
-     id : string;
+     organisationId : string;
 
 }
 
+
+//convince
 export interface NewOrganisationDTO{
     creatorNickName : string;
     orgName : string;
     roles : Role[];
 }
-
 export interface NewOrganisationData extends NewOrganisationDTO{
     creatorId : string
 }
