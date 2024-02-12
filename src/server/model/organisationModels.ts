@@ -1,10 +1,6 @@
 
-export enum Permission {
-    ChangeOrginsationName,
-    DeleteOrginsitaion,
-    CreateNewEvent,
-    ChangeMemberRole,
-    AddRole,
+export interface Permission {
+    permissionName : string;
   }
   
 

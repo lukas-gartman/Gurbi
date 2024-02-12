@@ -9,7 +9,7 @@ export const organisationRouter : Router = express.Router();
 const organisationService : OrganisationService = new OrganisationService();
 
 
-organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDTO>, res : Response<boolean> ) => {
+organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDTO>, res : Response<{}> ) => {
 
     try {
         
@@ -20,7 +20,7 @@ organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDT
         
         organisationService.addOrganisation(newOrgData);
 
-        res.status(200).send(true);
+        res.status(200).send();
 
     } catch (e: any) {
         res.status(500).send(e.message);
