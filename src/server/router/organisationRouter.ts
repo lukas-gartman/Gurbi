@@ -1,6 +1,7 @@
 
 import express, { Request, Response, Router } from "express";
 import { NewOrganisationData, NewOrganisationDTO } from "../model/organisationModels";
+import {ServerModifierResponse} from "../model/dataModels";
 import {OrganisationService} from "../service/organisationService"
 
 
@@ -16,9 +17,11 @@ organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDT
 
         let newOrgData : NewOrganisationData = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};
         
-        organisationService.addOrganisation(newOrgData);
+        
 
-        res.status(200).send();
+        let response : ServerModifierResponse = organisationService.addOrganisation(newOrgData);
+
+        res.status(200).send(response);
 
     } catch (e: any) {
         res.status(500).send(e.message);

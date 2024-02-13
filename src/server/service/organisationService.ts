@@ -1,7 +1,6 @@
 
-import { error } from "console";
 import { NewOrganisationData, Permission, Role, Organisation, Member } from "../model/organisationModels";
-
+import {ServerModifierResponse} from "../model/dataModels"
 
 
 export class OrganisationService{
@@ -27,7 +26,7 @@ export class OrganisationService{
 
 
     //Create new organisation 
-    addOrganisation(newOrgData : NewOrganisationData){
+    addOrganisation(newOrgData : NewOrganisationData) : ServerModifierResponse{
         let roles : Role[] = newOrgData.roles;
         let creatorId : string = newOrgData.creatorId;
         let creatorNickName : string = newOrgData.creatorNickName;
@@ -45,22 +44,30 @@ export class OrganisationService{
 
 
         this.organisations.push({organisationMembers : members, organisationRoles : roles, organisationName : organisationName, organisationId : "32e3d23dqwdw4et"});
+
+        return {successState : true, msg : "organistation successfuly added"}
+
     }
 
     //Organisation operation requset
-    deleteOrginsitaion(userId : string, organisationId : string) : boolean{
-        
+    deleteOrginsitaion(userId : string, organisationId : string) : ServerModifierResponse{
+
         //find user role
         let memberRole : Role | undefined = this.getMemberPermissionns(userId, organisationId)
-        
-        //if user has a role that contains 'DeleteOrginsitaion' permissionn
-        if(memberRole?.permissions.some(permission => permission.permissionName === "DeleteOrginsitaion")){
-            //remove organisation from memmory
-            this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
-            return true
+        if(memberRole === undefined){
+            return {successState : false, msg : "not member in organisation, or organisation does not exsist"}
         }
 
-        return false;
+
+        //if user has a role that contains 'DeleteOrginsitaion' permissionn
+        if(memberRole.permissions.some(permission => permission.permissionName === "DeleteOrginsitaion")){
+            //remove organisation from memmory
+            //this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
+            this.organisations = this.organisations.filter(org => org.organisationId === organisationId)
+            return {successState : true, msg : "succesfuly deleted organisation"}
+        }
+
+        return {successState: false, msg : "member does not have permission to delete organisation"};
     }
 
 

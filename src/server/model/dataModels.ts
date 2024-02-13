@@ -6,7 +6,10 @@ export interface Event{
     dateTime : Date
 }
 
-
+export interface ServerModifierResponse{
+    successState : boolean;
+    msg : string;
+}
 
 
 
