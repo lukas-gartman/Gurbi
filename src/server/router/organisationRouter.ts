@@ -28,4 +28,20 @@ organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDT
     }
 });
 
+organisationRouter.post("/protected/delete", (req : Request<{},{},{organisationId : string}>, res : Response<{}> ) => {
+
+    try {
+        let userId : string = "e45t34234fwe" /// req.headers['UserId']).name
+        
+
+        let response : ServerModifierResponse = organisationService.deleteOrginsitaion(userId, req.body.organisationId);
+
+        res.status(200).send(response);
+
+    } catch (e: any) {
+        res.status(500).send(e.message);
+    }
+});
+
+
 

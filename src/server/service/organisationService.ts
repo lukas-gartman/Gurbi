@@ -9,7 +9,20 @@ export class OrganisationService{
 
     private permissions : string[] = ["ChangeOrginsationName", "DeleteOrginsitaion", "CreateNewEvent", "ChangeMemberRole", "AddRole"];
 
-    
+    getUserOrganisations(userId : string) : Organisation[] | undefined{
+        return this.organisations.filter((org) => {
+                org.organisationMembers.forEach(member => {
+                    if(member.userId === userId){
+                        return true
+                    }
+                });
+                return false;
+             });
+    }
+
+    getAllOrganisation() : Organisation[] | undefined{
+        return this.organisations;
+    }
 
     getAvilabePermissionns() : Permission[]{
         let permissions : Permission[] = [];
