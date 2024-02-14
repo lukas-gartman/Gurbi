@@ -105,8 +105,8 @@ test("delete organisation", async () =>{
     organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
 
-    expect(organisationService.deleteOrginsitaion("TestUser3", orgId)).toStrictEqual({successState : false, msg : "not member in organisation, or organisation does not exsist"} as ServerModifierResponse);
-    expect(organisationService.deleteOrginsitaion("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual({successState : false, msg : "not member in organisation, or organisation does not exsist"} as ServerModifierResponse);
+    expect(organisationService.deleteOrginsitaion("TestUser3", orgId)).toStrictEqual({successState : false, msg : "not member in organisation"} as ServerModifierResponse);
+    expect(organisationService.deleteOrginsitaion("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual({successState : false, msg : "organisation does not exsit"} as ServerModifierResponse);
     expect(organisationService.deleteOrginsitaion("TestUser2", orgId)).toStrictEqual({successState : false, msg : "member does not have permission to delete organisation"} as ServerModifierResponse);
     expect(organisationService.getOrganisations().length).toBe(1);
     expect(organisationService.deleteOrginsitaion("TestUser1", orgId)).toStrictEqual({successState : true, msg : "succesfuly deleted organisation"} as ServerModifierResponse);
@@ -124,9 +124,31 @@ test("add role to organisation", async () => {
 
     expect(organisationService.addRoleToOrganisation("TestUser1", "awdawfawfsegty456346ewraqwdawd", {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "organisation does not exsit"} as ServerModifierResponse)
     expect(organisationService.addRoleToOrganisation("TestUser3", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "not member in organisation"} as ServerModifierResponse);
-    expect(organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "member does not have permission to add role"} as ServerModifierResponse);
+    expect(organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "member does not have permission to add roles"} as ServerModifierResponse);
     expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}, {permissionName : "awdawfawfawetgwegfawefawdawd232323"}]})).toStrictEqual({successState : false, msg : "awdawfawfawetgwegfawefawdawd232323 is not an available premission"} as ServerModifierResponse);
     expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : true, msg : "role added to organisation"} as ServerModifierResponse);
     expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(3);
 });
 
+test("delete role from organisation", async () => {
+    const organisationService = new OrganisationService();
+    let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    organisationService.addOrganisation(orgData);
+    let orgId : string = organisationService.getUserOrganisations("TestUser1").at(0)?.organisationId as string;
+    organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
+
+
+    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : true, msg : "role added to organisation"} as ServerModifierResponse);
+    expect(organisationService.deleteRoleFromOrganistation("TestUser2", orgId, "myNewRole")).toStrictEqual({successState : false, msg : "member does not have permission to delete roles"})
+    expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(3);
+
+    organisationService.getOrganisation(orgId)?.organisationMembers.push({userId : "TestUser3", nickName : "TestUserNickname3", role : {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]}})
+
+    expect(organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "awfawfawd")).toStrictEqual({successState : true, msg : "role has been deleted from organisation"})
+    expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(3);
+
+
+    expect(organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "myNewRole")).toStrictEqual({successState : true, msg : "role has been deleted from organisation"})
+    expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(2);
+    expect(organisationService.getOrganisationMembers(orgId).find(member => member.userId === "TestUser3")?.role.roleName).toBe("member")
+})

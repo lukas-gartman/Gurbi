@@ -60,7 +60,11 @@ export class OrganisationService{
         });
 
         return members;
+    }
 
+    getOrganisationRoles(organisationId : string) : Role[] | undefined{
+        let organisation : Organisation | undefined = this.getOrganisation(organisationId);
+        return organisation?.organisationRoles;
     }
 
     
@@ -87,32 +91,34 @@ export class OrganisationService{
 
     }
 
-
     //Delete an organisation
     deleteOrginsitaion(userId : string, organisationId : string) : ServerModifierResponse{
+        let organisation : Organisation | undefined = this.organisations.find(org => org.organisationId === organisationId);
 
-        //find user role
-        let memberRole : Role | undefined = this.getMemberPermissions(userId, organisationId)
-        if(memberRole === undefined){
-            return {successState : false, msg : "not member in organisation, or organisation does not exsist"}
+        if(organisation === undefined){
+            return {successState: false, msg : "organisation does not exsit"}; 
         }
 
-
-        //if user has a role that contains 'DeleteOrganisation' permissionn
-        if (memberRole.permissions.some(permission => permission.permissionName === "DeleteOrganisation")){
-            //remove organisation from memmory
-            this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
-
-            return {successState : true, msg : "succesfuly deleted organisation"}
+        let member : Member | undefined = organisation.organisationMembers.find(member => member.userId === userId);
+        if(member === undefined){
+            return {successState : false, msg: "not member in organisation"};
         }
 
-        return {successState: false, msg : "member does not have permission to delete organisation"};
+        
+        let permission : Permission | undefined =  member.role.permissions.find(permission => permission.permissionName === "RoleManipulator");
+        if(permission === undefined){
+            return {successState : false, msg : "member does not have permission to delete organisation"};
+        }
+
+        this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
+
+        return {successState : true, msg : "succesfuly deleted organisation"}
     }
 
-    addMemberToOrganisation(userId : string, nickName : string, inOrganisationId : string) : ServerModifierResponse{
+    addMemberToOrganisation(userId : string, nickName : string, organisationId : string) : ServerModifierResponse{
         
         
-        let organisation : Organisation | undefined = this.organisations.find(org => org.organisationId === inOrganisationId);
+        let organisation : Organisation | undefined = this.organisations.find(org => org.organisationId === organisationId);
 
         if(organisation === undefined){
             return {successState: false, msg : "organisation does not exsit"}; 
@@ -132,7 +138,7 @@ export class OrganisationService{
     }
 
     addRoleToOrganisation(userId : string, organisationId : string, role : Role) : ServerModifierResponse{    
-        let organisation : Organisation | undefined = this.getOrganisation(organisationId);
+        let organisation : Organisation | undefined = this.organisations.find(org => org.organisationId === organisationId);
         if(organisation === undefined){
             return {successState : false, msg: "organisation does not exsit"};
         }
@@ -143,7 +149,7 @@ export class OrganisationService{
 
         let permission : Permission | undefined =  member.role.permissions.find(permission => permission.permissionName === "RoleManipulator");
         if(permission === undefined){
-            return {successState : false, msg : "member does not have permission to add role"};
+            return {successState : false, msg : "member does not have permission to add roles"};
         }
 
         for (let index = 0; index < role.permissions.length; index++) {
@@ -158,6 +164,45 @@ export class OrganisationService{
         return {successState : true, msg: "role added to organisation"}
         
 
+    }
+
+    deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : ServerModifierResponse{
+        let organisation : Organisation | undefined = this.organisations.find(org => org.organisationId === organisationId);
+        if(organisation === undefined){
+            return {successState : false, msg: "organisation does not exsit"};
+        }
+
+        let member : Member | undefined = organisation.organisationMembers.find(member => member.userId === userId);
+        if(member === undefined){
+            return {successState : false, msg: "not member in organisation"};
+        }
+
+        let permission : Permission | undefined =  member.role.permissions.find(permission => permission.permissionName === "RoleManipulator");
+        if(permission === undefined){
+            return {successState : false, msg : "member does not have permission to delete roles"};
+        }
+
+        if(this.member.roleName === roleName){
+            return {successState : false, msg : "cant delete this role"};
+        }
+
+        if(this.admin.roleName === roleName){
+            return {successState : false, msg : "cant delete this role"};
+        }
+
+        let index : number = organisation.organisationRoles.findIndex(role => role.roleName === roleName)
+
+        // make members with role to only have the role member.
+        if (index !== -1){
+            organisation.organisationRoles.splice(index, 1)
+            organisation.organisationMembers.forEach(member => {
+                if(member.role.roleName === roleName){
+                    member.role = this.member
+                }
+            });
+        }
+
+        return {successState : true, msg : "role has been deleted from organisation"};
     }
 
 }
