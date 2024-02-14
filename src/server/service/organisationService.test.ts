@@ -1,7 +1,10 @@
 
 import { ServerModifierResponse } from "../model/dataModels";
 import { Member, NewOrganisationData, Organisation } from "../model/organisationModels";
-import {OrganisationService} from "./organisationService"
+import {OrganisationService} from "./organisationService";
+
+
+
 
 
 test("test add organisation", async () => {
@@ -87,7 +90,43 @@ test("add member to organisation", async () => {
     expect(organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname2", orgId  as string)).toStrictEqual({successState : false, msg : "nickName is already used in organisation"} as ServerModifierResponse)
     expect(organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname3", "wadawdawdfesgsegsegsegsegsdge12412412412412safasf")).toStrictEqual({successState : false, msg : "organisation does not exsit"} as ServerModifierResponse)
 
+});
 
 
+test("delete organisation", async () =>{
+    
+    const organisationService = new OrganisationService();
+    let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+
+    organisationService.addOrganisation(orgData);
+
+    let orgId : string = organisationService.getUserOrganisations("TestUser1").at(0)?.organisationId as string;
+
+    organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
+
+
+    expect(organisationService.deleteOrginsitaion("TestUser3", orgId)).toStrictEqual({successState : false, msg : "not member in organisation, or organisation does not exsist"} as ServerModifierResponse);
+    expect(organisationService.deleteOrginsitaion("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual({successState : false, msg : "not member in organisation, or organisation does not exsist"} as ServerModifierResponse);
+    expect(organisationService.deleteOrginsitaion("TestUser2", orgId)).toStrictEqual({successState : false, msg : "member does not have permission to delete organisation"} as ServerModifierResponse);
+    expect(organisationService.getOrganisations().length).toBe(1);
+    expect(organisationService.deleteOrginsitaion("TestUser1", orgId)).toStrictEqual({successState : true, msg : "succesfuly deleted organisation"} as ServerModifierResponse);
+    expect(organisationService.getOrganisations().length).toBe(0);
+
+    
+});
+
+test("add role to organisation", async () => {
+    const organisationService = new OrganisationService();
+    let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    organisationService.addOrganisation(orgData);
+    let orgId : string = organisationService.getUserOrganisations("TestUser1").at(0)?.organisationId as string;
+    organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
+
+    expect(organisationService.addRoleToOrganisation("TestUser1", "awdawfawfsegty456346ewraqwdawd", {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "organisation does not exsit"} as ServerModifierResponse)
+    expect(organisationService.addRoleToOrganisation("TestUser3", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "not member in organisation"} as ServerModifierResponse);
+    expect(organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : false, msg : "member does not have permission to add role"} as ServerModifierResponse);
+    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}, {permissionName : "awdawfawfawetgwegfawefawdawd232323"}]})).toStrictEqual({successState : false, msg : "awdawfawfawetgwegfawefawdawd232323 is not an available premission"} as ServerModifierResponse);
+    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual({successState : true, msg : "role added to organisation"} as ServerModifierResponse);
+    expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(3);
 });
 

@@ -8,7 +8,7 @@ export class OrganisationService{
 
     private organisations : Organisation[] = [];
 
-    private permissions : string[] = ["ChangeOrginsationName", "DeleteOrganisation", "CreateNewEvent", "ChangeMemberRole", "AddRole"];
+    private permissions : string[] = ["ChangeOrginsationName", "DeleteOrganisation", "CreateNewEvent", "ChangeMemberRole", "RoleManipulator"];
 
     //standard roles
     private admin : Role = {roleName : "admin", permissions : this.getAvilabePermissionns()};
@@ -30,6 +30,10 @@ export class OrganisationService{
 
     getOrganisations() : Organisation[]{
         return this.organisations;
+    }
+
+    getOrganisation(organisationId : string) : Organisation | undefined{
+        return this.organisations.find(org => org.organisationId === organisationId);
     }
 
     getAvilabePermissionns() : Permission[]{
@@ -58,6 +62,8 @@ export class OrganisationService{
         return members;
 
     }
+
+    
 
 
     //Create new organisation 
@@ -125,5 +131,33 @@ export class OrganisationService{
 
     }
 
+    addRoleToOrganisation(userId : string, organisationId : string, role : Role) : ServerModifierResponse{    
+        let organisation : Organisation | undefined = this.getOrganisation(organisationId);
+        if(organisation === undefined){
+            return {successState : false, msg: "organisation does not exsit"};
+        }
+        let member : Member | undefined = organisation.organisationMembers.find(member => member.userId === userId);
+        if(member === undefined){
+            return {successState : false, msg: "not member in organisation"};
+        }
+
+        let permission : Permission | undefined =  member.role.permissions.find(permission => permission.permissionName === "RoleManipulator");
+        if(permission === undefined){
+            return {successState : false, msg : "member does not have permission to add role"};
+        }
+
+        for (let index = 0; index < role.permissions.length; index++) {
+            const newPremission = role.permissions[index];
+            let exsit : Permission | undefined = this.getAvilabePermissionns().find(permission => permission.permissionName === newPremission.permissionName);
+            if(exsit === undefined){
+                return {successState : false, msg: newPremission.permissionName + " is not an available premission"};
+            }
+        }
+
+        organisation.organisationRoles.push(role);
+        return {successState : true, msg: "role added to organisation"}
+        
+
+    }
 
 }
