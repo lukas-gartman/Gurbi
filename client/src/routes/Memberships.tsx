@@ -17,7 +17,7 @@ function Memberships() {
     return (
         <div className="App">
             <Header onSearch={onSearch} headerNav={navItems} />
-            <main>
+            <main className="memberships">
                 <p>Memberships</p>
             </main>
             <Footer />
