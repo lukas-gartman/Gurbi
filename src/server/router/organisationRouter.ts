@@ -10,7 +10,7 @@ export const organisationRouter : Router = express.Router();
 const organisationService : OrganisationService = new OrganisationService();
 
 
-organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDTO>, res : Response<{}> ) => {
+organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDTO>, res : Response<ServerModifierResponse> ) => {
 
     try {
         let userId : string = "e45t34234fwe" /// req.headers['UserId']).name
@@ -28,7 +28,7 @@ organisationRouter.post("/protected/new", (req : Request<{},{},NewOrganisationDT
     }
 });
 
-organisationRouter.post("/protected/delete", (req : Request<{},{},{organisationId : string}>, res : Response<{}> ) => {
+organisationRouter.post("/protected/delete", (req : Request<{},{},{organisationId : string}>, res : Response<ServerModifierResponse> ) => {
 
     try {
         let userId : string = "e45t34234fwe" /// req.headers['UserId']).name
