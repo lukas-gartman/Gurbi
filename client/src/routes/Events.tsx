@@ -3,6 +3,8 @@ import './Events.css';
 import Header from '../Header';
 import HeaderNavItem from '../HeaderNavItem';
 import Footer from '../Footer';
+import { Event } from '../../../src/server/model/dataModels';
+import EventCard from '../EventCard';
 
 function Events() {
     const navItems = (
@@ -12,11 +14,14 @@ function Events() {
         </>
     );
 
+    const e: Event = JSON.parse('{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning", "host": 1}')
+    const testEvents: Event[] = [e, e, e]
+
     return (
         <div className="App">
             <Header onSearch={onSearch} headerNav={navItems} />
             <main className="events">
-                <p>Events</p>
+                { testEvents.map(e => { return <EventCard event={e} /> }) }
             </main>
             <Footer />
         </div>

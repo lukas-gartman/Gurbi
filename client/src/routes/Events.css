@@ -2,3 +2,69 @@
     flex: 1;
     margin: 10px;
 }
+
+.event-card {
+    display: flex;
+    /* flex-direction: row;
+    align-items: center; */
+    height: fit-content;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 15px;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.event-card:hover {
+    background-color: rgb(176, 176, 176);
+    cursor: pointer;
+}
+
+.event-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.event-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    margin: 10px;
+}
+
+.event-info > p {
+    margin: 5px 0;
+    font-weight: 750;
+}
+
+.event-info > span, .event-host > span {
+    font-weight: 300;
+}
+
+.event-card-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.event-card-row > img, .event-card-row > i {
+    margin-right: 10px;
+}
+
+.event-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25px;
+    /* height: 100px */
+}
+
+.event-host-img {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+}

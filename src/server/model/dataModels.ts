@@ -4,11 +4,14 @@ export interface Event{
     location : string
     description : string
     dateTime : Date
+    picture: string
+    host: Organisation
 }
 
 export interface Organisation{
     id : string
     name : string
+    picture: string
 }
 
 export class User {
