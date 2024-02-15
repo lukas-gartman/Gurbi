@@ -11,7 +11,7 @@ function EventCard(props: {event: Event}) {
                 <p>{props.event.name}</p>
                 <div className="event-card-row">
                     <img className="event-host-img" src={props.event.picture} />
-                    <span>{props.event.name}</span>
+                    <span>{props.event.host.name}</span>
                 </div>
                 <div className="event-card-row">
                     <i className="bi bi-geo-alt-fill" />

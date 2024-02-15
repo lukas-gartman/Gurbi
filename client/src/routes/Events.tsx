@@ -3,7 +3,7 @@ import './Events.css';
 import Header from '../Header';
 import HeaderNavItem from '../HeaderNavItem';
 import Footer from '../Footer';
-import { Event } from '../../../src/server/model/dataModels';
+import { Event, Organisation } from '../../../src/server/model/dataModels';
 import EventCard from '../EventCard';
 
 function Events() {
@@ -14,7 +14,9 @@ function Events() {
         </>
     );
 
-    const e: Event = JSON.parse('{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning", "host": 1}')
+    const e: Event = JSON.parse('{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning"}')
+    const h: Organisation = JSON.parse('{"id": 1, "name": "MatNatSex", "picture": ""}')
+    e.host = h;
     const testEvents: Event[] = [e, e, e]
 
     return (
