@@ -1,4 +1,4 @@
-import './Footer.css';
+import '../stylesheets/Footer.css';
 
 function FooterButton(props: { url: string, icon: string }) {
     return (

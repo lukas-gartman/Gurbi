@@ -1,8 +1,8 @@
 import React from 'react';
-import './Memberships.css';
-import Header from '../Header';
-import HeaderNavItem from '../HeaderNavItem';
-import Footer from '../Footer';
+import '../stylesheets/Memberships.css';
+import Header from '../components/Header';
+import HeaderNavItem from '../components/HeaderNavItem';
+import Footer from '../components/Footer';
 
 function Memberships() {
     const navItems = (

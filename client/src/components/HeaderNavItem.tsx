@@ -1,4 +1,4 @@
-import './Header.css';
+import '../stylesheets/Header.css';
 
 function HeaderNavItem(props: { url: string, active?: boolean, children: React.ReactNode}) {
     return (

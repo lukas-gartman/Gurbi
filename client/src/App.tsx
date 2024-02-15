@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import './App.css';
+import './stylesheets/App.css';
 import Events from './routes/Events';
 import Memberships from './routes/Memberships';
 import Login from './routes/Login';

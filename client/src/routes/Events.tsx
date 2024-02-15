@@ -1,10 +1,10 @@
 import React from 'react';
-import './Events.css';
-import Header from '../Header';
-import HeaderNavItem from '../HeaderNavItem';
-import Footer from '../Footer';
+import '../stylesheets/Events.css';
+import Header from '../components/Header';
+import HeaderNavItem from '../components/HeaderNavItem';
+import Footer from '../components/Footer';
 import { Event, Organisation } from '../../../src/server/model/dataModels';
-import EventCard from '../EventCard';
+import EventCard from '../components/EventCard';
 
 function Events() {
     const navItems = (

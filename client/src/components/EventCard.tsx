@@ -1,6 +1,6 @@
 import React from 'react';
-import {Event} from "../../src/server/model/dataModels";
-import './routes/Events.css';
+import {Event} from "../../../src/server/model/dataModels";
+import '../stylesheets/Events.css';
 
 function EventCard(props: {event: Event}) {
     return (

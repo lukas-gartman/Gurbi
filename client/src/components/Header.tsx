@@ -1,7 +1,7 @@
 import React, { HTMLProps } from 'react';
 import {useLocation} from 'react-router';
 import axios, {AxiosResponse} from 'axios';
-import './Header.css';
+import '../stylesheets/Header.css';
 
 interface Header {
 	onSearch: (searchResults: JSON) => void,

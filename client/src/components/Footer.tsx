@@ -1,6 +1,6 @@
 import {useLocation} from 'react-router';
 import FooterButton from './FooterButton';
-import './Footer.css';
+import '../stylesheets/Footer.css';
 
 class FooterPage {
     constructor(readonly url: string, readonly icon: string, readonly activeIcon: string) {}
