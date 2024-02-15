@@ -14,7 +14,7 @@ function EventCard(props: {event: Event}) {
                     <span>{props.event.name}</span>
                 </div>
                 <div className="event-card-row">
-                    <i className="bi bi-location-pin" />
+                    <i className="bi bi-geo-alt-fill" />
                     <p>{props.event.location}</p>
                 </div>
             </div>
