@@ -1,8 +1,9 @@
+import {Link} from "react-router-dom";
 import '../stylesheets/Footer.css';
 
 function FooterButton(props: { url: string, icon: string }) {
     return (
-        <a className="footer-button" href={props.url}><i className={props.icon}></i></a>
+        <Link className="footer-button" to={props.url}><i className={props.icon}></i></Link>
     );
 }
 

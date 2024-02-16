@@ -1,5 +1,6 @@
 import React from 'react';
 import '../stylesheets/Form.css';
+import { Link } from 'react-router-dom';
 
 function Login() {
     return (
@@ -12,7 +13,7 @@ function Login() {
                     <label><input type="checkbox" name="remember-me" />Remember me</label>
                     <input type="submit" value="Login" />
                 </form>
-                <a href="/register">Register account</a>
+                <Link to="/register">Register account</Link>
             </main>
         </div>
     );

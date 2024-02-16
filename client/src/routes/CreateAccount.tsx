@@ -1,5 +1,6 @@
 import React from 'react';
 import '../stylesheets/Form.css';
+import { Link } from 'react-router-dom';
 
 function CreateAccount() {
     return (
@@ -14,7 +15,7 @@ function CreateAccount() {
                     <input type="password" name="password2" placeholder="Re-enter password" required />
                     <input type="submit" value="Create account" />
                 </form>
-                <a href="/">Already have an account?</a>
+                <Link to="/">Already have an account?</Link>
             </main>
         </div>
     );
