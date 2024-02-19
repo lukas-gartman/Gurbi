@@ -90,13 +90,6 @@ export class OrganisationService{
     }
 
 
-    getOrganisationRoles(organisationId : string) : Role[] | undefined{
-        let organisation : Organisation | undefined = this.getOrganisation(organisationId);
-        return organisation?.organisationRoles;
-    }
-
-    
-
 
     //Create new organisation 
     addOrganisation(newOrgData : NewOrganisationData) : ServerModifierResponse{
