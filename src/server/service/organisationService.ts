@@ -6,33 +6,34 @@ import { log } from "console";
 
 export class OrganisationService{
 
+    //replace with mongoDB class
     private organisations : Organisation[] = [];
 
     private permissions : string[] = ["ChangeOrginsationName", "DeleteOrganisation", "CreateNewEvent", "ChangeMemberRole", "RoleManipulator"];
 
     //standard roles
-    private admin : Role = {roleName : "admin", permissions : this.getAvilabePermissionns()};
-    private member : Role = {roleName : "member", permissions : [] as Permission[]};
+    private readonly admin : Role = {roleName : "admin", permissions : this.getAvilabePermissionns()};
+    private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
  
 
     private memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : string) : ServerModifierResponse{
         let organisation : Organisation | undefined = this.getOrganisation(organisationId);
 
         if(organisation === undefined){
-            return {successState: false, msg : "organisation does not exsit"}; 
+            return ServerModifierResponse.GetServerModifierResponse(401); 
         }
 
         let member : Member | undefined = organisation.organisationMembers.find(member => member.userId === userId);
         if(member === undefined){
-            return {successState : false, msg: "not member in organisation"};
+            return ServerModifierResponse.GetServerModifierResponse(402);
         }
 
         let permission : Permission | undefined =  this.getMemberPermissions(userId, organisationId)?.find(permission => permission.permissionName === checkPermission)
         if(permission === undefined){
-            return {successState : false, msg : "member does not have permission"};
+            return ServerModifierResponse.GetServerModifierResponse(403);
         }
 
-        return {successState : true, msg : "member does have permission"};
+        return ServerModifierResponse.GetServerModifierResponse(201);
     }
 
     private updateOrganisation(org : Organisation){
@@ -108,7 +109,7 @@ export class OrganisationService{
 
         this.organisations.push({organisationMembers : members, organisationRoles : roles, organisationName : organisationName, organisationId : "32e3d23dqwdw4et"});
 
-        return {successState : true, msg : "organistation successfuly added"}
+        return ServerModifierResponse.GetServerModifierResponse(200)
 
     }
 
@@ -122,7 +123,7 @@ export class OrganisationService{
         
         this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
 
-        return {successState : true, msg : "succesfuly deleted organisation"}
+        return ServerModifierResponse.GetServerModifierResponse(202)
     }
 
     addMemberToOrganisation(userId : string, nickName : string, organisationId : string) : ServerModifierResponse{
@@ -131,22 +132,22 @@ export class OrganisationService{
         let organisation : Organisation | undefined = this.getOrganisation(organisationId);
 
         if(organisation === undefined){
-            return {successState: false, msg : "organisation does not exsit"}; 
+            return ServerModifierResponse.GetServerModifierResponse(401)
         }
 
         if(organisation.organisationMembers.find(member => member.userId === userId)){
-            return {successState: false, msg : "user is already member in organisation"}; 
+            return ServerModifierResponse.GetServerModifierResponse(404)
         }
 
         if(organisation.organisationMembers.find(member => member.nickName === nickName)){
-            return {successState: false, msg : "nickName is already used in organisation"}; 
+            return ServerModifierResponse.GetServerModifierResponse(405)
         }
 
         organisation.organisationMembers.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
 
         this.updateOrganisation(organisation);
 
-        return {successState: true, msg : "user added as member to organisation"}; 
+        return ServerModifierResponse.GetServerModifierResponse(203); 
 
     }
 
@@ -163,7 +164,7 @@ export class OrganisationService{
             const newPremission = role.permissions[index];
             let exsit : Permission | undefined = this.getAvilabePermissionns().find(permission => permission.permissionName === newPremission.permissionName);
             if(exsit === undefined){
-                return {successState : false, msg: newPremission.permissionName + " is not an available premission"};
+                return ServerModifierResponse.GetServerModifierResponse(406);
             }
         }
         
@@ -172,7 +173,7 @@ export class OrganisationService{
 
         this.updateOrganisation(org)
         
-        return {successState : true, msg: "role added to organisation"}
+        return ServerModifierResponse.GetServerModifierResponse(204)
         
 
     }
@@ -188,11 +189,11 @@ export class OrganisationService{
 
 
         if(this.member.roleName === roleName){
-            return {successState : false, msg : "cant delete this role"};
+            return ServerModifierResponse.GetServerModifierResponse(407);
         }
 
         if(this.admin.roleName === roleName){
-            return {successState : false, msg : "cant delete this role"};
+            return ServerModifierResponse.GetServerModifierResponse(407);
         }
 
         let organisation : Organisation = this.getOrganisation(organisationId) as Organisation;
@@ -211,7 +212,7 @@ export class OrganisationService{
 
         this.updateOrganisation(organisation);
 
-        return {successState : true, msg : "role has been deleted from organisation"};
+        return ServerModifierResponse.GetServerModifierResponse(205);
     }
 
     changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : ServerModifierResponse{
@@ -225,19 +226,19 @@ export class OrganisationService{
         
         let role : Role | undefined =  org.organisationRoles.find(roleElement => roleElement.roleName === roleName)
         if(role === undefined){
-            return {successState : false, msg : "role does not exsist in organisation"};
+            return ServerModifierResponse.GetServerModifierResponse(408);
         }
 
         let index : number | undefined = org.organisationMembers.findIndex(member => member.userId === targetMemberId);
         if (index === -1){
-            return {successState : false, msg : "target member does not exsist in organisation"};
+            return ServerModifierResponse.GetServerModifierResponse(409);
         }
 
         org.organisationMembers[index].roleName = role.roleName;
 
         this.updateOrganisation(org);
 
-        return  {successState : true, msg : "changed target member's role"};
+        return  ServerModifierResponse.GetServerModifierResponse(206);
 
     }
 
