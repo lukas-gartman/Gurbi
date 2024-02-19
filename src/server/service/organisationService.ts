@@ -27,7 +27,7 @@ export class OrganisationService{
             return {successState : false, msg: "not member in organisation"};
         }
 
-        let permission : Permission | undefined =  member.role.permissions.find(permission => permission.permissionName === checkPermission);
+        let permission : Permission | undefined =  this.getMemberPermissions(userId, organisationId)?.find(permission => permission.permissionName === checkPermission)
         if(permission === undefined){
             return {successState : false, msg : "member does not have permission"};
         }
@@ -75,9 +75,18 @@ export class OrganisationService{
         return permissions;
     }
 
-    getMemberPermissions(userId : string, organisationId : string) : Role | undefined{
+    
+    getMemberPermissions(userId : string, organisationId : string) : Permission[] | undefined{
         let org : Organisation | undefined =  this.getOrganisation(organisationId);
-        return org?.organisationMembers.find(member => member.userId === userId)?.role;
+        let roleName : string | undefined = org?.organisationMembers.find(member => member.userId === userId)?.roleName;
+        
+        try {
+            return JSON.parse(JSON.stringify(org?.organisationRoles.find(role => role.roleName === roleName)?.permissions));
+        } catch (error) {
+            return undefined;    
+        }
+
+        
     }
 
 
@@ -101,7 +110,7 @@ export class OrganisationService{
         roles.push(this.member);
 
         //creator added as admin per default
-        let members : Member[] = [{userId : creatorId, role : this.admin, nickName : creatorNickName}];
+        let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
 
         this.organisations.push({organisationMembers : members, organisationRoles : roles, organisationName : organisationName, organisationId : "32e3d23dqwdw4et"});
@@ -140,7 +149,7 @@ export class OrganisationService{
             return {successState: false, msg : "nickName is already used in organisation"}; 
         }
 
-        organisation.organisationMembers.push({userId : userId, nickName : nickName, role : this.member})
+        organisation.organisationMembers.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
 
         this.updateOrganisation(organisation);
 
@@ -201,8 +210,8 @@ export class OrganisationService{
         if (index !== -1){
             organisation.organisationRoles.splice(index, 1)
             organisation.organisationMembers.forEach(member => {
-                if(member.role.roleName === roleName){
-                    member.role = this.member;
+                if(member.roleName === roleName){
+                    member.roleName = this.member.roleName;
                 }
             });
         }
@@ -231,7 +240,7 @@ export class OrganisationService{
             return {successState : false, msg : "target member does not exsist in organisation"};
         }
 
-        org.organisationMembers[index].role = role;
+        org.organisationMembers[index].roleName = role.roleName;
 
         this.updateOrganisation(org);
 

@@ -11,7 +11,7 @@ export interface Role{
 
 export interface Member{
     userId : string;
-    role : Role;
+    roleName : string;
     nickName : string;
 }
 

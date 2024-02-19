@@ -65,7 +65,7 @@ test("get user permissionns", async () => {
 
     let orgId : string | undefined = organisationService.getUserOrganisations("TestUser1")?.at(0)?.organisationId;
 
-    expect(organisationService.getMemberPermissions("TestUser1", orgId as string)?.permissions.length).toBe(organisationService.getAvilabePermissionns().length);
+    expect(organisationService.getMemberPermissions("TestUser1", orgId as string)?.length).toBe(organisationService.getAvilabePermissionns().length);
 
 
 });
@@ -85,7 +85,7 @@ test("add member to organisation", async () => {
 
     //expect(organisationService.getOrganisationMembers(orgId as string).length).toBe(2);
     expect(organisationService.getOrganisation(orgId as string)?.organisationMembers?.length).toBe(2)
-    expect(organisationService.getOrganisation(orgId as string)?.organisationMembers.find(member => member.userId === "TestUser2")?.role.roleName).toBe("member")
+    expect(organisationService.getOrganisation(orgId as string)?.organisationMembers.find(member => member.userId === "TestUser2")?.roleName).toBe("member")
     expect(organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname3", orgId  as string)).toStrictEqual({successState : false, msg : "user is already member in organisation"} as ServerModifierResponse)
     expect(organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname2", orgId  as string)).toStrictEqual({successState : false, msg : "nickName is already used in organisation"} as ServerModifierResponse)
     expect(organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname3", "wadawdawdfesgsegsegsegsegsdge12412412412412safasf")).toStrictEqual({successState : false, msg : "organisation does not exsit"} as ServerModifierResponse)
@@ -150,7 +150,7 @@ test("delete role from organisation", async () => {
 
     expect(organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "myNewRole")).toStrictEqual({successState : true, msg : "role has been deleted from organisation"})
     expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(2);
-    expect(organisationService.getOrganisation(orgId)?.organisationMembers?.find(member => member.userId === "TestUser3")?.role.roleName).toBe("member")
+    expect(organisationService.getOrganisation(orgId)?.organisationMembers?.find(member => member.userId === "TestUser3")?.roleName).toBe("member")
 })
 
 test("change member role", async () => {
@@ -165,6 +165,6 @@ test("change member role", async () => {
     expect(organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewawdawdRole")).toStrictEqual({successState : false, msg : "role does not exsist in organisation"})
     expect(organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser3", "MyNewRole")).toStrictEqual({successState : false, msg : "target member does not exsist in organisation"})
     expect(organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewRole")).toStrictEqual({successState : true, msg : "changed target member's role"})
-    expect(organisationService.getOrganisation(orgId)?.organisationMembers.find(member => member.userId === "TestUser2")?.role.roleName).toBe("MyNewRole")
+    expect(organisationService.getOrganisation(orgId)?.organisationMembers.find(member => member.userId === "TestUser2")?.roleName).toBe("MyNewRole")
 
 })
