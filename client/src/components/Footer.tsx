@@ -1,6 +1,7 @@
 import {useLocation} from 'react-router';
 import FooterButton from './FooterButton';
 import '../stylesheets/Footer.css';
+import { NavLink } from 'react-router-dom';
 
 class FooterPage {
     constructor(readonly url: string, readonly icon: string, readonly activeIcon: string) {}
@@ -13,8 +14,8 @@ function Footer() {
     const curr: string = "/" + useLocation().pathname.split("/")[1];
     return (
         <footer>
-            <FooterButton url={events.url} icon={curr === events.url ? events.activeIcon : events.icon}/>
-            <FooterButton url={memberships.url} icon={curr === memberships.url ? memberships.activeIcon : memberships.icon}/>
+            <NavLink to="/events" className={({ isActive }) => isActive ? "bi bi-house-door-fill" : "bi bi-house-door"} />
+            <NavLink to="/memberships" className={({ isActive }) => isActive ? "bi bi-person-vcard-fill" : "bi bi-person-vcard" } />
         </footer>
     );
 }

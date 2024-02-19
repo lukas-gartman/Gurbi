@@ -1,13 +1,13 @@
-.events {
+.events, .event {
     flex: 1;
     margin: 10px;
 }
 
 .event-card {
     display: flex;
-    /* flex-direction: row;
-    align-items: center; */
     height: fit-content;
+    color: black;
+    text-decoration: none;
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -59,13 +59,48 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 25px;
-    /* height: 100px */
+    align-items: flex-end;
+}
+
+.event-host-img, .event-organiser-img {
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .event-host-img {
-    border-radius: 50%;
     width: 25px;
     height: 25px;
-    object-fit: cover;
+}
+
+.event-organiser-img {
+    width: 50px;
+    height: 50px;
+}
+
+.event-organiser-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.event-organiser-options > * > * {
+    margin: 0 5px;
+}
+
+.event-organiser-follow-btn {
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    padding: 5px 10px;
+    color: black;
+    background-color: white;
+    text-decoration: none;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+.event-organiser-follow-btn.following {
+    border: none;
+    color: white;
+    background-color: black;
 }
