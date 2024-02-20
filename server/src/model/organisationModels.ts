@@ -1,7 +1,4 @@
-
-export interface Permission {
-    permissionName : string;
-  }
+import {Permission} from "../model/dataModels"
   
 
 export interface Role{

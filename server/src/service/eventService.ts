@@ -9,6 +9,8 @@ export class EventService{
 
     addEvent() : ServerModifierResponse {
 
+        
+
         return ServerModifierResponse.GetServerModifierResponse(207)
     }    
 }

@@ -19,7 +19,7 @@ export class ServerModifierResponse{
         this.serverModifierResponseId = serverModifierResponseId;
     }
 
-    private static readonly serverResponses : ServerModifierResponseTemplate[] = [
+    private static readonly serverResponses : ServerModifierResponse[] = [
         {successState: false, msg : "organisation does not exsit", serverModifierResponseId : 401},
         {successState : false, msg: "not member in organisation", serverModifierResponseId : 402},
         {successState : false, msg : "member does not have permission", serverModifierResponseId : 403},
@@ -50,6 +50,44 @@ export class ServerModifierResponse{
 
 }
 
+export class Permission {
+    permissionName : string;
+    permissionId : number;
+
+    private constructor (permissionName : string, permissionId : number){
+        this.permissionId = permissionId;
+        this.permissionName = permissionName;
+    }
+
+    private static readonly permissions : Permission[] = [
+        {permissionName : "ChangeOrginsationName", permissionId : 0},
+        {permissionName : "DeleteOrganisation", permissionId : 1},
+        {permissionName : "RoleManipulator", permissionId : 2},
+        {permissionName : "CreateNewEvent", permissionId : 3},
+        {permissionName : "ChangeEventPrice", permissionId : 4},
+        {permissionName : "ChangeEventDescription", permissionId : 5},
+        {permissionName : "ChangeEventName", permissionId : 6},
+        {permissionName : "ChangeLocation", permissionId : 7}
+    ];
+    
+    static getPermission(permissionId : number) : Permission{
+        let premission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
+        if(premission === undefined){
+            throw error("premission does not exsist");
+        }
+        return new Permission(premission.permissionName, premission.permissionId);
+    }
+
+    static getAllPermissions() : Permission[]{
+        let premissions : Permission[] = [];
+        this.permissions.forEach(element => {
+            premissions.push(new Permission(element.permissionName, element.permissionId));
+        });
+
+        return premissions;
+    }
+
+  }
 
 export class User {
     public id : string
