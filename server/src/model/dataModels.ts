@@ -1,12 +1,5 @@
 import { error } from "console"
 
-export interface Event{
-    id : string
-    name : string
-    location : string
-    description : string
-    dateTime : Date
-}
 
 interface ServerModifierResponseTemplate{
     successState : boolean;
@@ -43,7 +36,8 @@ export class ServerModifierResponse{
         {successState: true, msg : "user added as member to organisation", serverModifierResponseId: 203},
         {successState : true, msg: "role added to organisation", serverModifierResponseId : 204},
         {successState : true, msg : "role has been deleted from organisation", serverModifierResponseId : 205},
-        {successState : true, msg : "changed target member's role", serverModifierResponseId : 206}
+        {successState : true, msg : "changed target member's role", serverModifierResponseId : 206},
+        {successState : true, msg : "added event", serverModifierResponseId : 207}
     ]
 
     static GetServerModifierResponse(serverModifierResponseId : number) : ServerModifierResponse{
