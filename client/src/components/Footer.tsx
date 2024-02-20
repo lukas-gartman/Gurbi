@@ -1,21 +1,12 @@
-import {useLocation} from 'react-router';
-import FooterButton from './FooterButton';
 import '../stylesheets/Footer.css';
-import { NavLink } from 'react-router-dom';
-
-class FooterPage {
-    constructor(readonly url: string, readonly icon: string, readonly activeIcon: string) {}
-}
-
-const events = new FooterPage("/events", "bi bi-house-door", "bi bi-house-door-fill")
-const memberships = new FooterPage("/memberships", "bi bi-person-vcard", "bi bi-person-vcard-fill")
+import { NavLink, useLocation } from 'react-router-dom';
 
 function Footer() {
-    const curr: string = "/" + useLocation().pathname.split("/")[1];
+    const curr: string = useLocation().pathname.split("/")[1];
     return (
         <footer>
-            <NavLink to="/events" className={({ isActive }) => isActive ? "bi bi-house-door-fill" : "bi bi-house-door"} />
-            <NavLink to="/memberships" className={({ isActive }) => isActive ? "bi bi-person-vcard-fill" : "bi bi-person-vcard" } />
+            <NavLink to="/events" className={({ isActive }) => isActive ? "bi bi-house-door-fill" : "bi bi-house-door"} end/>
+            <NavLink to="/organisations/memberships" className={({ isActive }) => (isActive || curr === "organisations") ? "bi bi-person-vcard-fill" : "bi bi-person-vcard" } end/>
         </footer>
     );
 }

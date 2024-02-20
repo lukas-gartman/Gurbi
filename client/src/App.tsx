@@ -3,10 +3,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import './stylesheets/App.css';
 import Events from './routes/Events';
 import Event from './routes/Event';
-import Memberships from './routes/Memberships';
+import Organisations from './routes/Organisations';
+import Organisation from './routes/Organisation';
 import Login from './routes/Login';
 import CreateAccount from './routes/CreateAccount';
-import Organisation from './routes/Organisation';
 import axios from 'axios';
 
 const router = createBrowserRouter([
@@ -21,9 +21,10 @@ const router = createBrowserRouter([
 	{
 		path: "/events",
 		element: <Events />,
-		// loader: async ({ params }) => {
+		loader: async ({ params }) => {
 		// 	return axios.get(`/api/events`);
-		// }
+			return JSON.parse('[{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning"}, {"id": 2, "location": "Monaden", "dateTime": "18:30", "name": "Mega6 Sittning"}]');
+		}
 	},
 	{
 		path: "/events/:eventId",
@@ -34,19 +35,21 @@ const router = createBrowserRouter([
 		}
 	},
 	{
-		path: "/memberships",
-		element: <Memberships />,
-		// loader: async ({ params }) => {
+		path: "/organisations",
+		element: <Organisations />,
+		loader: async ({ params }) => {
 		// 	return axios.get(`/api/memberships`);
-		// }
+			return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}, {"id": 2, "name": "Mega6", "picture": ""}]');
+		}
 	},
-	// {
-	// 	path: "/organisations",
-	// 	element: <Organisations />,
-	// 	loader: async({ params }) => {
-	// 		return axios.get(`/api/organisations`);
-	// 	}
-	// },
+	{
+		path: "/organisations/memberships",
+		element: <Organisations />,
+		loader: async({ params }) => {
+			// return axios.get(`/api/organisations/memberships`);
+			return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}]');
+		}
+	},
 	{
 		path: "/organisations/:orgId",
 		element: <Organisation />,

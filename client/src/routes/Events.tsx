@@ -1,23 +1,23 @@
 import React from 'react';
 import '../stylesheets/Events.css';
 import Header from '../components/Header';
-import HeaderNavItem from '../components/HeaderNavItem';
 import Footer from '../components/Footer';
 import { Event, Organisation } from '../../../src/server/model/dataModels';
 import EventCard from '../components/EventCard';
+import { NavLink, useLoaderData } from 'react-router-dom';
 
 function Events() {
     const navItems = (
         <>
-        <HeaderNavItem url="#" active={true}>Following</HeaderNavItem>
-        <HeaderNavItem url="#">Upcoming</HeaderNavItem>
+        <NavLink to="/events" className="nav-button" end>Following</NavLink>
+        <NavLink to="/events/upcoming" className="nav-button" end>Upcoming</NavLink>
         </>
     );
 
-    const e: Event = JSON.parse('{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning"}')
-    const h: Organisation = JSON.parse('{"id": 1, "name": "MatNatSex", "picture": ""}')
-    e.host = h;
-    const testEvents: Event[] = [e, e, e]
+    const testEvents = useLoaderData() as Event[];
+    const h: Organisation[] = JSON.parse('[{"id": 1, "name": "MatNatSex", "picture": ""}, {"id": 2, "name": "Mega6", "picture": ""}]');
+    testEvents[0].host = h[0];
+    testEvents[1].host = h[1];
 
     return (
         <div className="App">
