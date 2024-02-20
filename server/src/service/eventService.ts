@@ -1,7 +1,8 @@
-import {ServerModifierResponse} from "../model/dataModels"
+import {ServerModifierResponse, Permission} from "../model/dataModels"
 import {Event} from "../model/eventModels"
 
-const permissions : string[] = ["ChangePrice", "ChangeDescription", "ChangeEventName", "ChangeLocation"];
+//exempel Permission.getPermission(1)
+
 
 
 export class EventService{
@@ -9,7 +10,7 @@ export class EventService{
 
     addEvent() : ServerModifierResponse {
 
-        
+
 
         return ServerModifierResponse.GetServerModifierResponse(207)
     }    

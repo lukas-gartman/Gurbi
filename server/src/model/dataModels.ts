@@ -1,13 +1,6 @@
 import { error } from "console"
 
 
-interface ServerModifierResponseTemplate{
-    successState : boolean;
-    msg : string;
-    serverModifierResponseId : number;
-}
-
-
 export class ServerModifierResponse{
     successState : boolean;
     msg : string;
@@ -41,7 +34,7 @@ export class ServerModifierResponse{
     ]
 
     static GetServerModifierResponse(serverModifierResponseId : number) : ServerModifierResponse{
-        let resposne : ServerModifierResponseTemplate | undefined = this.serverResponses.find(res => res.serverModifierResponseId === serverModifierResponseId)
+        let resposne : ServerModifierResponse | undefined = this.serverResponses.find(res => res.serverModifierResponseId === serverModifierResponseId)
         if(resposne === undefined){
             throw error("not know serverModifierResponseId");
         }
