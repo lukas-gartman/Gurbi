@@ -1,11 +1,11 @@
-import React from 'react';
+import '../stylesheets/Login.css'
 import '../stylesheets/Form.css';
 import { Link } from 'react-router-dom';
 
 function Login() {
     return (
         <div className="App">
-            <main className="form-container">
+            <main className="login form-container">
                 <h1>Login</h1>
                 <form className="form" action="/login" method="POST">
                     <input type="text" name="email" placeholder="Email" required />
