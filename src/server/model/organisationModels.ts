@@ -5,8 +5,8 @@ export interface Permission {
   
 
 export interface Role{
-    roleName : string
-    permissions : Permission[]
+    roleName : string;
+    permissions : Permission[];
 }
 
 export interface Member{
@@ -16,12 +16,11 @@ export interface Member{
 }
 
 export interface Organisation{
-
-     organisationMembers : Member[];
-     organisationRoles : Role[];
-     organisationName : string;
-     organisationId : string;
-
+    members : Member[];
+    roles : Role[];
+    name : string;
+    id : string;
+    picture : string;
 }
 
 

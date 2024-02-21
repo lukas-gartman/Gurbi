@@ -1,4 +1,5 @@
 import { error } from "console"
+import { Organisation } from "./organisationModels"
 
 export interface Event{
     id : string
@@ -6,6 +7,8 @@ export interface Event{
     location : string
     description : string
     dateTime : Date
+    picture: string
+    host: Organisation
 }
 
 interface ServerModifierResponseTemplate{
@@ -81,4 +84,10 @@ export interface UserLogin{
     password : string
 }
 
-
+export interface IUser {
+    id: number
+    name: string
+    email: string
+    regDate: Date
+    picture: string
+}
