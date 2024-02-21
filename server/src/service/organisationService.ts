@@ -101,7 +101,7 @@ export class OrganisationService{
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
 
-        this.organisations.push({members : members, roles : roles, name : organisationName, id : "32e3d23dqwdw4et"});
+        this.organisations.push({members : members, roles : roles, name : organisationName, id : "32e3d23dqwdw4et", picture:"wdaw"});
 
         return ServerModifierResponse.GetServerModifierResponse(200)
 
