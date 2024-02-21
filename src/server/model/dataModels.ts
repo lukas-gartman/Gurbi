@@ -38,4 +38,10 @@ export interface UserLogin{
     password : string
 }
 
-
+export interface IUser {
+    id: number
+    name: string
+    email: string
+    regDate: Date
+    picture: string
+}

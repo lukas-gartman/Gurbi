@@ -7,6 +7,8 @@ import Organisations from './routes/Organisations';
 import Organisation from './routes/Organisation';
 import Login from './routes/Login';
 import CreateAccount from './routes/CreateAccount';
+import Profile from './routes/Profile';
+import Settings from './routes/Settings';
 import axios from 'axios';
 
 const router = createBrowserRouter([
@@ -17,6 +19,27 @@ const router = createBrowserRouter([
 	{
 		path: "/register",
 		element: <CreateAccount />
+	},
+	{
+		path: "/profile",
+		element: <Profile />,
+		loader: async ({ params }) => {
+			// curr_usr = get_user_id()
+			// return axios.get(`api/user/${curr_usr}`);
+			return JSON.parse(`{"id": 1, "name": "Lukas", "email": "lukas@dvet.se", "regDate": "2024-02-20"}`);
+		}
+	},
+	{
+		path: "/profile/settings",
+		element: <Settings />
+	},
+	{
+		path: "/profile/:userId",
+		element: <Profile />,
+		loader: async ({ params }) => {
+			// return axios.get(`api/user/${params.userId}`);
+			return JSON.parse(`{"id": 1, "name": "Lukas", "email": "lukas@dvet.se", "regDate": "2024-02-20"}`);
+		}
 	},
 	{
 		path: "/events",

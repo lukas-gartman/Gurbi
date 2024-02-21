@@ -5,8 +5,24 @@
   width: 100%;
 }
 
-.header-row > h1 {
+.header-row > h1, .header-row > h2, .header-row > h3 {
   margin: 10px;
+}
+
+#back-button {
+  font-size: 2.5em;
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+#settings-button {
+  font-size: 2em;
+  cursor: pointer;
+  padding: 10px;
+}
+
+#back-button:hover, #settings-button:hover {
+  background-color: rgb(225, 225, 225);
 }
 
 .search-bar {
