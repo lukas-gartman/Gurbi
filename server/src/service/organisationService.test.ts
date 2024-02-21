@@ -1,5 +1,5 @@
 
-import { ServerModifierResponse } from "../model/dataModels";
+import { Permission, ServerModifierResponse } from "../model/dataModels";
 import { Member, NewOrganisationData, Organisation } from "../model/organisationModels";
 import {OrganisationService} from "./organisationService";
 
@@ -121,12 +121,11 @@ test("add role to organisation", async () => {
     let orgId : string = organisationService.getUserOrganisations("TestUser1").at(0)?.id as string;
     organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
-    expect(organisationService.addRoleToOrganisation("TestUser1", "awdawfawfsegty456346ewraqwdawd", {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(401))
-    expect(organisationService.addRoleToOrganisation("TestUser3", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(402));
-    expect(organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(403));
-    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}, {permissionName : "awdawfawfawetgwegfawefawdawd232323"}]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(406));
-    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(204));
-    expect(organisationService.getOrganisation(orgId)?.roles.length).toBe(3);
+    expect(organisationService.addRoleToOrganisation("TestUser1", "awdawfawfsegty456346ewraqwdawd", {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(401))
+    expect(organisationService.addRoleToOrganisation("TestUser3", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(402));
+    expect(organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(403));
+    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(204));
+    expect(organisationService.getOrganisation(orgId)?.organisationRoles.length).toBe(3);
 });
 
 test("delete role from organisation", async () => {
@@ -137,7 +136,7 @@ test("delete role from organisation", async () => {
     organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
 
-    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(204));
+    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(204));
     expect(organisationService.deleteRoleFromOrganistation("TestUser2", orgId, "myNewRole")).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(403))
     expect(organisationService.getOrganisation(orgId)?.roles.length).toBe(3);
 
@@ -159,7 +158,7 @@ test("change member role", async () => {
     let orgId : string = organisationService.getUserOrganisations("TestUser1").at(0)?.id as string;
     organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
-    organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "MyNewRole", permissions : [{permissionName : "ChangeOrginsationName"}]})
+    organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "MyNewRole", permissions : [Permission.getPermission(0)]})
 
     expect(organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewawdawdRole")).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(408))
     expect(organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser3", "MyNewRole")).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(409))

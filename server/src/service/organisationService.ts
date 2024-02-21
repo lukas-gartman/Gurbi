@@ -1,6 +1,6 @@
 
-import { NewOrganisationData, Permission, Role, Organisation, Member } from "../model/organisationModels";
-import {ServerModifierResponse} from "../model/dataModels"
+import { NewOrganisationData, Role, Organisation, Member } from "../model/organisationModels";
+import {ServerModifierResponse, Permission} from "../model/dataModels"
 import { log } from "console";
 
 
@@ -9,14 +9,12 @@ export class OrganisationService{
     //replace with mongoDB class
     private organisations : Organisation[] = [];
 
-    private permissions : string[] = ["ChangeOrginsationName", "DeleteOrganisation", "CreateNewEvent", "ChangeMemberRole", "RoleManipulator"];
-
     //standard roles
     private readonly admin : Role = {roleName : "admin", permissions : this.getAvilabePermissionns()};
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
  
 
-    private memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : string) : ServerModifierResponse{
+    private memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : ServerModifierResponse{
         let organisation : Organisation | undefined = this.getOrganisation(organisationId);
 
         if(organisation === undefined){
@@ -28,7 +26,7 @@ export class OrganisationService{
             return ServerModifierResponse.GetServerModifierResponse(402);
         }
 
-        let permission : Permission | undefined =  this.getMemberPermissions(userId, organisationId)?.find(permission => permission.permissionName === checkPermission)
+        let permission : Permission | undefined =  this.getMemberPermissions(userId, organisationId)?.find(permission => permission.permissionId === checkPermission.permissionId)
         if(permission === undefined){
             return ServerModifierResponse.GetServerModifierResponse(403);
         }
@@ -69,11 +67,7 @@ export class OrganisationService{
     }
 
     getAvilabePermissionns() : Permission[]{
-        let permissions: Permission[] = [];
-        this.permissions.forEach(element => {
-            permissions.push({permissionName:element});
-        });
-        return permissions;
+        return Permission.getAllPermissions();
     }
 
     
@@ -116,7 +110,7 @@ export class OrganisationService{
     //Delete an organisation
     deleteOrginsitaion(userId : string, organisationId : string) : ServerModifierResponse{
         
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, "DeleteOrganisation")
+        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
         if(!checkedUserPremission.successState){
             return checkedUserPremission
         }
@@ -155,7 +149,7 @@ export class OrganisationService{
 
     addRoleToOrganisation(userId : string, organisationId : string, role : Role) : ServerModifierResponse{    
         
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, "RoleManipulator")
+        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
         if(!checkedUserPremission.successState){
             return checkedUserPremission
         }
@@ -182,7 +176,7 @@ export class OrganisationService{
 
     deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : ServerModifierResponse{
         
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, "RoleManipulator")
+        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId,  Permission.getPermission(2))
         if(!checkedUserPremission.successState){
             return checkedUserPremission
         }
@@ -216,7 +210,7 @@ export class OrganisationService{
     }
 
     changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : ServerModifierResponse{
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, "RoleManipulator")
+        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
         if(!checkedUserPremission.successState){
             return checkedUserPremission;
         }
