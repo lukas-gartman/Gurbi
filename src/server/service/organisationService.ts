@@ -23,7 +23,7 @@ export class OrganisationService{
             return ServerModifierResponse.GetServerModifierResponse(401); 
         }
 
-        let member : Member | undefined = organisation.organisationMembers.find(member => member.userId === userId);
+        let member : Member | undefined = organisation.members.find(member => member.userId === userId);
         if(member === undefined){
             return ServerModifierResponse.GetServerModifierResponse(402);
         }
@@ -37,7 +37,7 @@ export class OrganisationService{
     }
 
     private updateOrganisation(org : Organisation){
-        let orgIndex : number | undefined= this.organisations.findIndex(orgElement => orgElement.organisationId === org.organisationId)
+        let orgIndex : number | undefined= this.organisations.findIndex(orgElement => orgElement.id === org.id)
         this.organisations[orgIndex] = org;
     }
 
@@ -45,7 +45,7 @@ export class OrganisationService{
         
         let userOrgs : Organisation[] = []
         this.organisations.forEach(org => {
-            org.organisationMembers.forEach(member => {
+            org.members.forEach(member => {
                 if(member.userId === userId){
                     userOrgs.push(JSON.parse(JSON.stringify(org)))
                 }
@@ -61,7 +61,7 @@ export class OrganisationService{
 
     getOrganisation(organisationId : string) : Organisation | undefined{
         try {
-            return JSON.parse(JSON.stringify(this.organisations.find(org => org.organisationId === organisationId)));      
+            return JSON.parse(JSON.stringify(this.organisations.find(org => org.id === organisationId)));      
         } catch (error) {
             return undefined;
         }
@@ -79,10 +79,10 @@ export class OrganisationService{
     
     getMemberPermissions(userId : string, organisationId : string) : Permission[] | undefined{
         let org : Organisation | undefined =  this.getOrganisation(organisationId);
-        let roleName : string | undefined = org?.organisationMembers.find(member => member.userId === userId)?.roleName;
+        let roleName : string | undefined = org?.members.find(member => member.userId === userId)?.roleName;
         
         try {
-            return JSON.parse(JSON.stringify(org?.organisationRoles.find(role => role.roleName === roleName)?.permissions));
+            return JSON.parse(JSON.stringify(org?.roles.find(role => role.roleName === roleName)?.permissions));
         } catch (error) {
             return undefined;    
         }
@@ -107,7 +107,7 @@ export class OrganisationService{
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
 
-        this.organisations.push({organisationMembers : members, organisationRoles : roles, organisationName : organisationName, organisationId : "32e3d23dqwdw4et"});
+        this.organisations.push({members : members, roles : roles, name : organisationName, id : "32e3d23dqwdw4et"});
 
         return ServerModifierResponse.GetServerModifierResponse(200)
 
@@ -121,7 +121,7 @@ export class OrganisationService{
             return checkedUserPremission
         }
         
-        this.organisations.splice(this.organisations.findIndex(org => org.organisationId === organisationId) ,1)
+        this.organisations.splice(this.organisations.findIndex(org => org.id === organisationId) ,1)
 
         return ServerModifierResponse.GetServerModifierResponse(202)
     }
@@ -135,15 +135,15 @@ export class OrganisationService{
             return ServerModifierResponse.GetServerModifierResponse(401)
         }
 
-        if(organisation.organisationMembers.find(member => member.userId === userId)){
+        if(organisation.members.find(member => member.userId === userId)){
             return ServerModifierResponse.GetServerModifierResponse(404)
         }
 
-        if(organisation.organisationMembers.find(member => member.nickName === nickName)){
+        if(organisation.members.find(member => member.nickName === nickName)){
             return ServerModifierResponse.GetServerModifierResponse(405)
         }
 
-        organisation.organisationMembers.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
+        organisation.members.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
 
         this.updateOrganisation(organisation);
 
@@ -169,7 +169,7 @@ export class OrganisationService{
         }
         
         let org : Organisation = this.getOrganisation(organisationId) as Organisation;
-        org.organisationRoles.push(role);
+        org.roles.push(role);
 
         this.updateOrganisation(org)
         
@@ -198,12 +198,12 @@ export class OrganisationService{
 
         let organisation : Organisation = this.getOrganisation(organisationId) as Organisation;
 
-        let index : number = organisation.organisationRoles.findIndex(role => role.roleName === roleName)
+        let index : number = organisation.roles.findIndex(role => role.roleName === roleName)
 
         // make members with role to only have the role member.
         if (index !== -1){
-            organisation.organisationRoles.splice(index, 1)
-            organisation.organisationMembers.forEach(member => {
+            organisation.roles.splice(index, 1)
+            organisation.members.forEach(member => {
                 if(member.roleName === roleName){
                     member.roleName = this.member.roleName;
                 }
@@ -224,17 +224,17 @@ export class OrganisationService{
         let org : Organisation = this.getOrganisation(organisationId) as Organisation;
 
         
-        let role : Role | undefined =  org.organisationRoles.find(roleElement => roleElement.roleName === roleName)
+        let role : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === roleName)
         if(role === undefined){
             return ServerModifierResponse.GetServerModifierResponse(408);
         }
 
-        let index : number | undefined = org.organisationMembers.findIndex(member => member.userId === targetMemberId);
+        let index : number | undefined = org.members.findIndex(member => member.userId === targetMemberId);
         if (index === -1){
             return ServerModifierResponse.GetServerModifierResponse(409);
         }
 
-        org.organisationMembers[index].roleName = role.roleName;
+        org.members[index].roleName = role.roleName;
 
         this.updateOrganisation(org);
 

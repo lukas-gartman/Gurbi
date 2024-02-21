@@ -1,4 +1,4 @@
-import { Organisation } from "../../../src/server/model/dataModels";
+import { Organisation } from "../../../src/server/model/organisationModels";
 import '../stylesheets/Organisations.css';
 import { NavLink } from 'react-router-dom';
 
