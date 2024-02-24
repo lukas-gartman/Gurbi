@@ -14,24 +14,24 @@ export class OrganisationService{
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
  
 
-    private memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : ServerModifierResponse{
+    private memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : {serverRes:ServerModifierResponse, succes:boolean}{
         let organisation : Organisation | undefined = this.getOrganisation(organisationId);
 
         if(organisation === undefined){
-            return ServerModifierResponse.GetServerModifierResponse(401); 
+            return {serverRes:ServerModifierResponse.GetServerModifierResponse(401), succes: false }; 
         }
 
         let member : Member | undefined = organisation.members.find(member => member.userId === userId);
         if(member === undefined){
-            return ServerModifierResponse.GetServerModifierResponse(402);
+            return {serverRes:ServerModifierResponse.GetServerModifierResponse(402), succes: false };
         }
 
         let permission : Permission | undefined =  this.getMemberPermissions(userId, organisationId)?.find(permission => permission.permissionId === checkPermission.permissionId)
         if(permission === undefined){
-            return ServerModifierResponse.GetServerModifierResponse(403);
+            return {serverRes:ServerModifierResponse.GetServerModifierResponse(403), succes: false };
         }
 
-        return ServerModifierResponse.GetServerModifierResponse(201);
+        return {serverRes:ServerModifierResponse.GetServerModifierResponse(201), succes: true};
     }
 
     private updateOrganisation(org : Organisation){
@@ -110,9 +110,9 @@ export class OrganisationService{
     //Delete an organisation
     deleteOrginsitaion(userId : string, organisationId : string) : ServerModifierResponse{
         
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
-        if(!checkedUserPremission.successState){
-            return checkedUserPremission
+        let checkedUserPremission : {serverRes:ServerModifierResponse, succes:boolean} = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
+        if(!checkedUserPremission.succes){
+            return checkedUserPremission.serverRes
         }
         
         this.organisations.splice(this.organisations.findIndex(org => org.id === organisationId) ,1)
@@ -149,10 +149,12 @@ export class OrganisationService{
 
     addRoleToOrganisation(userId : string, organisationId : string, role : Role) : ServerModifierResponse{    
         
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
-        if(!checkedUserPremission.successState){
-            return checkedUserPremission
+        let checkedUserPremission : {serverRes:ServerModifierResponse, succes:boolean} = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
+        if(!checkedUserPremission.succes){
+            return checkedUserPremission.serverRes
         }
+
+
 
         for (let index = 0; index < role.permissions.length; index++) {
             const newPremission = role.permissions[index];
@@ -176,11 +178,10 @@ export class OrganisationService{
 
     deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : ServerModifierResponse{
         
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId,  Permission.getPermission(2))
-        if(!checkedUserPremission.successState){
-            return checkedUserPremission
+        let checkedUserPremission : {serverRes:ServerModifierResponse, succes:boolean} = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
+        if(!checkedUserPremission.succes){
+            return checkedUserPremission.serverRes
         }
-
 
         if(this.member.roleName === roleName){
             return ServerModifierResponse.GetServerModifierResponse(407);
@@ -210,9 +211,9 @@ export class OrganisationService{
     }
 
     changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : ServerModifierResponse{
-        let checkedUserPremission : ServerModifierResponse = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
-        if(!checkedUserPremission.successState){
-            return checkedUserPremission;
+        let checkedUserPremission : {serverRes:ServerModifierResponse, succes:boolean} = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
+        if(!checkedUserPremission.succes){
+            return checkedUserPremission.serverRes
         }
     
         let org : Organisation = this.getOrganisation(organisationId) as Organisation;
