@@ -3,6 +3,11 @@ import { NewOrganisationData, Role, Organisation, Member } from "../model/organi
 import {ServerModifierResponse, Permission} from "../model/dataModels"
 import { log } from "console";
 
+function getRandomInt(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
 export class OrganisationService{
 
@@ -101,7 +106,18 @@ export class OrganisationService{
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
 
-        this.organisations.push({members : members, roles : roles, name : organisationName, id : "32e3d23dqwdw4et", picture:"wdaw"});
+        let id : string;
+        while(true){
+            let testId : string = getRandomInt(0, 10000000000).toString();
+            if(this.getOrganisation(testId) === undefined){
+                id = testId;
+                break;
+            }
+        }
+        
+        console.log(id);
+
+        this.organisations.push({members : members, roles : roles, name : organisationName, id : id, picture:"wdaw"});
 
         return ServerModifierResponse.GetServerModifierResponse(200)
 

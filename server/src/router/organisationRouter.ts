@@ -108,5 +108,15 @@ organisationRouter.get("/authorized/by/user", (req : AuthorizedRequest<{},{},{}>
     }
 });
 
+organisationRouter.get("/by/id", (req : Request<{},{},{organisationId : string}>, res : Response<Organisation> ) => {
+    try {
+
+        let orgs : Organisation = organisationService.getOrganisation(req.body.organisationId) as Organisation;
+        return res.status(200).send(orgs);
+        
+    } catch (e: any) {
+        return res.status(500).send(e.message);
+    }
+});
 
 

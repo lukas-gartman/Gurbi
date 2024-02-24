@@ -79,6 +79,16 @@
         "ResponseStatusCodes": [200, 400, 500]
     }
 
+       {
+        "description": "Get organisation by Id",
+        "httpRequest": "get",
+        "root": "/organistaion/by/id",
+        "RequestHeaders": {},
+        "RequestBody": {organisationId : string},
+        "ResponseBody": Organisation,
+        "ResponseStatusCodes": [200, 500]
+    }
+
 ]
    
 
