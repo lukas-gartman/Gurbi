@@ -15,5 +15,5 @@ app.use("/authorized", authenticationMiddleware)
 
 
 //adding routers
-app.use("/authorized/organisation", organisationRouter)
+app.use("/organisation", organisationRouter)
 app.use("/user", userRouter);

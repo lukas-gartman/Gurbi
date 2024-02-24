@@ -2,7 +2,7 @@ import { error } from "console"
 import { Organisation } from "./organisationModels"
 import { Request} from "express";
 
-export interface UserIdRequest<something = any, ReqBody = any, ResBody = any> extends Request<something, ReqBody ,ResBody> {
+export interface AuthorizedRequest<something = any, ReqBody = any, ResBody = any> extends Request<something, ReqBody ,ResBody> {
     userId?: string;
   }
 
@@ -27,6 +27,7 @@ export class ServerModifierResponse{
         {httpStatusCode : 403, msg : "cant delete this role", serverModifierResponseId : 407},
         {httpStatusCode : 404, msg : "role does not exsist in organisation", serverModifierResponseId : 408},
         {httpStatusCode : 404, msg : "target member does not exsist in organisation", serverModifierResponseId : 409},
+        {httpStatusCode : 409, msg : "role already exsists", serverModifierResponseId : 410},
         
         {httpStatusCode : 200, msg : "organistation successfuly added", serverModifierResponseId : 200},
         {httpStatusCode : 200, msg : "member does have permission", serverModifierResponseId : 201},

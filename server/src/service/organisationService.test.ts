@@ -126,6 +126,7 @@ test("add role to organisation", async () => {
     expect(organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(403));
     expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(204));
     expect(organisationService.getOrganisation(orgId)?.roles.length).toBe(3);
+    expect(organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.getPermission(0)]})).toStrictEqual(ServerModifierResponse.GetServerModifierResponse(410));
 });
 
 test("delete role from organisation", async () => {

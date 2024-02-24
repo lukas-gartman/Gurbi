@@ -1,0 +1,85 @@
+
+"Type defintions" : {
+    "NewOrganisationDTO" : "defined in server/src/model/OrganistaionModels.ts",
+    "Organisation" : "defined in server/src/model/OrganistaionModels.ts",
+    "Role" :  "defined in server/src/model/OrganistaionModels.ts",
+}
+
+
+
+"organisation_api":[
+    {
+        "description": "Add a new organisation",
+        "httpRequest": "post",
+        "root": "/organisation/authorized/new",
+        "RequestHeaders": { "authorization": string},
+        "RequestBody": NewOrganisationDTO,
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 500]
+    },
+
+    
+    {
+        "description": "Delete an organisation",
+        "httpRequest": "post",
+        "root": "/organistaion/authorized/delete",
+        "RequestHeaders": { "authorization": string},
+        "RequestBody": { "organisationId" : string},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401, 404, 500]
+    },
+
+    {
+        "description": "Add an user as a member to an organisation",
+        "httpRequest": "post",
+        "root": "/organistaion/authorized/user",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": {"nickName" : string, "organisationId" : string},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 404, 409, 500]
+    },
+
+    {
+        "description": "Add a role to an organisation",
+        "httpRequest": "post",
+        "root": "/organistaion/authorized/role",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": { "organisationId" : string, "role" : Role},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401, 404, 409, 500]
+    },
+
+    {
+        "description": "Delete a role from an organisation",
+        "httpRequest": "delete",
+        "root": "/organistaion/authorized/role",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": { "organisationId" : string, "role" : string},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401, 403 ,404, 500]
+    },
+
+    {
+        "description": "Change the role of an member in the organisation",
+        "httpRequest": "put",
+        "root": "/organistaion/authorized/user/role",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": { "userId" : string, "organisationId" : string, "targetMemberId" : string, "roleName" : string},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401 ,404, 500]
+    },
+
+    {
+        "description": "Get the organisations that a user is a member in",
+        "httpRequest": "get",
+        "root": "/organistaion/authorized/by/user",
+        "RequestHeaders": { "authorization": string},
+        "RequestBody": {},
+        "ResponseBody": Organisation[],
+        "ResponseStatusCodes": [200, 400, 500]
+    }
+
+]
+   
+
+    

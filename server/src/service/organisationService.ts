@@ -112,7 +112,7 @@ export class OrganisationService{
         
         let checkedUserPremission : {serverRes:ServerModifierResponse, succes:boolean} = this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
         if(!checkedUserPremission.succes){
-            return checkedUserPremission.serverRes
+            return checkedUserPremission.serverRes;
         }
         
         this.organisations.splice(this.organisations.findIndex(org => org.id === organisationId) ,1)
@@ -162,6 +162,10 @@ export class OrganisationService{
             if(exsit === undefined){
                 return ServerModifierResponse.GetServerModifierResponse(406);
             }
+        }
+
+        if (this.getOrganisation(organisationId)?.roles.find(orgRole => orgRole.roleName === role.roleName) !== undefined){
+            return ServerModifierResponse.GetServerModifierResponse(410);
         }
         
         let org : Organisation = this.getOrganisation(organisationId) as Organisation;
