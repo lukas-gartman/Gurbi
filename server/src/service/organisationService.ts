@@ -1,5 +1,5 @@
 
-import { NewOrganisationData, Role, Organisation, Member } from "../model/organisationModels";
+import { NewOrganisationData, Role, Organisation, Member, OrganisationStorageHandler, MemoryOrganisationStorageHandler} from "../model/organisationModels";
 import {ServerModifierResponse, Permission} from "../model/dataModels"
 import { log } from "console";
 
@@ -12,12 +12,25 @@ function getRandomInt(min: number, max: number): number {
 export class OrganisationService{
 
     //replace with mongoDB class
-    private organisations : Organisation[] = [];
+
+
+    private organisationStorage : OrganisationStorageHandler;
 
     //standard roles
     private readonly admin : Role = {roleName : "admin", permissions : this.getAvilabePermissionns()};
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
- 
+    
+
+     constructor (useDatabase : boolean){
+
+        if(useDatabase){
+            this.organisationStorage = new MemoryOrganisationStorageHandler()
+        }
+        else{
+            this.organisationStorage = new MemoryOrganisationStorageHandler()
+        }
+        
+     }
 
     private memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : {serverRes:ServerModifierResponse, succes:boolean}{
         let organisation : Organisation | undefined = this.getOrganisation(organisationId);
@@ -39,41 +52,23 @@ export class OrganisationService{
         return {serverRes:ServerModifierResponse.GetServerModifierResponse(201), succes: true};
     }
 
-    private updateOrganisation(org : Organisation){
-        let orgIndex : number | undefined= this.organisations.findIndex(orgElement => orgElement.id === org.id)
-        this.organisations[orgIndex] = org;
-    }
 
     getUserOrganisations(userId : string) : Organisation[]{
-        
-        let userOrgs : Organisation[] = []
-        this.organisations.forEach(org => {
-            org.members.forEach(member => {
-                if(member.userId === userId){
-                    userOrgs.push(JSON.parse(JSON.stringify(org)))
-                }
-            });
-        });
-
-        return userOrgs;
+        return this.organisationStorage.getOrganisationsByUser(userId);
     }
 
     getOrganisations() : Organisation[]{
-        return JSON.parse(JSON.stringify(this.organisations));
+        return this.organisationStorage.getAllOrganisations();
     }
 
     getOrganisation(organisationId : string) : Organisation | undefined{
-        try {
-            return JSON.parse(JSON.stringify(this.organisations.find(org => org.id === organisationId)));      
-        } catch (error) {
-            return undefined;
-        }
-      
+        return this.organisationStorage.getOrganisationById(organisationId);
     }
 
     getAvilabePermissionns() : Permission[]{
         return Permission.getAllPermissions();
     }
+
 
     
     getMemberPermissions(userId : string, organisationId : string) : Permission[] | undefined{
@@ -115,9 +110,7 @@ export class OrganisationService{
             }
         }
         
-        console.log(id);
-
-        this.organisations.push({members : members, roles : roles, name : organisationName, id : id, picture:"wdaw"});
+        this.organisationStorage.postOrganisation({members : members, roles : roles, name : organisationName, id : id, picture:"wdaw"});
 
         return ServerModifierResponse.GetServerModifierResponse(200)
 
@@ -131,7 +124,7 @@ export class OrganisationService{
             return checkedUserPremission.serverRes;
         }
         
-        this.organisations.splice(this.organisations.findIndex(org => org.id === organisationId) ,1)
+        this.organisationStorage.deleteOrganisationById(organisationId);
 
         return ServerModifierResponse.GetServerModifierResponse(202)
     }
@@ -155,7 +148,7 @@ export class OrganisationService{
 
         organisation.members.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
 
-        this.updateOrganisation(organisation);
+        this.organisationStorage.postOrganisation(organisation);
 
         return ServerModifierResponse.GetServerModifierResponse(203); 
 
@@ -186,8 +179,8 @@ export class OrganisationService{
         
         let org : Organisation = this.getOrganisation(organisationId) as Organisation;
         org.roles.push(role);
-
-        this.updateOrganisation(org)
+        
+        this.organisationStorage.postOrganisation(org);
         
         return ServerModifierResponse.GetServerModifierResponse(204)
         
@@ -225,7 +218,7 @@ export class OrganisationService{
             });
         }
 
-        this.updateOrganisation(organisation);
+        this.organisationStorage.postOrganisation(organisation);
 
         return ServerModifierResponse.GetServerModifierResponse(205);
     }
@@ -251,7 +244,7 @@ export class OrganisationService{
 
         org.members[index].roleName = role.roleName;
 
-        this.updateOrganisation(org);
+        this.organisationStorage.postOrganisation(org);
 
         return  ServerModifierResponse.GetServerModifierResponse(206);
 

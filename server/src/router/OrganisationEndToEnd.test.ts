@@ -1,6 +1,9 @@
 import * as SuperTest from "supertest";
-import {app} from "../serverSetup";
-import { NewOrganisationDTO,  Organisation} from "../model/organisationModels";
+import {getApp} from "../app";
+import {NewOrganisationDTO} from "../model/organisationModels";
+import { Application } from "express";
+
+const app : Application = getApp(false);
 
 const request = SuperTest.default(app);
 

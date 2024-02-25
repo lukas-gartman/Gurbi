@@ -119,3 +119,4 @@ export interface IUser {
     regDate: Date
     picture: string
 }
+
