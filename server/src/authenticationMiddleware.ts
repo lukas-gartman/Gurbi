@@ -1,7 +1,7 @@
 import express, {Response, NextFunction} from "express";
 import {AuthorizedRequest} from "./model/dataModels";
 
-export const authenticationMiddleware = (req: AuthorizedRequest, res: Response, next: NextFunction) => {
+export const authenticationMiddleware = async (req: AuthorizedRequest, res: Response, next: NextFunction) => {
 
   let token : string | string[] | undefined = req.headers.authorization
 

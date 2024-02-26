@@ -18,7 +18,7 @@ export function getApp(useDatabase: boolean) : Application{
     app.use(express.json());
 
     //Add middleware for user token authentication for root /protected
-    app.use("/authorized", authenticationMiddleware)
+    app.use(/\/.*\/authorized/, authenticationMiddleware)
 
 
 

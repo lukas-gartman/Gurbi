@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "npx tsc && node ./dist/index.js",
     "dev": "node ./node_modules/nodemon/bin/nodemon.js -e ts --exec \"npm run compile\"",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
