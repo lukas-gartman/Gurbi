@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
-import { User } from "../model/dataModels";
-import { UserLogin } from "../model/dataModels";
+import { User } from "../model/UserModels";
+import { UserLogin } from "../model/UserModels";
 
 export const userRouter : Router = express.Router();
 
