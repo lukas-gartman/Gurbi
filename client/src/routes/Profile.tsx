@@ -2,7 +2,7 @@ import '../stylesheets/Profile.css';
 import '../stylesheets/Form.css';
 import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { IUser } from "../../../server/src/model/dataModels";
+import { IUser } from "../../../server/src/model/UserModels";
 
 function Profile() {
     let nav = useNavigate();
