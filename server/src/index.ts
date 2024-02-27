@@ -16,8 +16,8 @@ const PORT : number = 8080;
 
 
 async function startServer(){
-    let uri : string = "mongodb://localhost:27017/dat076"
-    await DBconnHandler.newConn(uri)
+    //let uri : string = "mongodb://localhost:27017/dat076"
+    //await DBconnHandler.newConn(uri)
     
     let app : Application = getApp(false)
 

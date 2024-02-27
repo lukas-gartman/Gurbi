@@ -18,11 +18,17 @@ function Login() {
         setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
     };
 
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+
         try {
-            const response = await axios.post("/login", formData);
+
+            const response = await axios.post("http://localhost:8080/user/login", {test: "my important data"});
+    
+            // Handle the response here if needed
+            console.log(response.data);
         } catch (error) {
             console.error(error);
         }
