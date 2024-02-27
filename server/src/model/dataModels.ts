@@ -1,5 +1,4 @@
 import { error } from "console"
-import { Organisation } from "./organisationModels"
 import { Request} from "express";
 
 export interface AuthorizedRequest<something = any, ReqBody = any, ResBody = any> extends Request<something, ReqBody ,ResBody> {

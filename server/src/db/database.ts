@@ -1,4 +1,4 @@
-import mongoose, { Connection, Model, Schema, createConnection } from "mongoose";
+import { Connection, Model, Schema, createConnection} from "mongoose";
 
 
 export class DBconnHandler{

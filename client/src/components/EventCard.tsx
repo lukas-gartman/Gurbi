@@ -1,4 +1,5 @@
-import { Event } from "../../../src/server/model/dataModels";
+import { Event } from "../models/modles";
+import { Organisation } from "../../../server/src/model/organisationModels";
 import '../stylesheets/Events.css';
 import { NavLink } from 'react-router-dom';
 

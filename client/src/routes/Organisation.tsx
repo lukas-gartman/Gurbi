@@ -2,7 +2,7 @@ import '../stylesheets/Organisations.css';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useLoaderData } from 'react-router-dom';
-import { Organisation } from '../../../src/server/model/organisationModels';
+import { Organisation } from '../../../server/src/model/organisationModels';
 
 function OrganisationPage() {
     const organisation = useLoaderData() as Organisation;

@@ -1,6 +1,6 @@
 
 import { Permission, ServerModifierResponse } from "../model/dataModels";
-import { Member, NewOrganisationData, Organisation} from "../model/organisationModels";
+import { NewOrganisationData, Organisation} from "../model/organisationModels";
 import {OrganisationService} from "./organisationService";
 
 

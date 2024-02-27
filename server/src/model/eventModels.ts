@@ -1,12 +1,13 @@
 
 export interface Event{
-    hostOrganisationId : string
-    eventId : string
+    hostid : string
+    id : string
     name : string
     location : string
     description : string
     dateTime : Date
     price : number
+    picture : string
 }
 
 

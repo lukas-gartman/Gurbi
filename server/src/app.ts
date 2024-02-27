@@ -4,7 +4,6 @@ import {userRouter} from "./router/user";
 import {getOrganisationRouter} from "./router/organisationRouter"
 import {authenticationMiddleware} from "./authenticationMiddleware"
 import { OrganisationService } from "./service/organisationService";
-import {DBconnHandler} from "./db/database";
 
 
 

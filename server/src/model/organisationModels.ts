@@ -1,5 +1,3 @@
-
-import { organisationModel } from "../db/organisation.db";
 import {Permission} from "../model/dataModels"
   
 

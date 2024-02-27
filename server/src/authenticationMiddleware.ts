@@ -1,4 +1,4 @@
-import express, {Response, NextFunction} from "express";
+import {Response, NextFunction} from "express";
 import {AuthorizedRequest} from "./model/dataModels";
 
 export const authenticationMiddleware = async (req: AuthorizedRequest, res: Response, next: NextFunction) => {

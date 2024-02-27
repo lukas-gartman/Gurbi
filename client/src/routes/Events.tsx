@@ -1,8 +1,8 @@
 import '../stylesheets/Events.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Event } from '../../../src/server/model/dataModels';
-import { Organisation } from "../../../src/server/model/organisationModels";
+import { Event } from "../models/modles";
+import { Organisation } from "../../../server/src/model/organisationModels";
 import EventCard from '../components/EventCard';
 import { NavLink, useLoaderData } from 'react-router-dom';
 

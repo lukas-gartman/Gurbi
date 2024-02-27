@@ -2,7 +2,7 @@ import '../stylesheets/Organisations.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { NavLink, useLoaderData } from 'react-router-dom';
-import { Organisation } from '../../../src/server/model/organisationModels';
+import { Organisation } from '../../../server/src/model/organisationModels';
 import OrganisationCard from '../components/OrganisationCard';
 
 function Organisations() {

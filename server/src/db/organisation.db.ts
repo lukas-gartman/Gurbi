@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import {Schema} from 'mongoose';
 import { Organisation } from '../model/organisationModels';
 import TotalCounter, { DBconnHandler } from './database';
 
