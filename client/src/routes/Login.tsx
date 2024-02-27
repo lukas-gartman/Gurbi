@@ -25,7 +25,7 @@ function Login() {
 
         try {
 
-            const response = await axios.post("http://localhost:8080/user/login", {test: "my important data"});
+            const response = await axios.post("http://localhost:8080/user/login", formData);
     
             // Handle the response here if needed
             console.log(response.data);
@@ -39,9 +39,9 @@ function Login() {
             <main className="login form-container">
                 <h1>Login</h1>
                 <form className="form" onSubmit={handleSubmit}>
-                    <input type="text" onChange={handleChange} placeholder="Email" required />
-                    <input type="password" onChange={handleChange} placeholder="Password" required />
-                    <label><input type="checkbox" onChange={handleChange} />Remember me</label>
+                    <input name="email" type="text" onChange={handleChange} placeholder="Email" required />
+                    <input name="password" type="password" onChange={handleChange} placeholder="Password" required />
+                    <label><input name="rememberMe" type="checkbox" onChange={handleChange} />Remember me</label>
                     <input type="submit" value="Login" />
                 </form>
                 <Link to="/register">Register account</Link>

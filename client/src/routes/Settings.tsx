@@ -53,9 +53,9 @@ function Profile() {
                 <h3>Update password</h3>
                 <div className="form-container">
                     <form className="form" onSubmit={handleSubmit}>
-                        <input type="password" onChange={handleChange} placeholder="Current password" required />
-                        <input type="password" onChange={handleChange} placeholder="New password" required />
-                        <input type="password" onChange={handleChange} placeholder="Repeat new password" required />
+                        <input name="currentPassword" type="password" onChange={handleChange} placeholder="Current password" required />
+                        <input name="newPassword" type="password" onChange={handleChange} placeholder="New password" required />
+                        <input name="repeatPassword" type="password" onChange={handleChange} placeholder="Repeat new password" required />
                         <input type="submit" value="Update password" />
                     </form>
                 </div>

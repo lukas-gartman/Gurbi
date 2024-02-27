@@ -12,9 +12,10 @@ import cors from 'cors';
 export  function getApp(useDatabase: boolean) : Application{
     const app = express();
 
+    //make some request work
     app.use(cors());
 
-    //Router setup
+    //JSON parse
     app.use(express.json());
 
     //Add middleware for user token authentication for root /protected
