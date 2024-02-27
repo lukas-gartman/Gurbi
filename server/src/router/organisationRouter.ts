@@ -12,7 +12,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     organisationRouter.post("/authorized/new", async (req : AuthorizedRequest<{},{},NewOrganisationDTO>, res : Response<string> ) => {
     
         try {
-            let userId : string = "req.userId as string";
+            let userId : string = req.userId as string;
     
     
             let newOrgData : NewOrganisationData = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};

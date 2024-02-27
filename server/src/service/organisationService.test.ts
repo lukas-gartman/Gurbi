@@ -1,6 +1,7 @@
 
+import { conn } from "../db/database";
 import { Permission, ServerModifierResponse } from "../model/dataModels";
-import { Member, NewOrganisationData, Organisation, MemoryOrganisationStorageHandler } from "../model/organisationModels";
+import { Member, NewOrganisationData, Organisation} from "../model/organisationModels";
 import {OrganisationService} from "./organisationService";
 
 
@@ -29,7 +30,7 @@ test("get organisations of user", async () => {
     await organisationService.addOrganisation(org2);
     await organisationService.addOrganisation(org3);
 
-    let userOrgs : Organisation[] | undefined = await organisationService.getUserOrganisations("TestUser2");
+    let userOrgs : Organisation[] | undefined = await organisationService.getUserOrganisations("TestUser1");
 
     expect(userOrgs?.length).toBe(2);
 
@@ -64,7 +65,7 @@ test("get user permissionns", async () => {
 
     let orgId : string | undefined = (await organisationService.getUserOrganisations("TestUser1"))?.at(0)?.id;
 
-    expect((await organisationService.getMemberPermissions("TestUser1", orgId as string))?.length).toBe(Permission.getAllPermissions.length);
+    expect((await organisationService.getMemberPermissions("TestUser1", orgId as string))?.length).toBe(Permission.getAllPermissions().length);
 
 
 });
@@ -167,3 +168,5 @@ test("change member role", async () => {
     expect(( await organisationService.getOrganisation(orgId))?.members.find(member => member.userId === "TestUser2")?.roleName).toBe("MyNewRole")
 
 })
+
+conn.close();

@@ -1,7 +1,7 @@
 
-import { NewOrganisationData, Role, Organisation, Member, OrganisationStorageHandler, MemoryOrganisationStorageHandler} from "../model/organisationModels";
+import { NewOrganisationData, Role, Organisation, Member} from "../model/organisationModels";
 import {ServerModifierResponse, Permission} from "../model/dataModels"
-import { log } from "console";
+import { MemoryOrganisationStorageHandler, MongoDBOrganisationStorageHandler, OrganisationStorageHandler } from "../db/organisation.db";
 
 
 
@@ -20,7 +20,7 @@ export class OrganisationService{
      constructor (useDatabase : boolean){
 
         if(useDatabase){
-            this.organisationStorage = new MemoryOrganisationStorageHandler()
+            this.organisationStorage = new MongoDBOrganisationStorageHandler()
         }
         else{
             this.organisationStorage = new MemoryOrganisationStorageHandler()
@@ -66,7 +66,9 @@ export class OrganisationService{
 
     async getMemberPermissions(userId : string, organisationId : string) : Promise<Permission[] | undefined>{
         let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
+
         let roleName : string | undefined = organisation?.members.find(member => member.userId === userId)?.roleName;
+
         return organisation?.roles.find(role => role.roleName === roleName)?.permissions
     }
 
@@ -88,7 +90,7 @@ export class OrganisationService{
         //creator added as admin per default
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
-        await this.organisationStorage.postOrganisation({members : members, roles : roles, name : organisationName, id : "adawdawdawdawd", picture:"wdaw"});
+        await this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : "0", picture:"wdaw"});
 
         return ServerModifierResponse.GetServerModifierResponse(200)
 
@@ -126,7 +128,7 @@ export class OrganisationService{
 
         organisation.members.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
 
-        await this.organisationStorage.postOrganisation(organisation);
+        await this.organisationStorage.updateOrganisation(organisation);
 
         return ServerModifierResponse.GetServerModifierResponse(203); 
 
@@ -160,7 +162,7 @@ export class OrganisationService{
         
         organisation.roles.push(role);
         
-        await this.organisationStorage.postOrganisation(organisation);
+        await this.organisationStorage.updateOrganisation(organisation);
         
         return ServerModifierResponse.GetServerModifierResponse(204)
         
@@ -198,7 +200,7 @@ export class OrganisationService{
             });
         }
 
-        await this.organisationStorage.postOrganisation(organisation);
+        await this.organisationStorage.updateOrganisation(organisation);
 
         return ServerModifierResponse.GetServerModifierResponse(205);
     }
@@ -224,7 +226,7 @@ export class OrganisationService{
 
         org.members[index].roleName = role.roleName;
 
-        await this.organisationStorage.postOrganisation(org);
+        await this.organisationStorage.updateOrganisation(org);
 
         return  ServerModifierResponse.GetServerModifierResponse(206);
 
