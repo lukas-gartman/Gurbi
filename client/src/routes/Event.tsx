@@ -1,7 +1,7 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { Event } from "../../../src/server/model/dataModels";
-import { Organisation } from "../../../src/server/model/organisationModels";
+import { Event } from "../models/modles";
+import { Organisation } from "../../../server/src/model/organisationModels";
 import { NavLink, useLoaderData } from 'react-router-dom';
 
 function EventPage() {

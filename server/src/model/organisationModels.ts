@@ -1,7 +1,4 @@
-
-export interface Permission {
-    permissionName : string;
-  }
+import {Permission} from "../model/dataModels"
   
 
 export interface Role{
@@ -33,3 +30,10 @@ export interface NewOrganisationDTO{
 export interface NewOrganisationData extends NewOrganisationDTO{
     creatorId : string
 }
+
+
+
+//MongoDB modell
+
+
+
