@@ -51,7 +51,7 @@ const organisationSchema: Schema = new Schema({
 });
 
 
-export const organisationModel = DBconnHandler.getConn().model<Organisation>("organisation", organisationSchema);
+
 
 //storage
 export interface OrganisationStorageHandler {
@@ -70,6 +70,7 @@ export interface OrganisationStorageHandler {
 
 export class MongoDBOrganisationStorageHandler implements OrganisationStorageHandler {
 
+    private organisationModel = DBconnHandler.getConn().model<Organisation>("organisation", organisationSchema);
 
     private idCounter : TotalCounter = new TotalCounter("organisation");
 
@@ -77,31 +78,31 @@ export class MongoDBOrganisationStorageHandler implements OrganisationStorageHan
     async newOrganisation(org: Organisation){
         org.id = (await this.idCounter.getCounterValue()).toString();
         await this.idCounter.incrementCounter();
-        await organisationModel.create(org)
+        await this.organisationModel.create(org)
     }
 
     async getOrganisationsByUser(userId: string): Promise<Organisation[]> {
-        const organisations = await organisationModel.find({ 'members.userId': userId }).exec();
+        const organisations = await this.organisationModel.find({ 'members.userId': userId }).exec();
         return organisations;
     }
   
     async getAllOrganisations(): Promise<Organisation[]> {
-        const organisations = await organisationModel.find().exec();
+        const organisations = await this.organisationModel.find().exec();
         return organisations;
     }
   
     async getOrganisationById(organisationId: string): Promise<Organisation | null> {
-        const organisation = await organisationModel.findById(organisationId).exec();
+        const organisation = await this.organisationModel.findById(organisationId).exec();
         return organisation;
     }
   
     async updateOrganisation(org: Organisation): Promise<boolean> {
-        await organisationModel.findByIdAndUpdate(org.id, org, { upsert: true, new: false}).exec();
+        await this.organisationModel.findByIdAndUpdate(org.id, org, { upsert: true, new: false}).exec();
         return true;
     }
   
     async deleteOrganisationById(organisationId: string): Promise<boolean> {
-        await organisationModel.findByIdAndDelete(organisationId).exec();
+        await this.organisationModel.findByIdAndDelete(organisationId).exec();
         return true;
     }
   }

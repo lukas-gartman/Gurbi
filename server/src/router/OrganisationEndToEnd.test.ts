@@ -6,7 +6,7 @@ import mongoose, { Connection } from "mongoose";
 
 const uri : string = "mongodb://localhost:27017/dat076Test"
 
-test("/endToEndTest", async () => {
+test("/endToEndTestOrganisation", async () => {
 
 
     let conn : Connection = await DBconnHandler.newConn(uri);
