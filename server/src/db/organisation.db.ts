@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { Organisation } from '../model/organisationModels';
-import TotalCounter, { conn } from './database';
+import TotalCounter, { DBconnHandler } from './database';
 
 
 const organisationSchema: Schema = new Schema({
@@ -51,7 +51,7 @@ const organisationSchema: Schema = new Schema({
 });
 
 
-export const organisationModel = conn.model<Organisation>("organisation", organisationSchema);
+export const organisationModel = DBconnHandler.getConn().model<Organisation>("organisation", organisationSchema);
 
 //storage
 export interface OrganisationStorageHandler {

@@ -4,14 +4,13 @@ import {userRouter} from "./router/user";
 import {getOrganisationRouter} from "./router/organisationRouter"
 import {authenticationMiddleware} from "./authenticationMiddleware"
 import { OrganisationService } from "./service/organisationService";
+import {DBconnHandler} from "./db/database";
 
 
 
 
 
-export function getApp(useDatabase: boolean) : Application{
-
-
+export  function getApp(useDatabase: boolean) : Application{
     const app = express();
 
     //Router setup

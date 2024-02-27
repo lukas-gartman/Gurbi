@@ -1,21 +1,24 @@
 import * as SuperTest from "supertest";
 import {getApp} from "../app";
 import { NewOrganisationDTO,  Organisation} from "../model/organisationModels";
-import { conn } from "../db/database";
-import mongoose from "mongoose";
+import { DBconnHandler } from "../db/database";
+import mongoose, { Connection } from "mongoose";
 
-const request = SuperTest.default(getApp(false));
+const uri : string = "mongodb://localhost:27017/dat076Test"
+
+test("/endToEndTest", async () => {
 
 
+    let conn : Connection = await DBconnHandler.newConn(uri);
+    conn.dropDatabase();
 
-test("/new", async () => {
+    const request =  SuperTest.default(getApp(true));
 
-    await conn.asPromise()
     let org1 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg"};
     const res1 = await request.post("/organisation/authorized/new").set('authorization', "awdawdawd").send(org1);
     expect(res1.statusCode).toBe(200);
    
-    conn.close()
+    DBconnHandler.closeConn();
 
     
 });

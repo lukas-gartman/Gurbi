@@ -8,8 +8,8 @@ export const authenticationMiddleware = async (req: AuthorizedRequest, res: Resp
   if (typeof token !== 'string' || token === "") {
       return res.status(400).send("Not vaild authentication token")
     } else {
-      //add token decrypt stuff here
-      req['userId']= "skofta";
+      //repalce with token decrypt stuff later here
+      req['userId']= req.headers.authorization;
       next();
     }
 };

@@ -1,5 +1,4 @@
-//import { conn } from "../db/database";
-import TotalCounter, { conn } from "../db/database";
+
 import { organisationModel } from "../db/organisation.db";
 import {Permission} from "../model/dataModels"
   

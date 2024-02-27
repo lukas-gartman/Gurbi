@@ -1,5 +1,4 @@
 
-import { conn } from "../db/database";
 import { Permission, ServerModifierResponse } from "../model/dataModels";
 import { Member, NewOrganisationData, Organisation} from "../model/organisationModels";
 import {OrganisationService} from "./organisationService";
@@ -168,5 +167,3 @@ test("change member role", async () => {
     expect(( await organisationService.getOrganisation(orgId))?.members.find(member => member.userId === "TestUser2")?.roleName).toBe("MyNewRole")
 
 })
-
-conn.close();

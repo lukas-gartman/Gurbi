@@ -1,8 +1,25 @@
 import mongoose, { Connection, Model, Schema, createConnection } from "mongoose";
 
 
+export class DBconnHandler{
+    private static conn : Connection;
 
-export const conn = createConnection("mongodb://localhost:27017/dat076");
+    private constructor(){}
+
+    static async newConn(uri : string) : Promise<Connection>{
+        this.conn = createConnection(uri);
+        return await this.conn.asPromise();
+    }
+
+    static getConn() : Connection{
+        return this.conn;
+    }
+
+    static closeConn(){
+        this.conn.close();
+    }
+
+}
 
 
 interface CounterDocument extends Document {
@@ -24,7 +41,7 @@ class TotalCounter {
             value: { type: Number, default: 0 },
         });
 
-        this.model = conn.model<CounterDocument>('TotalCounters', counterSchema); // Use a common collection name for all counters
+        this.model = DBconnHandler.getConn().model<CounterDocument>('TotalCounters', counterSchema); // Use a common collection name for all counters
         this.collectionName = collectionName;
     }
 
