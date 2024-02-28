@@ -23,7 +23,7 @@ function CreateAccount() {
         e.preventDefault();
 
         try {
-            await axios.post("/account/create", formData);
+            await axios.post("http://localhost:8080/user/register", formData);
         } catch (error) {
             console.error(error);
         }

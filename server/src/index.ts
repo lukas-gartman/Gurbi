@@ -9,7 +9,7 @@ import { DBconnHandler } from "./db/database";
 * App Variables
 */
 const PORT : number = 8080;
-const USE_DATABASE : boolean = false;
+const USE_DATABASE : boolean = true;
 const DATABASE_URI : string = "mongodb://localhost:27017/dat076"
 /**
 * Server Activation

@@ -1,8 +1,10 @@
 
 import express, { Request, Response, Router } from "express";
 import { NewOrganisationData, NewOrganisationDTO, Organisation, Role} from "../model/organisationModels";
-import {ServerModifierResponse, AuthorizedRequest} from "../model/dataModels";
+import {AuthorizedRequest} from "../model/dataModels";
+import { OrgServiceResponse } from "../model/organisationModels";
 import {OrganisationService} from "../service/organisationService"
+import { log } from "console";
 
 
 export function getOrganisationRouter(organisationService : OrganisationService) : Router{
@@ -14,11 +16,10 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         try {
             let userId : string = req.userId as string;
     
-    
             let newOrgData : NewOrganisationData = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};
             
     
-            let response : ServerModifierResponse = await organisationService.addOrganisation(newOrgData);
+            let response : OrgServiceResponse = await organisationService.addOrganisation(newOrgData);
             return res.status(response.httpStatusCode).send(response.msg);
             
     
@@ -32,7 +33,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         try {
             let userId : string = req.userId as string;
             
-            let response : ServerModifierResponse = await organisationService.deleteOrginsitaion(userId, req.body.organisationId);
+            let response : OrgServiceResponse = await organisationService.deleteOrginsitaion(userId, req.body.organisationId);
             
             return res.status(response.httpStatusCode).send(response.msg);
     
@@ -46,7 +47,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         try {
             let userId : string = req.userId as string;
             
-            let response : ServerModifierResponse = await organisationService.addMemberToOrganisation(userId, req.body.nickName,req.body.organisationId);
+            let response : OrgServiceResponse = await organisationService.addMemberToOrganisation(userId, req.body.nickName,req.body.organisationId);
             return res.status(response.httpStatusCode).send(response.msg);
     
     
@@ -60,7 +61,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     organisationRouter.post("/authorized/role", async (req : AuthorizedRequest<{},{},{userId : string, organisationId : string, role : Role}>, res : Response<string> ) => {
         try {
-            let response : ServerModifierResponse = await organisationService.addRoleToOrganisation(req.userId as string, req.body.organisationId, req.body.role);
+            let response : OrgServiceResponse = await organisationService.addRoleToOrganisation(req.userId as string, req.body.organisationId, req.body.role);
             return res.status(response.httpStatusCode).send(response.msg);
             
         } catch (e: any) {
@@ -73,7 +74,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     organisationRouter.delete("/authorized/role", async (req : AuthorizedRequest<{},{},{organisationId : string, roleName : string}>, res : Response<string> ) => {
     
         try {
-            let response : ServerModifierResponse = await organisationService.deleteRoleFromOrganistation(req.userId as string, req.body.organisationId, req.body.roleName);
+            let response : OrgServiceResponse = await organisationService.deleteRoleFromOrganistation(req.userId as string, req.body.organisationId, req.body.roleName);
             return res.status(response.httpStatusCode).send(response.msg);
             
         } catch (e: any) {
@@ -86,7 +87,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     organisationRouter.put("/authorized/user/role", async (req : AuthorizedRequest<{},{},{userId : string, organisationId : string, targetMemberId : string, roleName : string}>, res : Response<string> ) => {
         try {
-            let response : ServerModifierResponse = await organisationService.changeRoleOfMember(req.userId as string, req.body.organisationId, req.body.targetMemberId, req.body.roleName);
+            let response : OrgServiceResponse = await organisationService.changeRoleOfMember(req.userId as string, req.body.organisationId, req.body.targetMemberId, req.body.roleName);
             return res.status(response.httpStatusCode).send(response.msg);
         } catch (e: any) {
             return res.status(500).send(e.message);
@@ -108,7 +109,6 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     organisationRouter.get("/by/id", async (req : Request<{},{},{organisationId : string}>, res : Response<Organisation> ) => {
         try {
-    
             let orgs : Organisation = await organisationService.getOrganisation(req.body.organisationId) as Organisation;
             return res.status(200).send(orgs);
             

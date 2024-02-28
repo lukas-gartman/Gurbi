@@ -1,10 +1,11 @@
 
 import express, { Application } from "express";
-import {userRouter} from "./router/userRouter";
+import {getUserRouter} from "./router/userRouter";
 import {getOrganisationRouter} from "./router/organisationRouter"
 import {authenticationMiddleware} from "./authenticationMiddleware"
 import { OrganisationService } from "./service/organisationService";
 import cors from 'cors';
+import { UserService } from "./service/userService";
 
 
 
@@ -23,7 +24,7 @@ export  function getApp(useDatabase: boolean) : Application{
 
     //adding routers
     app.use("/organisation", getOrganisationRouter(new OrganisationService(useDatabase)))
-    app.use("/user", userRouter);
+    app.use("/user", getUserRouter(new UserService()));
 
     return app;
 
