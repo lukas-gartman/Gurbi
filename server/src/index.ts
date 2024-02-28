@@ -12,8 +12,6 @@ const PORT : number = 8080;
 const USE_DATABASE : boolean = true;
 const DATABASE_URI : string = "mongodb://localhost:27017/dat076"
 
-export const MY_NOT_VERY_SECURE_PRIVATE_KEY : string = "AWFSWEGRSTsdsda13123ASFAAadahrrtj";
-
 /**
 * Server Activation
 */

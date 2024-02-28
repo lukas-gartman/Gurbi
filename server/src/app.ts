@@ -8,6 +8,7 @@ import cors from 'cors';
 import { UserService } from "./service/userService";
 
 
+export const MY_NOT_VERY_SECURE_PRIVATE_KEY: string = "AWFSWEGRSTsdsda13123ASFAAadahrrtj";
 
 
 export  function getApp(useDatabase: boolean) : Application{

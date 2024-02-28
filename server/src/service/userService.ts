@@ -1,8 +1,12 @@
-import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "..";
+
+import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
 import { MongoDBUserStorage, UserStorageHandler } from "../db/user.db";
 import { DBUser, userServiceResponse } from "../model/UserModels";
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+
+
+
 
 export class UserService{
 
@@ -63,6 +67,7 @@ export class UserService{
 
 
 }
+
 
 
 
