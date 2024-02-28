@@ -5,7 +5,6 @@ export interface DBUser {
     name: string;
     nickName: string
     encryptedPassword: string;
-    salt: string;
     email: string;
     regDate: Date;
 }

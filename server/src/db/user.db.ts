@@ -5,9 +5,8 @@ import TotalCounter, { DBconnHandler } from "./database";
 const userSchema: Schema = new Schema({
     id: { type: String, required: true, unique: true},
     name: { type: String, required: true },
-    nickName: { type: String, required: true },
+    nickName: { type: String},
     encryptedPassword: { type: String, required: true },
-    salt: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     regDate: { type: Date, required: true },
 });
