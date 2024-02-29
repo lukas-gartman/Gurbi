@@ -31,23 +31,24 @@ interface CounterDocument extends Document {
  * Represents a counter used to store a numerical value associated with a collection.
  * Useful for generating unique IDs
  */
+
+const counterSchema = new Schema({
+    _id: { type: String}, // Include collection name in _id
+    value: { type: Number, default: 0 },
+});
+
 class TotalCounter {
-    private readonly model: Model<CounterDocument>;
+
+    private readonly model: Model<CounterDocument> = DBconnHandler.getConn().model<CounterDocument>('TotalCounters', counterSchema); // Use a common collection name for all counters
     private collectionName : string;
 
+   
     constructor(collectionName: string) {
-        const counterSchema = new Schema({
-            _id: { type: String, default: `${collectionName}_Counter` }, // Include collection name in _id
-            value: { type: Number, default: 0 },
-        });
-
-        this.model = DBconnHandler.getConn().model<CounterDocument>('TotalCounters', counterSchema); // Use a common collection name for all counters
         this.collectionName = collectionName;
     }
 
     async getCounterValue(): Promise<number> {
         const counterDocument = await this.model.findOne({ _id: `${this.collectionName}_Counter` });
-
         return counterDocument ? counterDocument.value : 0;
     }
 

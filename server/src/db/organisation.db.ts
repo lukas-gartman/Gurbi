@@ -8,7 +8,6 @@ const organisationSchema: Schema = new Schema({
         type: String,
         required: true,
         unique: true,
-        alias: '_id',
     },
     members: [{
         userId: {
@@ -68,6 +67,7 @@ export interface OrganisationStorageHandler {
     deleteOrganisationById(organisationId: string): Promise<boolean>;
   }
 
+  //need try catch
 export class MongoDBOrganisationStorageHandler implements OrganisationStorageHandler {
 
     private organisationModel = DBconnHandler.getConn().model<Organisation>("organisation", organisationSchema);
@@ -92,17 +92,17 @@ export class MongoDBOrganisationStorageHandler implements OrganisationStorageHan
     }
   
     async getOrganisationById(organisationId: string): Promise<Organisation | null> {
-        const organisation = await this.organisationModel.findById(organisationId).exec();
+        const organisation = await this.organisationModel.findOne({id: organisationId}).exec();
         return organisation;
     }
   
     async updateOrganisation(org: Organisation): Promise<boolean> {
-        await this.organisationModel.findByIdAndUpdate(org.id, org, { upsert: true, new: false}).exec();
+        await this.organisationModel.findOneAndUpdate({id:org.id}, org, { upsert: true, new: false}).exec();
         return true;
     }
   
     async deleteOrganisationById(organisationId: string): Promise<boolean> {
-        await this.organisationModel.findByIdAndDelete(organisationId).exec();
+        await this.organisationModel.findOneAndDelete({id:organisationId}).exec();
         return true;
     }
   }

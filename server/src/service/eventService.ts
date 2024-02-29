@@ -1,4 +1,5 @@
-import {ServerModifierResponse, Permission} from "../model/dataModels"
+import {Permission} from "../model/dataModels"
+import { OrgServiceResponse } from "../model/organisationModels";
 import {Event} from "../model/eventModels"
 
 //exempel Permission.getPermission(1)
@@ -8,10 +9,10 @@ import {Event} from "../model/eventModels"
 export class EventService{
     private events : Event[] = [];
 
-    addEvent() : ServerModifierResponse {
+    addEvent() : OrgServiceResponse {
 
 
 
-        return ServerModifierResponse.GetServerModifierResponse(207)
+        return OrgServiceResponse.getRes(207)
     }    
 }

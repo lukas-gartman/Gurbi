@@ -23,7 +23,7 @@ function CreateAccount() {
         e.preventDefault();
 
         try {
-            await axios.post("/account/create", formData);
+            await axios.post("http://localhost:8080/user/register", formData);
         } catch (error) {
             console.error(error);
         }
@@ -34,11 +34,11 @@ function CreateAccount() {
             <main className="form-container">
                 <h1>Create account</h1>
                 <form className="form" onSubmit={handleSubmit}>
-                    <input type="text" onChange={handleChange} placeholder="Full name" required />
-                    <input type="text" onChange={handleChange} placeholder="Nickname (optional)" required />
-                    <input type="text" onChange={handleChange} placeholder="Email" required />
-                    <input type="password" onChange={handleChange} placeholder="Password" required />
-                    <input type="password" onChange={handleChange} placeholder="Re-enter password" required />
+                    <input name="fullName" type="text" onChange={handleChange} placeholder="Full name" required />
+                    <input name="nickname" type="text" onChange={handleChange} placeholder="Nickname (optional)" required />
+                    <input name="email" type="text" onChange={handleChange} placeholder="Email" required />
+                    <input name="password" type="password" onChange={handleChange} placeholder="Password" required />
+                    <input name="repeatPassword" type="password" onChange={handleChange} placeholder="Re-enter password" required />
                     <input type="submit" value="Create account" />
                 </form>
                 <Link to="/">Already have an account?</Link>

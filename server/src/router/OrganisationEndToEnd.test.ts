@@ -10,14 +10,38 @@ test("/endToEndTestOrganisation", async () => {
 
 
     let conn : Connection = await DBconnHandler.newConn(uri);
-    conn.dropDatabase();
+    await conn.dropDatabase();
 
     const request =  SuperTest.default(getApp(true));
-
+    
     let org1 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg"};
     const res1 = await request.post("/organisation/authorized/new").set('authorization', "awdawdawd").send(org1);
     expect(res1.statusCode).toBe(200);
+
+    
+    let org2 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg"};
+    const res2 = await request.post("/organisation/authorized/new").set('authorization', "awdawdawd").send(org1);
+    expect(res2.statusCode).toBe(200);
+
+
+    let org3 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg"};
+    const res3 = await request.post("/organisation/authorized/new").set('authorization', "awdawdawd").send(org1);
+    expect(res3.statusCode).toBe(200);
+
+
+    let org4 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg"};
+    const res4 = await request.post("/organisation/authorized/new").set('authorization', "awdawdawd").send(org1);
+    expect(res4.statusCode).toBe(200);
+
+
+
+    const res5 = await request.get("/organisation/by/id").send({organisationId: "2"});
+    console.log(res5.body)
+
+    
    
+
+
     DBconnHandler.closeConn();
 
     

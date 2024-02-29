@@ -18,11 +18,17 @@ function Login() {
         setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
     };
 
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+
         try {
-            const response = await axios.post("/login", formData);
+
+            const response = await axios.post("http://localhost:8080/user/login", formData);
+    
+            // Handle the response here if needed
+            console.log(response.data);
         } catch (error) {
             console.error(error);
         }
@@ -33,9 +39,9 @@ function Login() {
             <main className="login form-container">
                 <h1>Login</h1>
                 <form className="form" onSubmit={handleSubmit}>
-                    <input type="text" onChange={handleChange} placeholder="Email" required />
-                    <input type="password" onChange={handleChange} placeholder="Password" required />
-                    <label><input type="checkbox" onChange={handleChange} />Remember me</label>
+                    <input name="email" type="text" onChange={handleChange} placeholder="Email" required />
+                    <input name="password" type="password" onChange={handleChange} placeholder="Password" required />
+                    <label><input name="rememberMe" type="checkbox" onChange={handleChange} />Remember me</label>
                     <input type="submit" value="Login" />
                 </form>
                 <Link to="/register">Register account</Link>
