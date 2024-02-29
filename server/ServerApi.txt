@@ -108,6 +108,17 @@
 
 
 ]
+
+
+"event":[
+
+    alla evetns som man medlem / följer i
+
+
+]
+
+
+"follower stuff, medlem följer per atomatic"
    
 
     

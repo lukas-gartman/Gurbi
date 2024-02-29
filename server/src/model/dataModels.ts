@@ -22,7 +22,7 @@ export class Permission {
         {permissionName : "ChangeEventPrice", permissionId : 4},
         {permissionName : "ChangeEventDescription", permissionId : 5},
         {permissionName : "ChangeEventName", permissionId : 6},
-        {permissionName : "ChangeLocation", permissionId : 7}
+        {permissionName : "ChangeEventLocation", permissionId : 7}
     ];
     
     static getPermission(permissionId : number) : Permission{

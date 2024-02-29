@@ -1,5 +1,5 @@
 
-import { NewOrganisationData, Role, Organisation, Member} from "../model/organisationModels";
+import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
 import {Permission} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
 import { MemoryOrganisationStorageHandler, MongoDBOrganisationStorageHandler, OrganisationStorageHandler } from "../db/organisation.db";
@@ -65,12 +65,21 @@ export class OrganisationService{
         return await this.organisationStorage.getOrganisationById(organisationId);
     }
 
-    async getMemberPermissions(userId : string, organisationId : string) : Promise<Permission[] | undefined>{
-        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
+    async getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>{
+        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(orguser.organisationId);
 
-        let roleName : string | undefined = organisation?.members.find(member => member.userId === userId)?.roleName;
+        let roleName : string | undefined = organisation?.members.find(member => member.userId === orguser.userId)?.roleName;
 
-        return organisation?.roles.find(role => role.roleName === roleName)?.permissions
+        let premissions : Permission[] | undefined = organisation?.roles.find(role => role.roleName === roleName)?.permissions
+
+        if(premissions === undefined){
+            return [] as Permission[];
+        }
+        else{
+            return premissions;
+        }
+
+        
     }
 
 

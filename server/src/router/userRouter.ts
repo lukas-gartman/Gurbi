@@ -20,7 +20,7 @@ export function getUserRouter(userService : UserService) : Router{
 
     });
 
-    userRouter.post( "/login", async(req: Request<{},{},{email: string, password: string, rememberMe: boolean}>, res: Response<string>) => {
+    userRouter.post( "/login", async(req: Request<{},{},{email: string, password: string, rememberMe: boolean}>, res: Response<{token: string, succes: boolean}>) => {
         try {
 
            
@@ -29,9 +29,8 @@ export function getUserRouter(userService : UserService) : Router{
             console.log(response)
             
             
-            return res.status(200).send("d");
-            console.log(req.body);
-            res.status(200).send("token")
+            return res.status(200).send(response);
+
 
             //const newUser: User = new User("John Doe", "hello@example.com", "password123");
         } catch (e: any) {

@@ -1,7 +1,7 @@
 
 import express, { Request, Response, Router } from "express";
-import { NewOrganisationData, NewOrganisationDTO, Organisation, Role} from "../model/organisationModels";
-import {AuthorizedRequest} from "../model/dataModels";
+import { NewOrganisationData, NewOrganisationDTO, Organisation, OrganisationUser, Role} from "../model/organisationModels";
+import {AuthorizedRequest, Permission} from "../model/dataModels";
 import { OrgServiceResponse } from "../model/organisationModels";
 import {OrganisationService} from "../service/organisationService"
 import { log } from "console";
@@ -116,6 +116,17 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             return res.status(500).send(e.message);
         }
     });
+    
+    organisationRouter.get("/user/permissions", async (req : AuthorizedRequest<{},{},OrganisationUser>, res : Response<Permission[] >)  => {
+        try {
+            
+            let permissions : Permission[] = await organisationService.getMemberPermissions(req.body)
+            return res.status(200).send(permissions)
+        } catch (error) {
+            
+        }
+
+    } );
 
     return organisationRouter;
 }
