@@ -2,7 +2,7 @@
 import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
 import {Permission} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
-import { MemoryOrganisationStorageHandler, MongoDBOrganisationStorageHandler, OrganisationStorageHandler } from "../db/organisation.db";
+import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "../db/organisation.db";
 
 
 
@@ -11,22 +11,15 @@ export class OrganisationService{
     //replace with mongoDB class
 
 
-    private organisationStorage : OrganisationStorageHandler;
+    private organisationStorage : OrganisationStorage;
 
     //standard roles
     private readonly admin : Role = {roleName : "admin", permissions : Permission.getAllPermissions()};
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
     
 
-     constructor (useDatabase : boolean){
-
-        if(useDatabase){
-            this.organisationStorage = new MongoDBOrganisationStorageHandler()
-        }
-        else{
-            this.organisationStorage = new MemoryOrganisationStorageHandler()
-        }
-        
+     constructor (organisationStorage : OrganisationStorage){
+        this.organisationStorage = organisationStorage;
      }
 
     private async memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : Promise<{ serverRes: OrgServiceResponse; succes: boolean; }>{

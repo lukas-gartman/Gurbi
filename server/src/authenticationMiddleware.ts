@@ -8,13 +8,12 @@ export const authenticationMiddleware = async (req: AuthorizedRequest, res: Resp
 
   let token : string | string[] | undefined = req.headers.authorization
 
-  if (typeof token !== 'string' || token === "") {
+  if (typeof token !== 'string') {
       return res.status(400).send("Not vaild authentication token")
   }
 
-  let decoded : {userId : string}
   try {
-    decoded = jwt.verify(token, MY_NOT_VERY_SECURE_PRIVATE_KEY) as {userId : string};
+    let decoded = jwt.verify(token, MY_NOT_VERY_SECURE_PRIVATE_KEY) as {userId : string};
     req['userId']= decoded.userId;
     next();
   } catch (e: any) {

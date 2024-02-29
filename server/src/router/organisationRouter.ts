@@ -122,8 +122,8 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             
             let permissions : Permission[] = await organisationService.getMemberPermissions(req.body)
             return res.status(200).send(permissions)
-        } catch (error) {
-            
+        } catch (e: any) {
+            return res.status(500).send(e.message);
         }
 
     } );

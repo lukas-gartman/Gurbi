@@ -1,4 +1,4 @@
-import { error } from "console"
+
 import { Request} from "express";
 
 export interface AuthorizedRequest<something = any, ReqBody = any, ResBody = any> extends Request<something, ReqBody ,ResBody> {
@@ -28,7 +28,7 @@ export class Permission {
     static getPermission(permissionId : number) : Permission{
         let premission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
         if(premission === undefined){
-            throw error("premission does not exsist");
+            throw Error("premission does not exsist");
         }
         return new Permission(premission.permissionName, premission.permissionId);
     }

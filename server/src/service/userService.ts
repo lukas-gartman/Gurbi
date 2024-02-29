@@ -1,6 +1,6 @@
 
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
-import { MongoDBUserStorage, UserStorageHandler } from "../db/user.db";
+import { MongoDBUserStorage, UserStorage } from "../db/user.db";
 import { DBUser, userServiceResponse } from "../model/UserModels";
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -10,10 +10,10 @@ import * as jwt from 'jsonwebtoken';
 
 export class UserService{
 
-    private userStorage : UserStorageHandler;
+    private userStorage : UserStorage;
 
-    constructor(){
-        this.userStorage = new MongoDBUserStorage();
+    constructor(userStorage : UserStorage){
+        this.userStorage = userStorage;
     }
 
     async regNewUser(userInfo : {fullName: string, nickname: string, email: string, password: string, repeatPassword: string}) : Promise<userServiceResponse>{

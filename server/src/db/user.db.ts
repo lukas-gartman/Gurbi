@@ -14,7 +14,7 @@ const userSchema: Schema = new Schema({
 
 
 //storage
-export interface UserStorageHandler {
+export interface UserStorage {
     getUserById(id: string): Promise<DBUser | null>;
   
     getUserByEmail(email: string): Promise<DBUser | null>;
@@ -28,7 +28,7 @@ export interface UserStorageHandler {
     isEmailExists(email: string) : Promise<boolean>;
   }
 
-  export class MongoDBUserStorage implements UserStorageHandler {
+  export class MongoDBUserStorage implements UserStorage {
     private userModel = DBconnHandler.getConn().model<DBUser>("users", userSchema);
 
     private idCounter : TotalCounter = new TotalCounter("users");
