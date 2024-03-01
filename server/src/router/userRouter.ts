@@ -27,7 +27,6 @@ export function getUserRouter(userService : UserService) : Router{
             
             return res.status(200).send(response);
 
-            //const newUser: User = new User("John Doe", "hello@example.com", "password123");
         } catch (e: any) {
             res.status(500).send(e.message);
         }

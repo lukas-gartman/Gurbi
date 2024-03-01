@@ -22,7 +22,7 @@ export  function getApp(useDatabase: boolean) : Application{
     //JSON parse
     app.use(express.json());
 
-    //Add middleware for user token authentication for root /protected
+    //Add middleware for user token authentication for root /authorized
     app.use(/\/.*\/authorized/, authenticationMiddleware)
 
     //Setting upp service layer
@@ -35,7 +35,7 @@ export  function getApp(useDatabase: boolean) : Application{
     }
     else{
         organisationStorage = new MemoryOrganisationStorage()
-        throw Error("MemoryOrganisationStorage")
+        throw Error("MemoryOrganisationStorage not implemented")
     }
     
 
