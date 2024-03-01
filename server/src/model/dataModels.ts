@@ -1,4 +1,4 @@
-import { error } from "console"
+
 import { Request} from "express";
 
 export interface AuthorizedRequest<something = any, ReqBody = any, ResBody = any> extends Request<something, ReqBody ,ResBody> {
@@ -15,22 +15,22 @@ export class Permission {
     }
 
     private static readonly permissions : Permission[] = [
-        {permissionName : "ChangeOrginsationName", permissionId : 0},
+        {permissionName : "ChangeOrganisationName", permissionId : 0},
         {permissionName : "DeleteOrganisation", permissionId : 1},
         {permissionName : "RoleManipulator", permissionId : 2},
         {permissionName : "CreateNewEvent", permissionId : 3},
         {permissionName : "ChangeEventPrice", permissionId : 4},
         {permissionName : "ChangeEventDescription", permissionId : 5},
         {permissionName : "ChangeEventName", permissionId : 6},
-        {permissionName : "ChangeLocation", permissionId : 7}
+        {permissionName : "ChangeEventLocation", permissionId : 7}
     ];
     
     static getPermission(permissionId : number) : Permission{
-        let premission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
-        if(premission === undefined){
-            throw error("premission does not exsist");
+        let permission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
+        if(permission === undefined){
+            throw Error("premission does not exsist");
         }
-        return new Permission(premission.permissionName, premission.permissionId);
+        return new Permission(permission.permissionName, permission.permissionId);
     }
 
     static getAllPermissions() : Permission[]{

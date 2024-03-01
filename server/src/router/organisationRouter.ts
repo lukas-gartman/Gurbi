@@ -1,7 +1,7 @@
 
 import express, { Request, Response, Router } from "express";
-import { NewOrganisationData, NewOrganisationDTO, Organisation, Role} from "../model/organisationModels";
-import {AuthorizedRequest} from "../model/dataModels";
+import { NewOrganisationData, NewOrganisationDTO, Organisation, OrganisationUser, Role} from "../model/organisationModels";
+import {AuthorizedRequest, Permission} from "../model/dataModels";
 import { OrgServiceResponse } from "../model/organisationModels";
 import {OrganisationService} from "../service/organisationService"
 import { log } from "console";
@@ -33,7 +33,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         try {
             let userId : string = req.userId as string;
             
-            let response : OrgServiceResponse = await organisationService.deleteOrginsitaion(userId, req.body.organisationId);
+            let response : OrgServiceResponse = await organisationService.deleteOrganisation(userId, req.body.organisationId);
             
             return res.status(response.httpStatusCode).send(response.msg);
     
@@ -115,6 +115,18 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         } catch (e: any) {
             return res.status(500).send(e.message);
         }
+    });
+    
+    organisationRouter.get("/:orgId/permissions/by/user", async (req : AuthorizedRequest<{},{},OrganisationUser>, res : Response<Permission[] >)  => {
+        try {
+            const orgUser: OrganisationUser = { userId: req.userId as string, organisationId: req.query.orgId as string };
+            let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
+
+            return res.status(200).send(permissions);
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+
     });
 
     return organisationRouter;

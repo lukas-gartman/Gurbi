@@ -1,8 +1,8 @@
 
-import { NewOrganisationData, Role, Organisation, Member} from "../model/organisationModels";
+import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
 import {Permission} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
-import { MemoryOrganisationStorageHandler, MongoDBOrganisationStorageHandler, OrganisationStorageHandler } from "../db/organisation.db";
+import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "../db/organisation.db";
 
 
 
@@ -11,22 +11,15 @@ export class OrganisationService{
     //replace with mongoDB class
 
 
-    private organisationStorage : OrganisationStorageHandler;
+    private organisationStorage : OrganisationStorage;
 
     //standard roles
     private readonly admin : Role = {roleName : "admin", permissions : Permission.getAllPermissions()};
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
     
 
-     constructor (useDatabase : boolean){
-
-        if(useDatabase){
-            this.organisationStorage = new MongoDBOrganisationStorageHandler()
-        }
-        else{
-            this.organisationStorage = new MemoryOrganisationStorageHandler()
-        }
-        
+     constructor (organisationStorage : OrganisationStorage){
+        this.organisationStorage = organisationStorage;
      }
 
     private async memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : Promise<{ serverRes: OrgServiceResponse; succes: boolean; }>{
@@ -65,12 +58,21 @@ export class OrganisationService{
         return await this.organisationStorage.getOrganisationById(organisationId);
     }
 
-    async getMemberPermissions(userId : string, organisationId : string) : Promise<Permission[] | undefined>{
-        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
+    async getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>{
+        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(orguser.organisationId);
 
-        let roleName : string | undefined = organisation?.members.find(member => member.userId === userId)?.roleName;
+        let roleName : string | undefined = organisation?.members.find(member => member.userId === orguser.userId)?.roleName;
 
-        return organisation?.roles.find(role => role.roleName === roleName)?.permissions
+        let premissions : Permission[] | undefined = organisation?.roles.find(role => role.roleName === roleName)?.permissions
+
+        if(premissions === undefined){
+            return [] as Permission[];
+        }
+        else{
+            return premissions;
+        }
+
+        
     }
 
 
@@ -91,14 +93,14 @@ export class OrganisationService{
         //creator added as admin per default
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
-        await this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : "0", picture:"wdaw"});
+        this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : "0", picture:"wdaw"});
 
         return OrgServiceResponse.getRes(200)
 
     }
 
     //Delete an organisation
-    async deleteOrginsitaion(userId : string, organisationId : string) : Promise<OrgServiceResponse>{
+    async deleteOrganisation(userId : string, organisationId : string) : Promise<OrgServiceResponse>{
         
         let checkedUserPremission : {serverRes:OrgServiceResponse, succes:boolean} = await this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
         if(!checkedUserPremission.succes){
