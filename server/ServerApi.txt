@@ -101,6 +101,16 @@
         "RequestBody": {fullName: string, nickname: string, email: string, password: string, repeatPassword: string},
         "ResponseBody": string,
         "ResponseStatusCodes": [200, 400, 500]
+    },
+
+    {
+        "description": "get seession token to login user",
+        "httpRequest": "post",
+        "root": "/user/login,
+        "RequestHeaders": {},
+        "RequestBody": {email: string, password: string, rememberMe: boolean},
+        "ResponseBody": {token: string, succes: boolean},
+        "ResponseStatusCodes": [200, 500]
     }
 
     {},

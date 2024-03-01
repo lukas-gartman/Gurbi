@@ -23,8 +23,6 @@ export function getUserRouter(userService : UserService) : Router{
     userRouter.post( "/login", async(req: Request<{},{},{email: string, password: string, rememberMe: boolean}>, res: Response<{token: string, succes: boolean}>) => {
         try {
             let response : {token: string, succes: boolean} = await userService.loginUser(req.body);
-            console.log(response)
-            
             return res.status(200).send(response);
 
         } catch (e: any) {

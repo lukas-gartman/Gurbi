@@ -49,7 +49,6 @@ export interface UserStorage {
 
     async addUser(newUser: DBUser): Promise<void> {
         newUser.id = (await this.idCounter.getCounterValue()).toString();
-        console.log(newUser)
         await this.idCounter.incrementCounter();
         await this.userModel.create(newUser);
     }
