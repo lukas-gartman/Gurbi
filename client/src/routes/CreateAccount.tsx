@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../stylesheets/Form.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function CreateAccount() {
+    const nav = useNavigate();
+
     interface CreateAccountFormData {
         fullName: string;
         nickname: string;
@@ -23,7 +25,13 @@ function CreateAccount() {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:8080/user/register", formData);
+            axios.post("http://localhost:8080/user/register", formData).then(r => {
+                if (r.status == 200) {
+                    nav("/");
+                }
+            }).catch(err => {
+                console.error(err);
+            });
         } catch (error) {
             console.error(error);
         }
