@@ -107,11 +107,11 @@ test("delete organisation", async () =>{
     await organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
 
-    expect(await organisationService.deleteOrginsitaion("TestUser3", orgId)).toStrictEqual(OrgServiceResponse.getRes(402));
-    expect(await organisationService.deleteOrginsitaion("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual(OrgServiceResponse.getRes(401));
-    expect(await organisationService.deleteOrginsitaion("TestUser2", orgId)).toStrictEqual(OrgServiceResponse.getRes(403));
+    expect(await organisationService.deleteOrganisation("TestUser3", orgId)).toStrictEqual(OrgServiceResponse.getRes(402));
+    expect(await organisationService.deleteOrganisation("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual(OrgServiceResponse.getRes(401));
+    expect(await organisationService.deleteOrganisation("TestUser2", orgId)).toStrictEqual(OrgServiceResponse.getRes(403));
     expect((await organisationService.getOrganisations()).length).toBe(1);
-    expect(await organisationService.deleteOrginsitaion("TestUser1", orgId)).toStrictEqual(OrgServiceResponse.getRes(202));
+    expect(await organisationService.deleteOrganisation("TestUser1", orgId)).toStrictEqual(OrgServiceResponse.getRes(202));
     expect((await organisationService.getOrganisations()).length).toBe(0);
 
     

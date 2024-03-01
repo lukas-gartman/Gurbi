@@ -93,14 +93,14 @@ export class OrganisationService{
         //creator added as admin per default
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
 
-        await this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : "0", picture:"wdaw"});
+        this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : "0", picture:"wdaw"});
 
         return OrgServiceResponse.getRes(200)
 
     }
 
     //Delete an organisation
-    async deleteOrginsitaion(userId : string, organisationId : string) : Promise<OrgServiceResponse>{
+    async deleteOrganisation(userId : string, organisationId : string) : Promise<OrgServiceResponse>{
         
         let checkedUserPremission : {serverRes:OrgServiceResponse, succes:boolean} = await this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
         if(!checkedUserPremission.succes){

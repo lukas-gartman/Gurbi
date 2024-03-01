@@ -33,7 +33,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         try {
             let userId : string = req.userId as string;
             
-            let response : OrgServiceResponse = await organisationService.deleteOrginsitaion(userId, req.body.organisationId);
+            let response : OrgServiceResponse = await organisationService.deleteOrganisation(userId, req.body.organisationId);
             
             return res.status(response.httpStatusCode).send(response.msg);
     
@@ -117,16 +117,17 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         }
     });
     
-    organisationRouter.get("/user/permissions", async (req : AuthorizedRequest<{},{},OrganisationUser>, res : Response<Permission[] >)  => {
+    organisationRouter.get("/:orgId/permissions/by/user", async (req : AuthorizedRequest<{},{},OrganisationUser>, res : Response<Permission[] >)  => {
         try {
-            
-            let permissions : Permission[] = await organisationService.getMemberPermissions(req.body)
-            return res.status(200).send(permissions)
+            const orgUser: OrganisationUser = { userId: req.userId as string, organisationId: req.query.orgId as string };
+            let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
+
+            return res.status(200).send(permissions);
         } catch (e: any) {
             return res.status(500).send(e.message);
         }
 
-    } );
+    });
 
     return organisationRouter;
 }

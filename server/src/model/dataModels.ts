@@ -15,7 +15,7 @@ export class Permission {
     }
 
     private static readonly permissions : Permission[] = [
-        {permissionName : "ChangeOrginsationName", permissionId : 0},
+        {permissionName : "ChangeOrganisationName", permissionId : 0},
         {permissionName : "DeleteOrganisation", permissionId : 1},
         {permissionName : "RoleManipulator", permissionId : 2},
         {permissionName : "CreateNewEvent", permissionId : 3},
@@ -26,11 +26,11 @@ export class Permission {
     ];
     
     static getPermission(permissionId : number) : Permission{
-        let premission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
-        if(premission === undefined){
+        let permission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
+        if(permission === undefined){
             throw Error("premission does not exsist");
         }
-        return new Permission(premission.permissionName, premission.permissionId);
+        return new Permission(permission.permissionName, permission.permissionId);
     }
 
     static getAllPermissions() : Permission[]{
