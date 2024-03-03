@@ -1,11 +1,9 @@
-import { error } from "console";
 
 export interface DBUser {
     id: string;
     name: string;
     nickName: string
     encryptedPassword: string;
-    salt: string;
     email: string;
     regDate: Date;
 }
@@ -45,7 +43,7 @@ export class userServiceResponse {
     static getRes(id: number): userServiceResponse {
         let resposne: userServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
         if (resposne === undefined) {
-            throw error("not know id");
+            throw Error("not know id");
         }
         return new userServiceResponse(resposne.httpStatusCode, resposne.msg, resposne.id);
     }

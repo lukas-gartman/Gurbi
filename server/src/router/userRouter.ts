@@ -12,7 +12,7 @@ export function getUserRouter(userService : UserService) : Router{
     userRouter.post("/register", async(req: Request<{},{},{fullName: string, nickname: string, email: string, password: string, repeatPassword: string}>, res: Response<string>) => {
 
         try {
-            let response : userServiceResponse = await userService.addNewUser(req.body);
+            let response : userServiceResponse = await userService.regNewUser(req.body);
             return res.status(response.httpStatusCode).send(response.msg);
         } catch (e: any) {
             res.status(500).send(e.message);
@@ -20,18 +20,15 @@ export function getUserRouter(userService : UserService) : Router{
 
     });
 
-    userRouter.post( "/login", async(req: Request, res: Response<string>) => {
+    userRouter.post( "/login", async(req: Request<{},{},{email: string, password: string, rememberMe: boolean}>, res: Response<{token: string, succes: boolean}>) => {
         try {
+            let response : {token: string, succes: boolean} = await userService.loginUser(req.body);
+            return res.status(200).send(response);
 
-            console.log(req.body);
-            res.status(200).send("token")
-
-            //const newUser: User = new User("John Doe", "hello@example.com", "password123");
         } catch (e: any) {
             res.status(500).send(e.message);
         }
-    }
-    );
+    });
 
 
     return userRouter;

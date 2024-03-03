@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import '../stylesheets/Login.css'
 import '../stylesheets/Form.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 function Login() {
+    const nav = useNavigate();
+
     interface LoginFormData {
         email: string;
         password: string;
@@ -22,16 +25,14 @@ function Login() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-
-        try {
-
-            const response = await axios.post("http://localhost:8080/user/login", formData);
-    
-            // Handle the response here if needed
-            console.log(response.data);
-        } catch (error) {
-            console.error(error);
-        }
+        axios.post("http://localhost:8080/user/login", formData).then(r => {
+            if (r.status == 200) {
+                const jwt = r.data.token;
+                Cookies.set("jwt", jwt, { sameSite: "lax" });
+                console.log(Cookies.get("jwt"));
+                nav("/events");
+            }
+        }).catch(err => console.error(err));
     };
 
     return (

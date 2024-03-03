@@ -53,7 +53,7 @@ const organisationSchema: Schema = new Schema({
 
 
 //storage
-export interface OrganisationStorageHandler {
+export interface OrganisationStorage {
     getOrganisationsByUser(userId: string): Promise<Organisation[]>;
   
     getAllOrganisations(): Promise<Organisation[]>;
@@ -68,7 +68,7 @@ export interface OrganisationStorageHandler {
   }
 
   //need try catch
-export class MongoDBOrganisationStorageHandler implements OrganisationStorageHandler {
+export class MongoDBOrganisationStorage implements OrganisationStorage {
 
     private organisationModel = DBconnHandler.getConn().model<Organisation>("organisation", organisationSchema);
 
@@ -108,7 +108,7 @@ export class MongoDBOrganisationStorageHandler implements OrganisationStorageHan
   }
 
 
-export class MemoryOrganisationStorageHandler implements OrganisationStorageHandler{
+export class MemoryOrganisationStorage implements OrganisationStorage{
 
     private organisations : Organisation[] = [];
     private idCounter : number = 0;
@@ -160,7 +160,7 @@ export class MemoryOrganisationStorageHandler implements OrganisationStorageHand
     async getOrganisationById(organisationId: string): Promise<Organisation | null> {
         try {
             return JSON.parse(JSON.stringify(this.organisations.find(org => org.id === organisationId)));      
-        } catch (error) {
+        } catch (e : any) {
             return null;
         }
     }

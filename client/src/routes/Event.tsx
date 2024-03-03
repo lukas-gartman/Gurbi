@@ -58,13 +58,12 @@ function EventPage() {
                         <div>
                             <i className="bi bi-people"></i>
                             <span>1337</span>
-                            <a href={`/organisations/${event.host.id}/unfollow`} className="event-organiser-follow-btn following">Following</a>
+                            <NavLink to={`/organisations/${event.host.id}/unfollow`} className="event-organiser-follow-btn following">Following</NavLink>
                         </div>
                     </div>
                 </NavLink>
                 <div className="event-organiser">
                     <img src={event.host.picture} />
-                    
                 </div>
             </main>
             <Footer />

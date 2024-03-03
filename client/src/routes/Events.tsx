@@ -23,7 +23,7 @@ function Events() {
         <div className="App">
             <Header onSearch={onSearch} headerNav={navItems} />
             <main className="events">
-                { testEvents.map(e => { return <EventCard event={e} /> }) }
+                { testEvents.map((e, i) => { return <EventCard event={e} key={i} /> }) }
             </main>
             <Footer />
         </div>

@@ -21,6 +21,10 @@ export interface Organisation{
     picture : string;
 }
 
+export interface OrganisationUser{
+    userId : string;
+    organisationId : string;
+}
 
 //convince
 export interface NewOrganisationDTO{

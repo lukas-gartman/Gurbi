@@ -7,7 +7,7 @@
 
 
 
-"organisation_api":[
+"/organisation/":[
     {
         "description": "Add a new organisation",
         "httpRequest": "post",
@@ -22,7 +22,7 @@
     {
         "description": "Delete an organisation",
         "httpRequest": "post",
-        "root": "/organistaion/authorized/delete",
+        "root": "/organisation/authorized/delete",
         "RequestHeaders": { "authorization": string},
         "RequestBody": { "organisationId" : string},
         "ResponseBody": string,
@@ -32,7 +32,7 @@
     {
         "description": "Add an user as a member to an organisation",
         "httpRequest": "post",
-        "root": "/organistaion/authorized/user",
+        "root": "/organisation/authorized/user",
         "RequestHeaders": {"authorization": string},
         "RequestBody": {"nickName" : string, "organisationId" : string},
         "ResponseBody": string,
@@ -42,7 +42,7 @@
     {
         "description": "Add a role to an organisation",
         "httpRequest": "post",
-        "root": "/organistaion/authorized/role",
+        "root": "/organisation/authorized/role",
         "RequestHeaders": {"authorization": string},
         "RequestBody": { "organisationId" : string, "role" : Role},
         "ResponseBody": string,
@@ -52,7 +52,7 @@
     {
         "description": "Delete a role from an organisation",
         "httpRequest": "delete",
-        "root": "/organistaion/authorized/role",
+        "root": "/organisation/authorized/role",
         "RequestHeaders": {"authorization": string},
         "RequestBody": { "organisationId" : string, "role" : string},
         "ResponseBody": string,
@@ -62,7 +62,7 @@
     {
         "description": "Change the role of an member in the organisation",
         "httpRequest": "put",
-        "root": "/organistaion/authorized/user/role",
+        "root": "/organisation/authorized/user/role",
         "RequestHeaders": {"authorization": string},
         "RequestBody": { "userId" : string, "organisationId" : string, "targetMemberId" : string, "roleName" : string},
         "ResponseBody": string,
@@ -72,17 +72,17 @@
     {
         "description": "Get the organisations that a user is a member in",
         "httpRequest": "get",
-        "root": "/organistaion/authorized/by/user",
+        "root": "/organisation/authorized/by/user",
         "RequestHeaders": { "authorization": string},
         "RequestBody": {},
         "ResponseBody": Organisation[],
         "ResponseStatusCodes": [200, 400, 500]
     }
 
-       {
+    {
         "description": "Get organisation by Id",
         "httpRequest": "get",
-        "root": "/organistaion/by/id",
+        "root": "/organisation/by/id",
         "RequestHeaders": {},
         "RequestBody": {organisationId : string},
         "ResponseBody": Organisation,
@@ -90,6 +90,45 @@
     }
 
 ]
+
+"user":[
+    
+    {
+        "description": "register a new user",
+        "httpRequest": "post",
+        "root": "/user/register,
+        "RequestHeaders": {},
+        "RequestBody": {fullName: string, nickname: string, email: string, password: string, repeatPassword: string},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 500]
+    },
+
+    {
+        "description": "get seession token to login user",
+        "httpRequest": "post",
+        "root": "/user/login,
+        "RequestHeaders": {},
+        "RequestBody": {email: string, password: string, rememberMe: boolean},
+        "ResponseBody": {token: string, succes: boolean},
+        "ResponseStatusCodes": [200, 500]
+    }
+
+    {},
+    {},
+
+
+]
+
+
+"event":[
+
+    alla evetns som man medlem / följer i
+
+
+]
+
+
+"follower stuff, medlem följer per atomatic"
    
 
     

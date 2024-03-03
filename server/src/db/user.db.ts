@@ -5,9 +5,8 @@ import TotalCounter, { DBconnHandler } from "./database";
 const userSchema: Schema = new Schema({
     id: { type: String, required: true, unique: true},
     name: { type: String, required: true },
-    nickName: { type: String, required: true },
+    nickName: { type: String},
     encryptedPassword: { type: String, required: true },
-    salt: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     regDate: { type: Date, required: true },
 });
@@ -15,7 +14,7 @@ const userSchema: Schema = new Schema({
 
 
 //storage
-export interface UserStorageHandler {
+export interface UserStorage {
     getUserById(id: string): Promise<DBUser | null>;
   
     getUserByEmail(email: string): Promise<DBUser | null>;
@@ -29,7 +28,7 @@ export interface UserStorageHandler {
     isEmailExists(email: string) : Promise<boolean>;
   }
 
-  export class MongoDBUserStorage implements UserStorageHandler {
+  export class MongoDBUserStorage implements UserStorage {
     private userModel = DBconnHandler.getConn().model<DBUser>("users", userSchema);
 
     private idCounter : TotalCounter = new TotalCounter("users");
@@ -50,7 +49,6 @@ export interface UserStorageHandler {
 
     async addUser(newUser: DBUser): Promise<void> {
         newUser.id = (await this.idCounter.getCounterValue()).toString();
-        console.log(newUser)
         await this.idCounter.incrementCounter();
         await this.userModel.create(newUser);
     }
