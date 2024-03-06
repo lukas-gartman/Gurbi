@@ -1,6 +1,7 @@
 import * as SuperTest from "supertest";
 import {getApp} from "./app";
 import { NewOrganisationDTO,  Organisation} from "./model/organisationModels";
+import { NewEventDTO} from "./model/eventModels";
 import { DBconnHandler } from "./db/database";
 import mongoose, { Connection } from "mongoose";
 import { userServiceResponse } from "./model/UserModels";
@@ -20,6 +21,10 @@ test("/user/register", async () => {
   const res1 = await request.post("/user/register").send({fullName: "testUser1", nickname: "tu", email: "test@gmail.se", password: "123", repeatPassword: "123"});
   expect(res1.statusCode).toBe(200);
   expect(res1.text).toStrictEqual(userServiceResponse.getRes(4).msg);
+
+  const res2 = await request.post("/user/register").send({fullName: "testUser2", nickname: "tur", email: "test2@gmail.se", password: "1234", repeatPassword: "1234"});
+  expect(res2.statusCode).toBe(200);
+  expect(res2.text).toStrictEqual(userServiceResponse.getRes(4).msg);
   
 });
 
@@ -64,6 +69,45 @@ test("/organisation/by/id", async () => {
 });
 
 
+test("post /organisation/authorized/user", async () =>{
+  const res = await request.post("/user/login").send({email : "test2@gmail.se", password : "1234", rememberMe : true});
+  let token : string = res.body.token
+
+  const res2 = await request.post("/organisation/authorized/user").set('authorization', token).send({nickName : "nickname2", organisationId : "0"});
+  
+  expect(res2.statusCode).toBe(200);
+
+});
+
+
+test("post /organisation/:orgId/authorized/event", async () =>{
+  const res = await request.post("/user/login").send({email : "test2@gmail.se", password : "1234", rememberMe : true});
+  let token : string = res.body.token
+
+  let event : NewEventDTO = {} as NewEventDTO;
+
+  event.date = new Date();
+  event.description = "my event description";
+  event.location = "trollhättan";
+  event.title = "";
+
+  const res2 = await request.post("/organisation/2/authorized/event").set('authorization', token).send(event);
+  expect(res2.statusCode).toBe(401)
+
+  const res3 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
+  let token2 : string = res3.body.token
+
+
+  const res4 = await request.post("/organisation/2/authorized/event").set('authorization', token2).send(event);
+  expect(res4.statusCode).toBe(400)
+
+  event.title = "TheRobotMan"
+  const res5 = await request.post("/organisation/2/authorized/event").set('authorization', token2).send(event);
+  expect(res5.statusCode).toBe(200)
+
+
+
+});
 
 afterAll(async () => {
     DBconnHandler.closeConn();

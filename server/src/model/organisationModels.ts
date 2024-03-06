@@ -47,6 +47,7 @@ export class OrgServiceResponse {
     }
 
     private static readonly serverResponses: OrgServiceResponse[] = [
+        {httpStatusCode: 400, msg : "missing data", id: 400},
         { httpStatusCode: 404, msg: "organisation does not exsit", id: 401 },
         { httpStatusCode: 401, msg: "not member in organisation", id: 402 },
         { httpStatusCode: 401, msg: "member does not have permission", id: 403 },

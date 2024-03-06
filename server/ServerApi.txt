@@ -89,6 +89,16 @@
         "ResponseStatusCodes": [200, 500]
     }
 
+        {
+        "description": "add an event",
+        "httpRequest": "post",
+        "root": "/organisation/:orgId/authorized/event",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": NewEventDTO,
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401, 404, 500]
+    }
+
 ]
 
 "user":[

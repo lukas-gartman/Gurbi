@@ -5,6 +5,7 @@ import {AuthorizedRequest, Permission} from "../model/dataModels";
 import { OrgServiceResponse } from "../model/organisationModels";
 import {OrganisationService} from "../service/organisationService"
 import { log } from "console";
+import { NewEventDTO } from "../model/eventModels";
 
 
 export function getOrganisationRouter(organisationService : OrganisationService) : Router{
@@ -117,9 +118,14 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         }
     });
     
-    organisationRouter.get("/:orgId/permissions/by/user", async (req : AuthorizedRequest<{},{},OrganisationUser>, res : Response<Permission[] >)  => {
+    organisationRouter.get("/:orgId/permissions/by/user", async (req : AuthorizedRequest<{orgId : string},{},OrganisationUser>, res : Response<Permission[] >)  => {
         try {
-            const orgUser: OrganisationUser = { userId: req.userId as string, organisationId: req.query.orgId as string };
+            let orgId : string = "";
+            if(typeof(req.params.orgId) === "string"){
+                orgId = req.params.orgId
+            }
+
+            const orgUser: OrganisationUser = { userId: req.userId as string, organisationId: orgId};
             let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
 
             return res.status(200).send(permissions);
@@ -127,6 +133,21 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             return res.status(500).send(e.message);
         }
 
+    });
+
+    organisationRouter.post("/:orgId/authorized/event", async (req : AuthorizedRequest<{orgId : string},{}, NewEventDTO>, res : Response<string>)  => {
+        try {
+            let orgId : string = "";
+            if(typeof(req.params.orgId) === "string"){
+                orgId = req.params.orgId
+            }
+
+            let response : OrgServiceResponse = await organisationService.addEvent(req.body, orgId, req.userId as string)
+            return res.status(response.httpStatusCode).send(response.msg);
+
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
     });
 
     return organisationRouter;

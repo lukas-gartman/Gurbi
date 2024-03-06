@@ -1,22 +1,19 @@
 
 export interface Event{
-    hostid : string
+    hostId : string
     id : string
-    name : string
+    title : string
     location : string
     description : string
-    dateTime : Date
-    price : number
+    date : Date
     picture : string
 }
 
 
 //data transfer object
 export interface NewEventDTO{
-    hostOrganisationId : string
-    name : string
-    location : string
-    description : string
-    dateTime : Date
-    price : number
+    title: string;
+    date: Date;
+    location: string;
+    description: string;
 }

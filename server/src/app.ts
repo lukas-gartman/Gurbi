@@ -8,6 +8,7 @@ import cors from 'cors';
 import { UserService } from "./service/userService";
 import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "./db/organisation.db";
 import { MongoDBUserStorage, UserStorage } from "./db/user.db";
+import { EventStorage, MongoDBEventStorage } from "./db/event.db";
 
 
 export const MY_NOT_VERY_SECURE_PRIVATE_KEY: string = "AWFSWEGRSTsdsda13123ASFAAadahrrtj";
@@ -28,9 +29,11 @@ export  function getApp(useDatabase: boolean) : Application{
     //Setting upp service layer
     let organisationStorage : OrganisationStorage;
     let userStorage : UserStorage;
+    let eventStorage : EventStorage;
     
     if(useDatabase){
         organisationStorage = new MongoDBOrganisationStorage();
+        eventStorage = new MongoDBEventStorage();
         userStorage = new MongoDBUserStorage();
     }
     else{
@@ -40,7 +43,7 @@ export  function getApp(useDatabase: boolean) : Application{
     
 
     //adding routers
-    app.use("/organisation", getOrganisationRouter(new OrganisationService(organisationStorage)))
+    app.use("/organisation", getOrganisationRouter(new OrganisationService(organisationStorage, eventStorage)))
     app.use("/user", getUserRouter(new UserService(userStorage)));
 
     return app;
