@@ -3,6 +3,7 @@
     "NewOrganisationDTO" : "defined in server/src/model/OrganistaionModels.ts",
     "Organisation" : "defined in server/src/model/OrganistaionModels.ts",
     "Role" :  "defined in server/src/model/OrganistaionModels.ts",
+    "NewEventDTO" : "defined in server/src/model/eventModels.ts"
 }
 
 
@@ -89,7 +90,7 @@
         "ResponseStatusCodes": [200, 500]
     }
 
-        {
+    {
         "description": "add an event",
         "httpRequest": "post",
         "root": "/organisation/:orgId/authorized/event",
