@@ -1,6 +1,7 @@
 import {Schema} from 'mongoose';
 import { Organisation } from '../model/organisationModels';
 import TotalCounter, { DBconnHandler } from './database';
+import { Permission } from '../model/dataModels';
 
 
 const organisationSchema: Schema = new Schema({
@@ -29,14 +30,9 @@ const organisationSchema: Schema = new Schema({
             required: true,
         },
         permissions: [{
-            permissionName: {
-                type: String,
-                required: true,
-            },
-            permissionId: {
-                type: Number,
-                required: true,
-            },
+            type: String,
+            enum: Object.values(Permission),
+            required: true,
         }],
     }],
     name: {

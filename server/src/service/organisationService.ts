@@ -1,10 +1,11 @@
 
 import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
-import {OrganisationPermissionChecker, Permission, ServiceResponse} from "../model/dataModels"
+import {OrganisationPermissionChecker, Permission, ServiceResponse, getAllPermissions} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
 import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "../db/organisation.db";
 import { EventStorage } from "../db/event.db";
 import { Event, NewEventDTO } from "../model/eventModels";
+
 
 
 
@@ -19,7 +20,7 @@ export class OrganisationService{
     private organisationPermissionChecker : OrganisationPermissionChecker;
 
     //standard roles
-    private readonly admin : Role = {roleName : "admin", permissions : Permission.getAllPermissions()};
+    private readonly admin : Role = {roleName : "admin", permissions : getAllPermissions()};
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
     
 
@@ -85,7 +86,7 @@ export class OrganisationService{
     //Delete an organisation
     async deleteOrganisation(userId : string, organisationId : string) : Promise<ServiceResponse>{
         
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.getPermission(1))
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.DeleteOrganisation)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes;
         }
@@ -124,7 +125,7 @@ export class OrganisationService{
 
     async addRoleToOrganisation(userId : string, organisationId : string, role : Role) : Promise<ServiceResponse>{    
         
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.getPermission(2))
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes
         }
@@ -133,7 +134,7 @@ export class OrganisationService{
 
         for (let index = 0; index < role.permissions.length; index++) {
             const newPremission = role.permissions[index];
-            let exsit : Permission | undefined = Permission.getAllPermissions().find(permission => permission.permissionName === newPremission.permissionName);
+            let exsit : Permission | undefined = getAllPermissions().find(permission => permission === newPremission);
             if(exsit === undefined){
                 return OrgServiceResponse.getRes(406);
             }
@@ -159,7 +160,7 @@ export class OrganisationService{
 
     async deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : Promise<ServiceResponse>{
         
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.getPermission(2))
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes
         }
@@ -192,7 +193,7 @@ export class OrganisationService{
     }
 
     async changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : Promise<ServiceResponse>{
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.getPermission(2))
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes
         }

@@ -19,7 +19,7 @@ export class EventService{
 
     async addEvent(eventData : NewEventDTO, orgId : string, userId : string) : Promise<ServiceResponse>{
 
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.getPermission(3))
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.CreateNewEvent)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes
         }
