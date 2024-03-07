@@ -1,5 +1,5 @@
-import React from 'react';
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from "react-router-dom";
 import './stylesheets/App.css';
 import Events from './routes/Events';
 import Event from './routes/Event';
@@ -13,28 +13,51 @@ import NewEvent from './routes/NewEvent';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 
-const jwt = Cookie.get("jwt");
-if (jwt != null) {
-	axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
-}
-
-const AuthCheck = () => {
+const AuthGuard = () => {
 	const jwt = Cookie.get("jwt");
-	if (jwt == null) {
-		console.log("User not logged in. Redirecting...");
-		return <Navigate to="/login" replace />
+
+	if (jwt === undefined) {
+		console.log("User not logged in. Redirecting from " + window.location.pathname + "to /login ...");
+		return <Navigate to="/login" replace />;
 	}
 
-	return <Outlet />
+	const isValid = async () : Promise<boolean> => {
+		const response = await axios.post("http://localhost:8080/user/validate", { token: jwt });
+		return response.data.valid;
+	}
+
+	isValid().then(isValid => {
+		if (isValid) {
+			// Send the jwt token for all requests
+			axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
+		} else {
+			console.log("User token is not valid. Redirecting from " + window.location.pathname + "to /login ...");
+			return <Navigate to="/login" replace />;
+		}
+	});
+	
+	// useEffect(() => {
+		
+	// }, []);
+
+	return <Outlet />;
+}
+
+const Logout = () => {
+	Cookie.remove("jwt");
+	return <Navigate to="/login" replace />;
 }
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <AuthCheck />,
+		element: <AuthGuard />,
 		children: [
 			{
 				index: true,
+				element: <Navigate to="/events" replace />
+			},
+			{
 				path: "/events",
 				element: <Events />,
 				loader: async ({ params }) => {
@@ -113,7 +136,11 @@ const router = createBrowserRouter([
 	{
 		path: "/register",
 		element: <CreateAccount />
-	}
+	},
+	{
+		path: "/logout",
+		element: <Logout />
+	},
 ]);
 
 function App() {

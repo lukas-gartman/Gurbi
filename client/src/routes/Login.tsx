@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookie from 'js-cookie';
 import '../stylesheets/Login.css'
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +8,21 @@ import Cookies from 'js-cookie';
 
 function Login() {
     const nav = useNavigate();
+
+    const jwt = Cookie.get("jwt");
+    const isValid = async () : Promise<boolean> => {
+        const response = await axios.post("http://localhost:8080/user/validate", { token: jwt });
+        return response.data.valid;
+    }
+
+    if (jwt) {
+        isValid().then(isValid => {
+            if (isValid) {
+                console.log("login evaluated to true");
+                nav("/events");
+            }
+        });
+    }
 
     interface LoginFormData {
         email: string;
@@ -29,7 +45,7 @@ function Login() {
             if (r.status == 200) {
                 const jwt = r.data.token;
                 Cookies.set("jwt", jwt, { sameSite: "lax" });
-                console.log(Cookies.get("jwt"));
+                console.log("[Login: setting jwt cookie]" + Cookies.get("jwt"));
                 nav("/events");
             }
         }).catch(err => console.error(err));
