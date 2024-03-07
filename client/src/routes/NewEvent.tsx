@@ -39,7 +39,7 @@ function NewEvent() {
         e.preventDefault();
 
         try {
-            axios.post(`http://localhost:8080/organisation/${orgId}/authorized/event`, formData)
+            axios.post(`http://localhost:8080/event/authorized/organisation/${orgId}`, formData)
             .then(r => { if (r.status == 200) {redirect(`/organisations/${orgId}`) }})
             .catch(err => {console.error(err)});
         } catch (error) {
