@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookie from 'js-cookie';
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
 
 function CreateAccount() {
     const nav = useNavigate();
+
+    useEffect(() => {
+        const jwt = Cookie.get("jwt");
+        if (jwt) {
+            nav("/events");
+        }
+    }, []);
 
     interface CreateAccountFormData {
         fullName: string;
