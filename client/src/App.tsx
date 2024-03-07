@@ -38,7 +38,7 @@ const router = createBrowserRouter([
 				path: "/events",
 				element: <Events />,
 				loader: async ({ params }) => {
-				// 	return axios.get(`/api/events`);
+				// 	return axios.get(`/organisation/events`);
 					return JSON.parse('[{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning"}, {"id": 2, "location": "Monaden", "dateTime": "18:30", "name": "Mega6 Sittning"}]');
 				}
 			},

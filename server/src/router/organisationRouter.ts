@@ -147,7 +147,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     });
 
 
-    organisationRouter.get("/:orgId/events", async (req: Request<{orgId : string},{},{}>, res : Response<{}>) => {
+    organisationRouter.get("/:orgId/events", async (req: Request<{orgId : string},{},{}>, res : Response<Event[]>) => {
         try {
             let orgId : string = req.params.orgId.toString();
             let response : Event[] = await organisationService.getOrganisationEvents(orgId);
@@ -158,6 +158,16 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             return res.status(500).send(e.message);
         }
     })
+
+
+    organisationRouter.get("/events", async (req: Request<{},{},{}>, res : Response<Event[]>) => {
+        try {
+            let response : Event[] = await organisationService.getAllEvents();
+            return res.status(200).send(response);    
+        } catch (e : any) {
+            return res.status(500).send(e.message);
+        }
+    })    
 
     return organisationRouter;
 }

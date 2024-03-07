@@ -267,4 +267,8 @@ export class OrganisationService{
         return await this.eventStorage.getEventsByHostId(orgId);
     }
 
+    async getAllEvents() : Promise<Event[]>{
+        return await this.eventStorage.getAllEvents();
+    }
+
 }

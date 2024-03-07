@@ -102,9 +102,19 @@
     }
 
     {
-        "description": "Get all events that a organisation host",
+        "description": "Get all events that an organisation host",
         "httpRequest": "get",
         "root": "/organisation/:orgId/events",
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Event[],
+        "ResponseStatusCodes": [200, 500]
+    }
+
+    {
+        "description": "Get all events",
+        "httpRequest": "get",
+        "root": "/organisation/events",
         "RequestHeaders": {},
         "RequestBody": {},
         "ResponseBody": Event[],

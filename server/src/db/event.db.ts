@@ -26,6 +26,8 @@ export interface EventStorage {
     deleteEventById(id: string): Promise<void>;
 
     getEventsByHostId(hostId : string) : Promise<Event[]>;
+
+    getAllEvents(): Promise<Event[]>;
   }
 
   export class MongoDBEventStorage implements EventStorage {
@@ -54,6 +56,11 @@ export interface EventStorage {
 
     async deleteEventById(id: string): Promise<void> {
         await this.eventModel.findOneAndDelete({id : id}).exec();
+    }
+
+    async getAllEvents(): Promise<Event[]> {
+        const events = await this.eventModel.find().exec();
+        return events;
     }
 
 
