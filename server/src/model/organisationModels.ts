@@ -1,5 +1,5 @@
 import { error } from "console";
-import {Permission} from "../model/dataModels"
+import {Permission, ServiceResponse} from "../model/dataModels"
   
 
 export interface Role{
@@ -35,7 +35,7 @@ export interface NewOrganisationDTO{
 export interface NewOrganisationData extends NewOrganisationDTO{
     creatorId : string
 }
-export class OrgServiceResponse {
+export class OrgServiceResponse implements ServiceResponse{
     httpStatusCode: number;
     msg: string;
     id: number;
@@ -47,6 +47,7 @@ export class OrgServiceResponse {
     }
 
     private static readonly serverResponses: OrgServiceResponse[] = [
+        { httpStatusCode: 400, msg : "missing data", id: 400},
         { httpStatusCode: 404, msg: "organisation does not exsit", id: 401 },
         { httpStatusCode: 401, msg: "not member in organisation", id: 402 },
         { httpStatusCode: 401, msg: "member does not have permission", id: 403 },
@@ -65,7 +66,7 @@ export class OrgServiceResponse {
         { httpStatusCode: 200, msg: "role added to organisation", id: 204 },
         { httpStatusCode: 200, msg: "role has been deleted from organisation", id: 205 },
         { httpStatusCode: 200, msg: "changed target member's role", id: 206 },
-        { httpStatusCode: 200, msg: "added event", id: 207 }
+       
     ];
 
     static getRes(id: number): OrgServiceResponse {

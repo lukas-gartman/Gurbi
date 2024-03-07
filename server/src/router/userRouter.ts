@@ -4,13 +4,14 @@ import { UserLogin } from "../model/UserModels";
 import { UserService } from "../service/userService";
 import * as jwt from 'jsonwebtoken';
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
+import { ServiceResponse } from "../model/dataModels";
 
 export function getUserRouter(userService : UserService) : Router {
     const userRouter : Router = express.Router();
 
     userRouter.post("/register", async(req: Request<{},{},{fullName: string, nickname: string, email: string, password: string, repeatPassword: string}>, res: Response<string>) => {
         try {
-            let response : userServiceResponse = await userService.regNewUser(req.body);
+            let response : ServiceResponse = await userService.regNewUser(req.body);
             return res.status(response.httpStatusCode).send(response.msg);
         } catch (e: any) {
             res.status(500).send(e.message);
