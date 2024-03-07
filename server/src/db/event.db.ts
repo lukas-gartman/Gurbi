@@ -1,6 +1,7 @@
 import { Error, Schema } from "mongoose";
 import TotalCounter, { DBconnHandler } from "./database";
 import { Event } from "../model/eventModels";
+import { promises } from "dns";
 
 const eventSchema: Schema = new Schema({
     id: { type: String, required: true, unique: true},
@@ -18,11 +19,13 @@ const eventSchema: Schema = new Schema({
 export interface EventStorage {
     getEventById(id: string): Promise<Event | null>;
 
-    updateEvent(Event: Event): Promise<void>;
+    updateEvent(updatedEvent: Event): Promise<void>;
 
-    addEvent(Event: Event): Promise<void>;
+    addEvent(newEvent: Event): Promise<void>;
   
     deleteEventById(id: string): Promise<void>;
+
+    getEventsByHostId(hostId : string) : Promise<Event[]>;
   }
 
   export class MongoDBEventStorage implements EventStorage {
@@ -31,8 +34,8 @@ export interface EventStorage {
     private idCounter : TotalCounter = new TotalCounter("events");
 
     async getEventById(id: string): Promise<Event | null> {
-            const event = await this.eventModel.findOne({id: id}).exec();
-            return event ? event.toObject() : null;
+        const event = await this.eventModel.findOne({id: id}).exec();
+        return event ? event.toObject() : null;
     }
 
     async getEventsByHostId(hostId : string) : Promise<Event[]>{
@@ -40,7 +43,7 @@ export interface EventStorage {
     }
 
     async updateEvent(updatedEvent: Event): Promise<void> {
-            await this.eventModel.findOneAndUpdate({id: updatedEvent.id}, updatedEvent, { new: true }).exec();
+        await this.eventModel.findOneAndUpdate({id: updatedEvent.id}, updatedEvent, { new: true }).exec();
     }
 
     async addEvent(newEvent: Event): Promise<void> {
@@ -50,7 +53,7 @@ export interface EventStorage {
     }
 
     async deleteEventById(id: string): Promise<void> {
-            await this.eventModel.findOneAndDelete({id : id}).exec();
+        await this.eventModel.findOneAndDelete({id : id}).exec();
     }
 
 

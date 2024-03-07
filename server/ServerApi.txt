@@ -4,6 +4,7 @@
     "Organisation" : "defined in server/src/model/OrganistaionModels.ts",
     "Role" :  "defined in server/src/model/OrganistaionModels.ts",
     "NewEventDTO" : "defined in server/src/model/eventModels.ts"
+    "Event"  : "defined in server/src/model/eventModels.ts"
 }
 
 
@@ -98,6 +99,16 @@
         "RequestBody": NewEventDTO,
         "ResponseBody": string,
         "ResponseStatusCodes": [200, 400, 401, 404, 500]
+    }
+
+    {
+        "description": "Get all events that a organisation host",
+        "httpRequest": "get",
+        "root": "/organisation/:orgId/events",
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Event[],
+        "ResponseStatusCodes": [200, 500]
     }
 
 ]

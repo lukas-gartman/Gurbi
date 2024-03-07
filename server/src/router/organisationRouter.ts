@@ -1,11 +1,13 @@
 
 import express, { Request, Response, Router } from "express";
 import { NewOrganisationData, NewOrganisationDTO, Organisation, OrganisationUser, Role} from "../model/organisationModels";
+import { Event} from "../model/eventModels";
 import {AuthorizedRequest, Permission} from "../model/dataModels";
 import { OrgServiceResponse } from "../model/organisationModels";
 import {OrganisationService} from "../service/organisationService"
 import { log } from "console";
 import { NewEventDTO } from "../model/eventModels";
+import e from "express";
 
 
 export function getOrganisationRouter(organisationService : OrganisationService) : Router{
@@ -120,10 +122,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     organisationRouter.get("/:orgId/permissions/by/user", async (req : AuthorizedRequest<{orgId : string},{},OrganisationUser>, res : Response<Permission[] >)  => {
         try {
-            let orgId : string = "";
-            if(typeof(req.params.orgId) === "string"){
-                orgId = req.params.orgId
-            }
+            let orgId : string = req.params.orgId.toString()
 
             const orgUser: OrganisationUser = { userId: req.userId as string, organisationId: orgId};
             let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
@@ -137,11 +136,8 @@ export function getOrganisationRouter(organisationService : OrganisationService)
 
     organisationRouter.post("/:orgId/authorized/event", async (req : AuthorizedRequest<{orgId : string},{}, NewEventDTO>, res : Response<string>)  => {
         try {
-            let orgId : string = "";
-            if(typeof(req.params.orgId) === "string"){
-                orgId = req.params.orgId
-            }
-
+            let orgId : string = req.params.orgId.toString()
+        
             let response : OrgServiceResponse = await organisationService.addEvent(req.body, orgId, req.userId as string)
             return res.status(response.httpStatusCode).send(response.msg);
 
@@ -149,6 +145,19 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             return res.status(500).send(e.message);
         }
     });
+
+
+    organisationRouter.get("/:orgId/events", async (req: Request<{orgId : string},{},{}>, res : Response<{}>) => {
+        try {
+            let orgId : string = req.params.orgId.toString();
+            let response : Event[] = await organisationService.getOrganisationEvents(orgId);
+            return res.status(200).send(response);
+            
+            
+        } catch (e : any) {
+            return res.status(500).send(e.message);
+        }
+    })
 
     return organisationRouter;
 }

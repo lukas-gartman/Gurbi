@@ -1,10 +1,11 @@
 import * as SuperTest from "supertest";
 import {getApp} from "./app";
 import { NewOrganisationDTO,  Organisation} from "./model/organisationModels";
-import { NewEventDTO} from "./model/eventModels";
+import { Event, NewEventDTO} from "./model/eventModels";
 import { DBconnHandler } from "./db/database";
 import mongoose, { Connection } from "mongoose";
 import { userServiceResponse } from "./model/UserModels";
+import e from "express";
 
 const uri : string = "mongodb://localhost:27017/dat076Test"
 let request : any;
@@ -88,7 +89,7 @@ test("post /organisation/:orgId/authorized/event", async () =>{
 
   event.date = new Date();
   event.description = "my event description";
-  event.location = "trollhättan";
+  event.location = "göteborg";
   event.title = "";
 
   const res2 = await request.post("/organisation/2/authorized/event").set('authorization', token).send(event);
@@ -101,13 +102,31 @@ test("post /organisation/:orgId/authorized/event", async () =>{
   const res4 = await request.post("/organisation/2/authorized/event").set('authorization', token2).send(event);
   expect(res4.statusCode).toBe(400)
 
-  event.title = "TheRobotMan"
+  event.title = "Robot"
   const res5 = await request.post("/organisation/2/authorized/event").set('authorization', token2).send(event);
   expect(res5.statusCode).toBe(200)
 
+  event.title = "computer"
+  event.date = new Date();
+  event.description = "my new description"
+  event.location = "vänersborg"
+
+  const res6 = await request.post("/organisation/2/authorized/event").set('authorization', token2).send(event);
+  expect(res6.statusCode).toBe(200)
 
 
 });
+
+test("get /organisation/:orgId/events", async () => {
+
+  let res = await request.get("/organisation/2/events");
+  
+  expect(res.statusCode).toBe(200);
+
+  expect((res.body as Event[]).length).toBe(2);
+
+});
+
 
 afterAll(async () => {
     DBconnHandler.closeConn();

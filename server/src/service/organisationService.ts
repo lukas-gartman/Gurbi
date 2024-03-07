@@ -251,7 +251,7 @@ export class OrganisationService{
         let event : Event = eventData as Event;
         event.id = "0";
         event.hostId = orgId;
-        event.picture = "/wdawd/Awfawf"
+        event.picture = "no picture"
 
         try {
             await this.eventStorage.addEvent(event);
@@ -261,6 +261,10 @@ export class OrganisationService{
 
         return OrgServiceResponse.getRes(207);
 
+    }
+
+    async getOrganisationEvents(orgId : string) : Promise<Event[]>{
+        return await this.eventStorage.getEventsByHostId(orgId);
     }
 
 }
