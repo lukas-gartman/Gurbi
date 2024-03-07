@@ -5,10 +5,10 @@ import { EventService } from "../service/eventService";
 
 export function getEventRouter(eventService : EventService) : Router{
 
-    const organisationRouter : Router = express.Router();
+    const eventRouter : Router = express.Router();
 
 
-    organisationRouter.post("/authorized/organisation/:orgId", async (req : AuthorizedRequest<{orgId : string},{}, NewEventDTO>, res : Response<string>)  => {
+    eventRouter.post("/authorized/organisation/:orgId", async (req : AuthorizedRequest<{orgId : string},{}, NewEventDTO>, res : Response<string>)  => {
         try {
             let orgId : string = req.params.orgId.toString()
         
@@ -21,7 +21,7 @@ export function getEventRouter(eventService : EventService) : Router{
     });
 
 
-    organisationRouter.get("/organisation/:orgId/all", async (req: Request<{orgId : string},{},{}>, res : Response<Event[]>) => {
+    eventRouter.get("/organisation/:orgId/all", async (req: Request<{orgId : string},{},{}>, res : Response<Event[]>) => {
         try {
             let orgId : string = req.params.orgId.toString();
             let response : Event[] = await eventService.getOrganisationEvents(orgId);
@@ -34,7 +34,7 @@ export function getEventRouter(eventService : EventService) : Router{
     })
 
 
-    organisationRouter.get("/all", async (req: Request<{},{},{}>, res : Response<Event[]>) => {
+    eventRouter.get("/all", async (req: Request<{},{},{}>, res : Response<Event[]>) => {
         try {
             let response : Event[] = await eventService.getAllEvents();
             return res.status(200).send(response);    
@@ -43,6 +43,16 @@ export function getEventRouter(eventService : EventService) : Router{
         }
     })   
 
-    return organisationRouter;
+    eventRouter.get("/:eventId", async (req: Request<{eventId : string},{},{}>, res : Response<Event | undefined>) =>{
+        try {
+            let eventId : string = req.params.eventId.toString();
+            let response : Event | undefined = await eventService.getEvent(eventId);
+            return res.status(200).send(response);    
+        } catch (e : any) {
+            return res.status(500).send(e.message);
+        }
+    });
+
+    return eventRouter;
 
 }

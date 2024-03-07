@@ -156,6 +156,18 @@ test("post /event/authorized/organisation/:orgId", async () =>{
 
 });
 
+
+test("get /event/:eventId", async () => {
+
+  let res = await request.get("/event/2");
+  
+  expect(res.statusCode).toBe(200);
+
+  expect((res.body as Event).id).toBe("2");
+
+});
+
+
 test("get /event/organisation/:orgId/all", async () => {
 
   //Retrive all events hosted by orgId=2

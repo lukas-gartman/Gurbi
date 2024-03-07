@@ -46,8 +46,14 @@ export class EventService{
         return await this.eventStorage.getAllEvents();
     }
 
-    async getEvent(eventId : string) : Promise<Event | null>{
-        return await this.eventStorage.getEventById(eventId);
+    async getEvent(eventId : string) : Promise<Event | undefined>{
+        let event : Event | null | undefined = await this.eventStorage.getEventById(eventId)
+
+        if (event === null){
+            event = undefined;
+        }
+
+        return event;
     }
 
 

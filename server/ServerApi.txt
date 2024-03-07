@@ -124,6 +124,16 @@
         "ResponseBody": Event[],
         "ResponseStatusCodes": [200, 500]
     }
+
+    {
+        "description": "Get event",
+        "httpRequest": "get",
+        "root": "/event/:eventId",
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Event,
+        "ResponseStatusCodes": [200, 500]
+    }
 ]
 
 
