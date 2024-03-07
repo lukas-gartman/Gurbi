@@ -9,6 +9,9 @@ import { UserService } from "./service/userService";
 import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "./db/organisation.db";
 import { MongoDBUserStorage, UserStorage } from "./db/user.db";
 import { EventStorage, MongoDBEventStorage } from "./db/event.db";
+import { getEventRouter } from "./router/eventRouter";
+import { EventService } from "./service/eventService";
+import { OrganisationPermissionChecker } from "./model/dataModels";
 
 export const MY_NOT_VERY_SECURE_PRIVATE_KEY: string = "AWFSWEGRSTsdsda13123ASFAAadahrrtj";
 
@@ -39,7 +42,8 @@ export function getApp(useDatabase: boolean) : Application {
     }
     
     //adding routers
-    app.use("/organisation", getOrganisationRouter(new OrganisationService(organisationStorage, eventStorage)))
+    app.use("/organisation", getOrganisationRouter(new OrganisationService(organisationStorage)))
+    app.use("/event", getEventRouter(new EventService(eventStorage, new OrganisationPermissionChecker(organisationStorage))))
     app.use("/user", getUserRouter(new UserService(userStorage)));
 
     return app;

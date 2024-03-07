@@ -91,10 +91,14 @@
         "ResponseStatusCodes": [200, 500]
     }
 
+]
+
+"event":[
+
     {
         "description": "add an event",
         "httpRequest": "post",
-        "root": "/organisation/:orgId/authorized/event",
+        "root": "/event/authorized/organisation/:orgId",
         "RequestHeaders": {"authorization": string},
         "RequestBody": NewEventDTO,
         "ResponseBody": string,
@@ -104,7 +108,7 @@
     {
         "description": "Get all events that an organisation host",
         "httpRequest": "get",
-        "root": "/organisation/:orgId/events",
+        "root": "/event/organisation/:orgId/all",
         "RequestHeaders": {},
         "RequestBody": {},
         "ResponseBody": Event[],
@@ -114,14 +118,14 @@
     {
         "description": "Get all events",
         "httpRequest": "get",
-        "root": "/organisation/events",
+        "root": "/event/all",
         "RequestHeaders": {},
         "RequestBody": {},
         "ResponseBody": Event[],
         "ResponseStatusCodes": [200, 500]
     }
-
 ]
+
 
 "user":[
     

@@ -2,7 +2,7 @@
 
 import { EventStorage } from "../db/event.db";
 import { MemoryOrganisationStorage } from "../db/organisation.db";
-import { Permission } from "../model/dataModels";
+import { Permission, ServiceResponse } from "../model/dataModels";
 import { OrgServiceResponse } from "../model/organisationModels";
 import { NewOrganisationData, Organisation} from "../model/organisationModels";
 import {OrganisationService} from "./organisationService";
@@ -11,11 +11,11 @@ import {OrganisationService} from "./organisationService";
 
 
 test("test add organisation", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
     let org1 : NewOrganisationData = {roles : [], creatorId : "TestUser", creatorNickName : "TestUserNickname", orgName : "TestOrg"}
 
-    let answer : OrgServiceResponse = await organisationService.addOrganisation(org1)
+    let answer : ServiceResponse = await organisationService.addOrganisation(org1)
 
     expect(answer).toStrictEqual(OrgServiceResponse.getRes(200));
 
@@ -23,7 +23,7 @@ test("test add organisation", async () => {
 })
 
 test("get organisations of user", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
     let org1 : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
     let org2 : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname2", orgName : "TestOrg2"};
@@ -42,7 +42,7 @@ test("get organisations of user", async () => {
 
 
 test("get all organisations", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
     let org1 : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
     let org2 : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname2", orgName : "TestOrg2"};
@@ -60,7 +60,7 @@ test("get all organisations", async () => {
 });
 
 test("get user permissionns", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
     let org1 : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
 
@@ -74,7 +74,7 @@ test("get user permissionns", async () => {
 });
 
 test("add member to organisation", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
     let org1 : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
 
@@ -98,7 +98,7 @@ test("add member to organisation", async () => {
 
 test("delete organisation", async () =>{
     
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
 
     await organisationService.addOrganisation(orgData);
@@ -119,7 +119,7 @@ test("delete organisation", async () =>{
 });
 
 test("add role to organisation", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
     await organisationService.addOrganisation(orgData);
     let orgId : string = (await organisationService.getUserOrganisations("TestUser1")).at(0)?.id as string;
@@ -134,7 +134,7 @@ test("add role to organisation", async () => {
 });
 
 test("delete role from organisation", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
     await organisationService.addOrganisation(orgData);
     let orgId : string = (await organisationService.getUserOrganisations("TestUser1")).at(0)?.id as string;
@@ -157,7 +157,7 @@ test("delete role from organisation", async () => {
 })
 
 test("change member role", async () => {
-    const organisationService = new OrganisationService(new MemoryOrganisationStorage(), undefined as unknown as EventStorage);
+    const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     let orgData : NewOrganisationData = {roles : [], creatorId : "TestUser1", creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
     await organisationService.addOrganisation(orgData);
     let orgId : string = (await organisationService.getUserOrganisations("TestUser1")).at(0)?.id as string;
