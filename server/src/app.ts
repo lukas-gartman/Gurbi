@@ -9,11 +9,9 @@ import { UserService } from "./service/userService";
 import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "./db/organisation.db";
 import { MongoDBUserStorage, UserStorage } from "./db/user.db";
 
-
 export const MY_NOT_VERY_SECURE_PRIVATE_KEY: string = "AWFSWEGRSTsdsda13123ASFAAadahrrtj";
 
-
-export  function getApp(useDatabase: boolean) : Application{
+export function getApp(useDatabase: boolean) : Application {
     const app = express();
 
     //make some request work
@@ -29,22 +27,17 @@ export  function getApp(useDatabase: boolean) : Application{
     let organisationStorage : OrganisationStorage;
     let userStorage : UserStorage;
     
-    if(useDatabase){
+    if (useDatabase) {
         organisationStorage = new MongoDBOrganisationStorage();
         userStorage = new MongoDBUserStorage();
-    }
-    else{
+    } else {
         organisationStorage = new MemoryOrganisationStorage()
         throw Error("MemoryOrganisationStorage not implemented")
     }
     
-
     //adding routers
     app.use("/organisation", getOrganisationRouter(new OrganisationService(organisationStorage)))
     app.use("/user", getUserRouter(new UserService(userStorage)));
 
     return app;
-
-
 }
-
