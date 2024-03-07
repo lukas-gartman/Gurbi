@@ -27,7 +27,6 @@ export class EventService{
         let event : Event = eventData as Event;
         event.id = "0";
         event.hostId = orgId;
-        event.picture = "no picture"
 
         try {
             await this.eventStorage.addEvent(event);

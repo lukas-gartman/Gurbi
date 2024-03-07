@@ -9,7 +9,7 @@ const eventSchema: Schema = new Schema({
     title: { type: String, required: true },
     location: { type: String, required: true},
     description: { type: String, required: true },
-    picture: { type: String, required: true},
+    picture: { type: String},
     date: { type: Date, required: true},
 });
 
