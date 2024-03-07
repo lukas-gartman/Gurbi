@@ -66,7 +66,7 @@ export class OrgServiceResponse implements ServiceResponse{
         { httpStatusCode: 200, msg: "role added to organisation", id: 204 },
         { httpStatusCode: 200, msg: "role has been deleted from organisation", id: 205 },
         { httpStatusCode: 200, msg: "changed target member's role", id: 206 },
-        { httpStatusCode: 200, msg: "added event", id: 207 }
+       
     ];
 
     static getRes(id: number): OrgServiceResponse {

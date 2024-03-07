@@ -1,8 +1,6 @@
 import {OrganisationPermissionChecker, Permission, ServiceResponse} from "../model/dataModels"
-import { OrgServiceResponse } from "../model/organisationModels";
-import {Event, NewEventDTO} from "../model/eventModels"
+import {Event, EventServiceResponse, NewEventDTO} from "../model/eventModels"
 import { EventStorage } from "../db/event.db";
-import { OrganisationStorage } from "../db/organisation.db";
 
 //exempel Permission.getPermission(1)
 
@@ -34,10 +32,10 @@ export class EventService{
         try {
             await this.eventStorage.addEvent(event);
         } catch (e : any) {
-            return OrgServiceResponse.getRes(400);
+            return EventServiceResponse.getRes(0);
         }
 
-        return OrgServiceResponse.getRes(207);
+        return EventServiceResponse.getRes(1);
 
     }
 
