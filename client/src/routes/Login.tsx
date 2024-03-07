@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import '../stylesheets/Login.css'
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
 function Login() {
     const nav = useNavigate();
@@ -44,8 +43,8 @@ function Login() {
         axios.post("http://localhost:8080/user/login", formData).then(r => {
             if (r.status == 200) {
                 const jwt = r.data.token;
-                Cookies.set("jwt", jwt, { sameSite: "lax" });
-                console.log("[Login: setting jwt cookie]" + Cookies.get("jwt"));
+                Cookie.set("jwt", jwt, { sameSite: "lax" });
+                console.log("[Login: setting jwt cookie]" + Cookie.get("jwt"));
                 nav("/events");
             }
         }).catch(err => console.error(err));
