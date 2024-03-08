@@ -28,8 +28,16 @@ export class UserService{
         return userServiceResponse.getRes(4);
     }
     
+	async changePassword(userInfo: { userId: string, password: string, repeatPassword: string, newPassword: string }): Promise<userServiceResponse>
+	{
+		if (password !== repeatPassword) {
+			return userServiceResponse.getRes(2);
+		}
 
+		await this.userStorage.changePassword(userId, newPassword);
 
+		return userServiceResponse.getRes(4);
+	}
 }
 
 

@@ -27,9 +27,9 @@ export interface UserStorageHandler {
     deleteUserById(id: string): Promise<void>;
 
     isEmailExists(email: string) : Promise<boolean>;
-  }
+}
 
-  export class MongoDBUserStorage implements UserStorageHandler {
+export class MongoDBUserStorage implements UserStorageHandler {
     private userModel = DBconnHandler.getConn().model<DBUser>("users", userSchema);
 
     private idCounter : TotalCounter = new TotalCounter("users");
@@ -48,6 +48,11 @@ export interface UserStorageHandler {
             await this.userModel.findOneAndUpdate({id: updatedUser.id}, updatedUser, { new: true }).exec();
     }
 
+	async changePassword(userId: string, newPassword: string: Promise<>
+	{
+		this.updateUser(this.getUserBysid(userId).encryptedPassword = newPassword);
+	}
+
     async addUser(newUser: DBUser): Promise<void> {
         newUser.id = (await this.idCounter.getCounterValue()).toString();
         console.log(newUser)
@@ -63,5 +68,4 @@ export interface UserStorageHandler {
             const existingUser = await this.userModel.findOne({ email : email});
             return !!existingUser;
     }
-
 }

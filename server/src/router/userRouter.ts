@@ -8,16 +8,13 @@ export function getUserRouter(userService : UserService) : Router{
 
     const userRouter : Router = express.Router();
 
-
     userRouter.post("/register", async(req: Request<{},{},{fullName: string, nickname: string, email: string, password: string, repeatPassword: string}>, res: Response<string>) => {
-
         try {
             let response : userServiceResponse = await userService.addNewUser(req.body);
             return res.status(response.httpStatusCode).send(response.msg);
         } catch (e: any) {
             res.status(500).send(e.message);
         }
-
     });
 
     userRouter.post( "/login", async(req: Request, res: Response<string>) => {
@@ -33,6 +30,18 @@ export function getUserRouter(userService : UserService) : Router{
     }
     );
 
+	userRouter.post("/authorized/profile/settings/update_password", async(req: AuthorizedRequest<{}, {}, { password: string, repeatPassword: string, newPassword: string}>, res: Response<string>) => {
+		try {
+			let changePasswordSuccess: userServiceResponse = await userService.changePassword(
+				req.body.userId,
+				req.body.password,
+				req.body.repeatPassword,
+				req.body.newPassword);
+			return res.status(changePasswordSuccess.httpestatusCode).send(response.msg);
+		} catch (e: any) {
+			res.status(500).send(e.message);
+		}
+	};
 
     return userRouter;
 
