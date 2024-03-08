@@ -30,7 +30,11 @@ export class UserService{
     
 	async changePassword(userInfo: { userId: string, password: string, repeatPassword: string, newPassword: string }): Promise<userServiceResponse>
 	{
-		if (password !== repeatPassword) {
+		if (currentPassword !== this.userStorage.getUserById(userId).encryptedPassword) {
+			return userServiceResponse.gerRes(5);
+		}
+		
+		if (newPassword !== repeatPassword) {
 			return userServiceResponse.getRes(2);
 		}
 

@@ -27,6 +27,8 @@ export interface UserStorageHandler {
     deleteUserById(id: string): Promise<void>;
 
     isEmailExists(email: string) : Promise<boolean>;
+    
+    changePassword(userId: string, newPassword: string): Promise<void>;
 }
 
 export class MongoDBUserStorage implements UserStorageHandler {
@@ -48,7 +50,7 @@ export class MongoDBUserStorage implements UserStorageHandler {
             await this.userModel.findOneAndUpdate({id: updatedUser.id}, updatedUser, { new: true }).exec();
     }
 
-	async changePassword(userId: string, newPassword: string: Promise<>
+	async changePassword(userId: string, newPassword: string): Promise<void>
 	{
 		this.updateUser(this.getUserBysid(userId).encryptedPassword = newPassword);
 	}

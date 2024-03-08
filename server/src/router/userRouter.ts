@@ -30,13 +30,13 @@ export function getUserRouter(userService : UserService) : Router{
     }
     );
 
-	userRouter.post("/authorized/profile/settings/update_password", async(req: AuthorizedRequest<{}, {}, { password: string, repeatPassword: string, newPassword: string}>, res: Response<string>) => {
+	userRouter.post("/authorized/profile/settings/update_password", async(req: AuthorizedRequest<{}, {}, { currentPassword: string, newPassword: string, repeatPassword: string}>, res: Response<string>) => {
 		try {
 			let changePasswordSuccess: userServiceResponse = await userService.changePassword(
 				req.body.userId,
-				req.body.password,
-				req.body.repeatPassword,
-				req.body.newPassword);
+				req.body.currentPassword,
+				req.body.newPassword,
+				req.body.repeatPassword);
 			return res.status(changePasswordSuccess.httpestatusCode).send(response.msg);
 		} catch (e: any) {
 			res.status(500).send(e.message);
