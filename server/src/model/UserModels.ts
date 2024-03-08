@@ -1,3 +1,4 @@
+import { ServiceResponse } from "./dataModels";
 
 export interface DBUser {
     id: string;
@@ -22,7 +23,7 @@ export interface IUser {
     picture: string;
 }
 
-export class userServiceResponse {
+export class userServiceResponse implements ServiceResponse{
     httpStatusCode: number;
     msg: string;
     id: number;

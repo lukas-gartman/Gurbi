@@ -3,6 +3,8 @@
     "NewOrganisationDTO" : "defined in server/src/model/OrganistaionModels.ts",
     "Organisation" : "defined in server/src/model/OrganistaionModels.ts",
     "Role" :  "defined in server/src/model/OrganistaionModels.ts",
+    "NewEventDTO" : "defined in server/src/model/eventModels.ts"
+    "Event"  : "defined in server/src/model/eventModels.ts"
 }
 
 
@@ -90,6 +92,50 @@
     }
 
 ]
+
+"event":[
+
+    {
+        "description": "add an event",
+        "httpRequest": "post",
+        "root": "/event/authorized/organisation/:orgId",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": NewEventDTO,
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401, 404, 500]
+    }
+
+    {
+        "description": "Get all events that an organisation host",
+        "httpRequest": "get",
+        "root": "/event/organisation/:orgId/all",
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Event[],
+        "ResponseStatusCodes": [200, 500]
+    }
+
+    {
+        "description": "Get all events",
+        "httpRequest": "get",
+        "root": "/event/all",
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Event[],
+        "ResponseStatusCodes": [200, 500]
+    }
+
+    {
+        "description": "Get event",
+        "httpRequest": "get",
+        "root": "/event/:eventId",
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Event,
+        "ResponseStatusCodes": [200, 500]
+    }
+]
+
 
 "user":[
     
