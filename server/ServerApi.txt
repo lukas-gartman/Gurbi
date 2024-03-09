@@ -13,7 +13,7 @@
     {
         "description": "Add a new organisation",
         "httpRequest": "post",
-        "root": "/organisation/authorized/new",
+        "route": "/organisation/authorized/new",
         "RequestHeaders": { "authorization": string},
         "RequestBody": NewOrganisationDTO,
         "ResponseBody": string,
@@ -24,7 +24,7 @@
     {
         "description": "Delete an organisation",
         "httpRequest": "post",
-        "root": "/organisation/authorized/delete",
+        "route": "/organisation/authorized/delete",
         "RequestHeaders": { "authorization": string},
         "RequestBody": { "organisationId" : string},
         "ResponseBody": string,
@@ -34,7 +34,7 @@
     {
         "description": "Add an user as a member to an organisation",
         "httpRequest": "post",
-        "root": "/organisation/authorized/user",
+        "route": "/organisation/authorized/user",
         "RequestHeaders": {"authorization": string},
         "RequestBody": {"nickName" : string, "organisationId" : string},
         "ResponseBody": string,
@@ -44,7 +44,7 @@
     {
         "description": "Add a role to an organisation",
         "httpRequest": "post",
-        "root": "/organisation/authorized/role",
+        "route": "/organisation/authorized/role",
         "RequestHeaders": {"authorization": string},
         "RequestBody": { "organisationId" : string, "role" : Role},
         "ResponseBody": string,
@@ -54,7 +54,7 @@
     {
         "description": "Delete a role from an organisation",
         "httpRequest": "delete",
-        "root": "/organisation/authorized/role",
+        "route": "/organisation/authorized/role",
         "RequestHeaders": {"authorization": string},
         "RequestBody": { "organisationId" : string, "role" : string},
         "ResponseBody": string,
@@ -64,7 +64,7 @@
     {
         "description": "Change the role of an member in the organisation",
         "httpRequest": "put",
-        "root": "/organisation/authorized/user/role",
+        "route": "/organisation/authorized/user/role",
         "RequestHeaders": {"authorization": string},
         "RequestBody": { "userId" : string, "organisationId" : string, "targetMemberId" : string, "roleName" : string},
         "ResponseBody": string,
@@ -74,22 +74,43 @@
     {
         "description": "Get the organisations that a user is a member in",
         "httpRequest": "get",
-        "root": "/organisation/authorized/by/user",
+        "route": "/organisation/authorized/by/user",
         "RequestHeaders": { "authorization": string},
         "RequestBody": {},
         "ResponseBody": Organisation[],
         "ResponseStatusCodes": [200, 400, 500]
-    }
+    },
 
     {
         "description": "Get organisation by Id",
         "httpRequest": "get",
-        "root": "/organisation/by/id",
+        "route": "/organisation/by/id",
         "RequestHeaders": {},
         "RequestBody": {organisationId : string},
         "ResponseBody": Organisation,
         "ResponseStatusCodes": [200, 500]
-    }
+    },
+
+    {
+        "description": "Get all organisations",
+        "httpRequest": "get",
+        "route": "/organisation/all,
+        "RequestHeaders": {},
+        "RequestBody": {},
+        "ResponseBody": Organisation[],
+        "ResponseStatusCodes": [200, 500]
+    },
+
+    {
+        "description": "Get member permissions",
+        "httpRequest": "get",
+        "route": "/organisation/:orgId/permissions/by/user,
+        "RequestHeaders": {},
+        "RequestBody": {userId: string, organisationId: string},
+        "ResponseBody": Permission[],
+        "ResponseStatusCodes": [200, 500]
+    },
+
 
 ]
 
@@ -98,7 +119,7 @@
     {
         "description": "add an event",
         "httpRequest": "post",
-        "root": "/event/authorized/organisation/:orgId",
+        "route": "/event/authorized/organisation/:orgId",
         "RequestHeaders": {"authorization": string},
         "RequestBody": NewEventDTO,
         "ResponseBody": string,
@@ -108,7 +129,7 @@
     {
         "description": "Get all events that an organisation host",
         "httpRequest": "get",
-        "root": "/event/organisation/:orgId/all",
+        "route": "/event/organisation/:orgId/all",
         "RequestHeaders": {},
         "RequestBody": {},
         "ResponseBody": Event[],
@@ -118,7 +139,7 @@
     {
         "description": "Get all events",
         "httpRequest": "get",
-        "root": "/event/all",
+        "route": "/event/all",
         "RequestHeaders": {},
         "RequestBody": {},
         "ResponseBody": Event[],
@@ -128,7 +149,7 @@
     {
         "description": "Get event",
         "httpRequest": "get",
-        "root": "/event/:eventId",
+        "route": "/event/:eventId",
         "RequestHeaders": {},
         "RequestBody": {},
         "ResponseBody": Event,
@@ -142,7 +163,7 @@
     {
         "description": "register a new user",
         "httpRequest": "post",
-        "root": "/user/register,
+        "route": "/user/register,
         "RequestHeaders": {},
         "RequestBody": {fullName: string, nickname: string, email: string, password: string, repeatPassword: string},
         "ResponseBody": string,
@@ -152,29 +173,12 @@
     {
         "description": "get seession token to login user",
         "httpRequest": "post",
-        "root": "/user/login,
+        "route": "/user/login,
         "RequestHeaders": {},
         "RequestBody": {email: string, password: string, rememberMe: boolean},
         "ResponseBody": {token: string, succes: boolean},
         "ResponseStatusCodes": [200, 500]
     }
 
-    {},
-    {},
-
-
 ]
 
-
-"event":[
-
-    alla evetns som man medlem / följer i
-
-
-]
-
-
-"follower stuff, medlem följer per atomatic"
-   
-
-    
