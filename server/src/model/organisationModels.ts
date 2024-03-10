@@ -69,7 +69,7 @@ export class OrgServiceResponse implements ServiceResponse{
        
     ];
 
-    static getRes(id: number): OrgServiceResponse {
+    static getResponse(id: number): OrgServiceResponse {
         let resposne: OrgServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
         if (resposne === undefined) {
             throw error("not know id");

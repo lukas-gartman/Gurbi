@@ -41,7 +41,7 @@ export class userServiceResponse implements ServiceResponse{
         {httpStatusCode: 200, msg: "successfully registered", id: 4},
     ];
 
-    static getRes(id: number): userServiceResponse {
+    static getResponse(id: number): userServiceResponse {
         let resposne: userServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
         if (resposne === undefined) {
             throw Error("not know id");

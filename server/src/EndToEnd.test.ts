@@ -21,12 +21,12 @@ test("/user/register", async () => {
   //register testUser1
   const res1 = await request.post("/user/register").send({fullName: "testUser1", nickname: "tu", email: "test@gmail.se", password: "123", repeatPassword: "123"});
   expect(res1.statusCode).toBe(200);
-  expect(res1.text).toStrictEqual(userServiceResponse.getRes(4).msg);
+  expect(res1.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
 
   //register testUser2
   const res2 = await request.post("/user/register").send({fullName: "testUser2", nickname: "tur", email: "test2@gmail.se", password: "1234", repeatPassword: "1234"});
   expect(res2.statusCode).toBe(200);
-  expect(res2.text).toStrictEqual(userServiceResponse.getRes(4).msg);
+  expect(res2.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
   
 });
 

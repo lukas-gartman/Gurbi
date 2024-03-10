@@ -38,7 +38,7 @@ export class EventServiceResponse implements ServiceResponse{
 
     ];
 
-    static getRes(id: number): EventServiceResponse {
+    static getResponse(id: number): EventServiceResponse {
         let resposne: EventServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
         if (resposne === undefined) {
             throw Error("not know id");
