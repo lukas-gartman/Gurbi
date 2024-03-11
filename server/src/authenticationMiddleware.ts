@@ -12,7 +12,7 @@ export const authenticationMiddleware = async (req: AuthorizedRequest, res: Resp
 	token = token.replace("Bearer ", ''); // Apparently jsonwebtoken is unable to handle this...
 
 	try {
-		let decoded = jwt.verify(token, MY_NOT_VERY_SECURE_PRIVATE_KEY) as {userId : string};
+		let decoded = jwt.verify(token, MY_NOT_VERY_SECURE_PRIVATE_KEY) as {userId : number};
 		req['userId']= decoded.userId;
 		next();
 	} catch (e: any) {

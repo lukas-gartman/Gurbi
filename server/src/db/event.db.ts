@@ -4,43 +4,35 @@ import { Event } from "../model/eventModels";
 import { promises } from "dns";
 
 const eventSchema: Schema = new Schema({
-    id: { type: String, required: true, unique: true},
-    hostId : {type: String, required: true},
+    id: { type: Number, required: true, unique: true},
+    hostId : {type: Number, required: true},
     title: { type: String, required: true },
     location: { type: String, required: true},
     description: { type: String, required: true },
-    picture: { type: String},
+    picture: { type: String },
     date: { type: Date, required: true},
 });
 
-
-
 //storage
 export interface EventStorage {
-    getEventById(id: string): Promise<Event | null>;
-
+    getEventById(id: number): Promise<Event | null>;
     updateEvent(updatedEvent: Event): Promise<void>;
-
     addEvent(newEvent: Event): Promise<void>;
-  
-    deleteEventById(id: string): Promise<void>;
-
-    getEventsByHostId(hostId : string) : Promise<Event[]>;
-
+    deleteEventById(id: number): Promise<void>;
+    getEventsByHostId(hostId : number) : Promise<Event[]>;
     getAllEvents(): Promise<Event[]>;
-  }
+}
 
-  export class MongoDBEventStorage implements EventStorage {
+export class MongoDBEventStorage implements EventStorage {
     private eventModel = DBconnHandler.getConn().model<Event>("events", eventSchema);
-
     private idCounter : TotalCounter = new TotalCounter("events");
 
-    async getEventById(id: string): Promise<Event | null> {
+    async getEventById(id: number): Promise<Event | null> {
         const event = await this.eventModel.findOne({id: id}).exec();
         return event ? event.toObject() : null;
     }
 
-    async getEventsByHostId(hostId : string) : Promise<Event[]>{
+    async getEventsByHostId(hostId : number) : Promise<Event[]>{
         return await this.eventModel.find({hostId : hostId}).exec();
     }
 
@@ -49,12 +41,12 @@ export interface EventStorage {
     }
 
     async addEvent(newEvent: Event): Promise<void> {
-        newEvent.id = (await this.idCounter.getCounterValue()).toString();
+        newEvent.id = (await this.idCounter.getCounterValue());
         await this.idCounter.incrementCounter();
         await this.eventModel.create(newEvent);
     }
 
-    async deleteEventById(id: string): Promise<void> {
+    async deleteEventById(id: number): Promise<void> {
         await this.eventModel.findOneAndDelete({id : id}).exec();
     }
 
@@ -62,6 +54,4 @@ export interface EventStorage {
         const events = await this.eventModel.find().exec();
         return events;
     }
-
-
 }
