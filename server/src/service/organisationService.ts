@@ -2,14 +2,26 @@
 import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
 import {OrganisationPermissionChecker, Permission, ServiceResponse, getAllPermissions} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
-import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "../db/organisation.db";
-import { EventStorage } from "../db/event.db";
-import { Event, NewEventDTO } from "../model/eventModels";
+import {OrganisationStorage } from "../db/organisation.db";
 
 
+export interface IOrganisationService{
+    getUserOrganisations(userId : string) : Promise<Organisation[]>;
+    getOrganisations() : Promise<Organisation[]>;
+    getOrganisation(organisationId : string) : Promise<Organisation | null>;
+    getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>;
+    addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>;
+    deleteOrganisation(userId : string, organisationId : string) : Promise<ServiceResponse>;
+    addMemberToOrganisation(userId : string, nickName : string, organisationId : string) : Promise<ServiceResponse>;
+    removeMemberFromOrganisation(userId : string, organisationId : string) : Promise<ServiceResponse>;
+    addRoleToOrganisation(userId : string, organisationId : string, role : Role) : Promise<ServiceResponse>;
+    deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : Promise<ServiceResponse>;
+    changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, wantedRoleName : string) : Promise<ServiceResponse>;
+    
+}
 
 
-export class OrganisationService{
+export class OrganisationService implements IOrganisationService{
 
     //replace with mongoDB class
 
@@ -138,7 +150,7 @@ export class OrganisationService{
 
         index = organisation.members.findIndex(member => member.roleName === this.admin.roleName);
         if(index === -1){
-            return OrgServiceResponse.getResponse(412);
+            return OrgServiceResponse.getResponse(411);
         }
         else{
             await this.organisationStorage.updateOrganisation(organisation);
@@ -215,34 +227,40 @@ export class OrganisationService{
         return OrgServiceResponse.getResponse(205);
     }
 
-    async changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : Promise<ServiceResponse>{
+    async changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, wantedRoleName : string) : Promise<ServiceResponse>{
         let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes
         }
-    
+
         let org : Organisation = await this.organisationStorage.getOrganisationById(organisationId) as Organisation
 
-        
-        let role : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === roleName)
-        if(role === undefined){
+        let targetRole : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === wantedRoleName)
+        if(targetRole === undefined){
             return OrgServiceResponse.getResponse(408);
         }
+
 
         let index : number | undefined = org.members.findIndex(member => member.userId === targetMemberId);
         if (index === -1){
             return OrgServiceResponse.getResponse(409);
         }
 
-        if(org.members[index].roleName === this.admin.roleName){
-            return OrgServiceResponse.getResponse(411)
+        let user : Member | undefined = org.members.find(member => member.userId === userId);
+        if(((targetRole.roleName === this.admin.roleName) || (org.members[index].roleName === this.admin.roleName)) && (user?.roleName !== this.admin.roleName)){
+            return OrgServiceResponse.getResponse(412)
         }
 
-        org.members[index].roleName = role.roleName;
+        org.members[index].roleName = targetRole.roleName;
 
-        await this.organisationStorage.updateOrganisation(org);
-
-        return  OrgServiceResponse.getResponse(206);
+        index = org.members.findIndex(member => member.roleName === this.admin.roleName);
+        if(index === -1){
+            return OrgServiceResponse.getResponse(411);
+        }
+        else{
+            await this.organisationStorage.updateOrganisation(org);
+            return  OrgServiceResponse.getResponse(206);
+        }
 
     }
 

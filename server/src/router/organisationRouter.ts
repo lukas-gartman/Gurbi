@@ -1,13 +1,11 @@
 
 import express, { Request, Response, Router } from "express";
 import { NewOrganisationData, NewOrganisationDTO, Organisation, OrganisationUser, Role} from "../model/organisationModels";
-import { Event} from "../model/eventModels";
 import {AuthorizedRequest, Permission, ServiceResponse} from "../model/dataModels";
-import {OrganisationService} from "../service/organisationService"
-import { NewEventDTO } from "../model/eventModels";
+import {IOrganisationService} from "../service/organisationService"
 
 
-export function getOrganisationRouter(organisationService : OrganisationService) : Router{
+export function getOrganisationRouter(organisationService : IOrganisationService) : Router{
 
     const organisationRouter : Router = express.Router();
 
@@ -73,7 +71,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     })
     
-    organisationRouter.post("/authorized/role", async (req : AuthorizedRequest<{},{},{userId : string, organisationId : string, role : Role}>, res : Response<string> ) => {
+    organisationRouter.post("/authorized/role", async (req : AuthorizedRequest<{},{},{organisationId : string, role : Role}>, res : Response<string> ) => {
         try {
             let response : ServiceResponse = await organisationService.addRoleToOrganisation(req.userId as string, req.body.organisationId, req.body.role);
             return res.status(response.httpStatusCode).send(response.msg);
@@ -99,7 +97,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     
     
-    organisationRouter.put("/authorized/user/role", async (req : AuthorizedRequest<{},{},{userId : string, organisationId : string, targetMemberId : string, roleName : string}>, res : Response<string> ) => {
+    organisationRouter.put("/authorized/user/role", async (req : AuthorizedRequest<{},{},{organisationId : string, targetMemberId : string, roleName : string}>, res : Response<string> ) => {
         try {
             let response : ServiceResponse = await organisationService.changeRoleOfMember(req.userId as string, req.body.organisationId, req.body.targetMemberId, req.body.roleName);
             return res.status(response.httpStatusCode).send(response.msg);

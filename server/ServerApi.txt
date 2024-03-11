@@ -66,7 +66,7 @@
         "httpRequest": "delete",
         "route": "/organisation/authorized/role",
         "RequestHeaders": {"authorization": string},
-        "RequestBody": { "organisationId" : string, "role" : string},
+        "RequestBody": { "organisationId" : string, "roleName" : string},
         "ResponseBody": string,
         "ResponseStatusCodes": [200, 400, 401, 403 ,404, 500]
     },
@@ -76,7 +76,7 @@
         "httpRequest": "put",
         "route": "/organisation/authorized/user/role",
         "RequestHeaders": {"authorization": string},
-        "RequestBody": { "userId" : string, "organisationId" : string, "targetMemberId" : string, "roleName" : string},
+        "RequestBody": {"organisationId" : string, "targetMemberId" : string, "roleName" : string},
         "ResponseBody": string,
         "ResponseStatusCodes": [200, 400, 401 ,404, 500]
     },

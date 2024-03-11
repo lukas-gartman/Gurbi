@@ -135,8 +135,29 @@ test("delete /organisation/:orgId/authorized/user", async () => {
   let res3 = await request.get("/organisation/by/id").send({organisationId: "0"});
   expect(res3.body.members.length).toBe(2);
 
+  //login testUser1
+  let res4 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
+  let token2 : string = res4.body.token;
+  
+  //try to remove testUser1 as member of orgId = 0, but is the only admin left
+  let res5 = await request.delete("/organisation/0/authorized/user").set('authorization', token2).send();
+  expect(res5.statusCode).toBe(403);
+
+
 })
 
+test("post /organisation/authorized/user/role", async () => {
+
+  //login testUser1
+  let res1 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
+  let token : string = res1.body.token;
+  
+  //try to change the role of testUser1 as member of orgId = 0, but is the only admin left
+  let res2 = await request.put("/organisation/authorized/user/role").set('authorization', token).send({organisationId : "0", targetMemberId : "0", roleName : "member"});
+  expect(res2.statusCode).toBe(403);
+
+
+})
 
 test("post /event/authorized/organisation/:orgId", async () =>{
   

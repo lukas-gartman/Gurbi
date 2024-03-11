@@ -1,14 +1,17 @@
 
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
-import { MongoDBUserStorage, UserStorage } from "../db/user.db";
+import { UserStorage } from "../db/user.db";
 import { DBUser, userServiceResponse } from "../model/UserModels";
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
+export interface IUserService{
+    regNewUser(userInfo : {fullName: string, nickname: string, email: string, password: string, repeatPassword: string}) : Promise<userServiceResponse>;
+    loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean}>;
+}
 
 
-
-export class UserService{
+export class UserService implements IUserService{
 
     private userStorage : UserStorage;
 

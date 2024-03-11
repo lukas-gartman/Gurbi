@@ -58,8 +58,8 @@ export class OrgServiceResponse implements ServiceResponse{
         { httpStatusCode: 404, msg: "role does not exsist in organisation", id: 408 },
         { httpStatusCode: 404, msg: "target member does not exsist in organisation", id: 409 },
         { httpStatusCode: 409, msg: "role already exsists", id: 410 },
-        { httpStatusCode: 403, msg: "can't change the role of an admin", id: 411 },
-        { httpStatusCode: 403, msg: "must be at minimum be one admin", id: 412 },
+        { httpStatusCode: 403, msg: "must be at minimum one admin", id: 411 },
+        { httpStatusCode: 403, msg: "must be an admin to change the role of a member to/from admin", id: 412 },
 
         { httpStatusCode: 200, msg: "organistation successfuly added", id: 200 },
         { httpStatusCode: 200, msg: "member does have permission", id: 201 },
