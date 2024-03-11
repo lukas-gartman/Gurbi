@@ -121,7 +121,25 @@ export class OrganisationService{
 
     }
 
-    
+    async removeMemberFromOrganisation(userId : string, organisationId : string) : Promise<ServiceResponse>{
+        
+        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
+        
+        if(organisation === null){
+            return OrgServiceResponse.getResponse(401);
+        }
+
+        let index : number = organisation.members.findIndex(member => member.userId === userId);
+        if(index === -1){
+            return OrgServiceResponse.getResponse(402);
+        }
+
+        organisation.members.splice(index, 1);
+
+        await this.organisationStorage.updateOrganisation(organisation);
+
+        return OrgServiceResponse.getResponse(207);
+    }
 
     async addRoleToOrganisation(userId : string, organisationId : string, role : Role) : Promise<ServiceResponse>{    
         

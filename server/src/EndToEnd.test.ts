@@ -19,21 +19,31 @@ beforeAll(async () => {
 test("/user/register", async () => {
   
   //register testUser1
-  const res1 = await request.post("/user/register").send({fullName: "testUser1", nickname: "tu", email: "test@gmail.se", password: "123", repeatPassword: "123"});
+  let res1 = await request.post("/user/register").send({fullName: "testUser1", nickname: "a", email: "test@gmail.se", password: "123", repeatPassword: "123"});
   expect(res1.statusCode).toBe(200);
   expect(res1.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
 
   //register testUser2
-  const res2 = await request.post("/user/register").send({fullName: "testUser2", nickname: "tur", email: "test2@gmail.se", password: "1234", repeatPassword: "1234"});
+  let res2 = await request.post("/user/register").send({fullName: "testUser2", nickname: "b", email: "test2@gmail.se", password: "123", repeatPassword: "123"});
   expect(res2.statusCode).toBe(200);
   expect(res2.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
+
+  //register testUser3
+  let res3 = await request.post("/user/register").send({fullName: "testUser3", nickname: "c", email: "test3@gmail.se", password: "123", repeatPassword: "123"});
+  expect(res3.statusCode).toBe(200);
+  expect(res3.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
+
+  //register testUser4
+  let res4 = await request.post("/user/register").send({fullName: "testUser4", nickname: "d", email: "test4@gmail.se", password: "123", repeatPassword: "123"});
+  expect(res4.statusCode).toBe(200);
+  expect(res4.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
   
 });
 
 
 test("/user/login", async () => {
   //login testUser1
-  const res1 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
+  let res1 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
   expect(res1.statusCode).toBe(200);
   expect(res1.body.succes).toBe(true);
   expect((res1.body.token  as string).length).toBeGreaterThan(0);
@@ -42,37 +52,37 @@ test("/user/login", async () => {
 test("/organisation/authorized/new", async () => {
   
   //login testUser1
-  const res = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
+  let res = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
   let token : string = res.body.token
 
   //testUser1 makes another org 
   let org1 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg1"};
-  const res1 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
+  let res1 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
   expect(res1.statusCode).toBe(200);
 
   //testUser1 makes another org 
   let org2 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg2"};
-  const res2 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
+  let res2 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
   expect(res2.statusCode).toBe(200);
 
   //testUser1 makes another org 
   let org3 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg3"};
-  const res3 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
+  let res3 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
   expect(res3.statusCode).toBe(200);
 
   //testUser1 makes another org 
   let org4 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg4"};
-  const res4 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
+  let res4 = await request.post("/organisation/authorized/new").set('authorization', token).send(org1);
   expect(res4.statusCode).toBe(200);
 
 
   //login TestUser2
-  const res5 = await request.post("/user/login").send({email : "test2@gmail.se", password : "1234", rememberMe : true});
+  let res5 = await request.post("/user/login").send({email : "test2@gmail.se", password : "123", rememberMe : true});
   let token2 : string = res5.body.token
 
   //testUser2 makes an org
   let org5 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg5"};
-  const res6 = await request.post("/organisation/authorized/new").set('authorization', token2).send(org5);
+  let res6 = await request.post("/organisation/authorized/new").set('authorization', token2).send(org5);
   expect(res6.statusCode).toBe(200);
 
     
@@ -82,7 +92,7 @@ test("/organisation/authorized/new", async () => {
 test("/organisation/by/id", async () => {
   
   //get an organisation
-  const res = await request.get("/organisation/by/id").send({organisationId: "2"});
+  let res = await request.get("/organisation/by/id").send({organisationId: "2"});
   expect(res.body.id).toBe("2");
 });
 
@@ -90,21 +100,48 @@ test("/organisation/by/id", async () => {
 test("post /organisation/authorized/user", async () =>{
   
   //login testUser2
-  const res = await request.post("/user/login").send({email : "test2@gmail.se", password : "1234", rememberMe : true});
+  let res = await request.post("/user/login").send({email : "test2@gmail.se", password : "123", rememberMe : true});
   let token : string = res.body.token
 
   //add testUser2 as member of organisation id = 0 
-  const res2 = await request.post("/organisation/authorized/user").set('authorization', token).send({nickName : "nickname2", organisationId : "0"});
-  
+  let res2 = await request.post("/organisation/authorized/user").set('authorization', token).send({nickName : "nickname2", organisationId : "0"});
   expect(res2.statusCode).toBe(200);
 
+
+  //login testUser3
+  let res1 = await request.post("/user/login").send({email : "test3@gmail.se", password : "123", rememberMe : true});
+  let token2 : string = res1.body.token
+  
+
+  //add testUser3 as member of organisation id = 0 
+  let res3 = await request.post("/organisation/authorized/user").set('authorization', token2).send({nickName : "nickname3", organisationId : "0"});
+  expect(res3.statusCode).toBe(200);
+
+  let res4 = await request.get("/organisation/by/id").send({organisationId: "0"});
+  expect(res4.body.members.length).toBe(3);
+
 });
+
+
+test("delete /organisation/:orgId/authorized/user", async () => {
+  //login testUser3
+  let res = await request.post("/user/login").send({email : "test3@gmail.se", password : "123", rememberMe : true});
+  let token : string = res.body.token;
+
+  //remove testUser3 as member of orgId = 0
+  let res2 = await request.delete("/organisation/0/authorized/user").set('authorization', token);
+  expect(res2.statusCode).toBe(200);
+
+  let res3 = await request.get("/organisation/by/id").send({organisationId: "0"});
+  expect(res3.body.members.length).toBe(2);
+
+})
 
 
 test("post /event/authorized/organisation/:orgId", async () =>{
   
   //login testUser2
-  const res = await request.post("/user/login").send({email : "test2@gmail.se", password : "1234", rememberMe : true});
+  let res = await request.post("/user/login").send({email : "test2@gmail.se", password : "123", rememberMe : true});
   let token : string = res.body.token
 
   //Create a new event
@@ -115,22 +152,22 @@ test("post /event/authorized/organisation/:orgId", async () =>{
   event.title = "";
 
   //let testUser2 that does not have prem for orgId = 2 try add an event
-  const res2 = await request.post("/event/authorized/organisation/2").set('authorization', token).send(event);
+  let res2 = await request.post("/event/authorized/organisation/2").set('authorization', token).send(event);
   expect(res2.statusCode).toBe(401)
 
 
    //login testUser1
-  const res3 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
+  let res3 = await request.post("/user/login").send({email : "test@gmail.se", password : "123", rememberMe : true});
   let token2 : string = res3.body.token
 
 
   //let testUser1 add an event with prem for orgId = 2 but not sending all data
-  const res4 = await request.post("/event/authorized/organisation/2").set('authorization', token2).send(event);
+  let res4 = await request.post("/event/authorized/organisation/2").set('authorization', token2).send(event);
   expect(res4.statusCode).toBe(400)
 
   //let testUser1 add an event with prem for orgId = 2 and full data
   event.title = "Robot"
-  const res5 = await request.post("/event/authorized/organisation/2").set('authorization', token2).send(event);
+  let res5 = await request.post("/event/authorized/organisation/2").set('authorization', token2).send(event);
   expect(res5.statusCode).toBe(200)
 
   event.title = "computer"
@@ -139,7 +176,7 @@ test("post /event/authorized/organisation/:orgId", async () =>{
   event.location = "vänersborg"
 
   //let testUser1 add an event with prem for orgId = 2 and full data
-  const res6 = await request.post("/event/authorized/organisation/2").set('authorization', token2).send(event);
+  let res6 = await request.post("/event/authorized/organisation/2").set('authorization', token2).send(event);
   expect(res6.statusCode).toBe(200)
 
 
@@ -149,7 +186,7 @@ test("post /event/authorized/organisation/:orgId", async () =>{
   event.location = "trollhättan"
   
   //let testUser1 add an event with prem for orgId = 4 and full data  
-  const res7 = await request.post("/event/authorized/organisation/4").set('authorization', token).send(event);
+  let res7 = await request.post("/event/authorized/organisation/4").set('authorization', token).send(event);
   expect(res7.statusCode).toBe(200)
 
 

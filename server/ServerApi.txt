@@ -32,13 +32,23 @@
     },
 
     {
-        "description": "Add an user as a member to an organisation",
+        "description": "Add a user as a member to an organisation",
         "httpRequest": "post",
         "route": "/organisation/authorized/user",
         "RequestHeaders": {"authorization": string},
         "RequestBody": {"nickName" : string, "organisationId" : string},
         "ResponseBody": string,
         "ResponseStatusCodes": [200, 400, 404, 409, 500]
+    },
+    
+    {
+        "description": "remove a user as a member from an organisation",
+        "httpRequest": "delete",
+        "route": "/organisation/:orgId/authorized/user",
+        "RequestHeaders": {"authorization": string},
+        "RequestBody": {},
+        "ResponseBody": string,
+        "ResponseStatusCodes": [200, 400, 401, 404, 500]
     },
 
     {
