@@ -1,6 +1,6 @@
 
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
-import { MongoDBUserStorage, UserStorage } from "../db/user.db";
+import { UserStorage } from "../db/user.db";
 import { DBUser, userServiceResponse } from "../model/UserModels";
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';

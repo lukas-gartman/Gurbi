@@ -2,7 +2,6 @@ import {OrganisationPermissionChecker, Permission, ServiceResponse} from "../mod
 import {Event, EventServiceResponse, NewEventDTO} from "../model/eventModels"
 import { EventStorage } from "../db/event.db";
 
-//exempel Permission.getPermission(1)
 
 export interface IEventService{
     addEvent(eventData : NewEventDTO, orgId : string, userId : string) : Promise<ServiceResponse>;
