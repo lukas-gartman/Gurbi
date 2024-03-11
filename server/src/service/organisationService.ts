@@ -2,14 +2,26 @@
 import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
 import {OrganisationPermissionChecker, Permission, ServiceResponse, getAllPermissions} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
-import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "../db/organisation.db";
-import { EventStorage } from "../db/event.db";
-import { Event, NewEventDTO } from "../model/eventModels";
+import {OrganisationStorage } from "../db/organisation.db";
 
 
+export interface IOrganisationService{
+    getUserOrganisations(userId : string) : Promise<Organisation[]>;
+    getOrganisations() : Promise<Organisation[]>;
+    getOrganisation(organisationId : string) : Promise<Organisation | null>;
+    getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>;
+    addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>;
+    deleteOrganisation(userId : string, organisationId : string) : Promise<ServiceResponse>;
+    addMemberToOrganisation(userId : string, nickName : string, organisationId : string) : Promise<ServiceResponse>;
+    removeMemberFromOrganisation(userId : string, organisationId : string) : Promise<ServiceResponse>;
+    addRoleToOrganisation(userId : string, organisationId : string, role : Role) : Promise<ServiceResponse>;
+    deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : Promise<ServiceResponse>;
+    changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, wantedRoleName : string) : Promise<ServiceResponse>;
+    
+}
 
 
-export class OrganisationService{
+export class OrganisationService implements IOrganisationService{
 
     //replace with mongoDB class
 

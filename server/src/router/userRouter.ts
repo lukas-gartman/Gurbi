@@ -1,12 +1,10 @@
 import express, { Request, Response, Router } from "express";
-import { DBUser, userServiceResponse } from "../model/UserModels";
-import { UserLogin } from "../model/UserModels";
-import { UserService } from "../service/userService";
+import { IUserService} from "../service/userService";
 import * as jwt from 'jsonwebtoken';
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
 import { ServiceResponse } from "../model/dataModels";
 
-export function getUserRouter(userService : UserService) : Router {
+export function getUserRouter(userService : IUserService) : Router {
     const userRouter : Router = express.Router();
 
     userRouter.post("/register", async(req: Request<{},{},{fullName: string, nickname: string, email: string, password: string, repeatPassword: string}>, res: Response<string>) => {

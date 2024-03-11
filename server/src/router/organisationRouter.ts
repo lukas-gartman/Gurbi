@@ -1,13 +1,11 @@
 
 import express, { Request, Response, Router } from "express";
 import { NewOrganisationData, NewOrganisationDTO, Organisation, OrganisationUser, Role} from "../model/organisationModels";
-import { Event} from "../model/eventModels";
 import {AuthorizedRequest, Permission, ServiceResponse} from "../model/dataModels";
-import {OrganisationService} from "../service/organisationService"
-import { NewEventDTO } from "../model/eventModels";
+import {IOrganisationService} from "../service/organisationService"
 
 
-export function getOrganisationRouter(organisationService : OrganisationService) : Router{
+export function getOrganisationRouter(organisationService : IOrganisationService) : Router{
 
     const organisationRouter : Router = express.Router();
 

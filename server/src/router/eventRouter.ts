@@ -1,9 +1,9 @@
 import express, { Router, Request, Response } from "express";
 import { AuthorizedRequest, ServiceResponse } from "../model/dataModels";
 import { NewEventDTO, Event} from "../model/eventModels";
-import { EventService } from "../service/eventService";
+import {IEventService } from "../service/eventService";
 
-export function getEventRouter(eventService : EventService) : Router{
+export function getEventRouter(eventService : IEventService) : Router{
 
     const eventRouter : Router = express.Router();
 

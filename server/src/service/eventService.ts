@@ -4,9 +4,14 @@ import { EventStorage } from "../db/event.db";
 
 //exempel Permission.getPermission(1)
 
+export interface IEventService{
+    addEvent(eventData : NewEventDTO, orgId : string, userId : string) : Promise<ServiceResponse>;
+    getOrganisationEvents(orgId : string) : Promise<Event[]>;
+    getAllEvents() : Promise<Event[]>;
+    getEvent(eventId : string) : Promise<Event | undefined>;
+}
 
-
-export class EventService{
+export class EventService implements IEventService{
 
     private eventStorage : EventStorage;
     private orgPremChecker : OrganisationPermissionChecker;
