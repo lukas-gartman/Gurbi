@@ -159,6 +159,7 @@ test("post /event/authorized/organisation/:orgId", async () =>{
 
 test("get /event/:eventId", async () => {
 
+   //Retrive an event by id = 2
   let res = await request.get("/event/2");
   
   expect(res.statusCode).toBe(200);
