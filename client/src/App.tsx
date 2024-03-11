@@ -12,7 +12,7 @@ import Settings from './routes/Settings';
 import NewEvent from './routes/NewEvent';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { IEvent, IOrganisation } from './models/models';
+import { IEvent, IOrganisation, IUser } from './models/models';
 
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
@@ -41,22 +41,6 @@ const AuthGuard = () => {
 	});
 
 	return <Outlet />;
-
-	// const isValid = async () : Promise<boolean> => {
-	// 	const response = await client.post("/authorized", { token: jwt });
-	// 	console.log("the response from validate is: \n" + response);
-	// 	return response.data.valid;
-	// }
-
-	// isValid().then(isValid => {
-	// 	if (!isValid) {
-	// 		client.defaults.headers.common['Authorization'] = ``;
-	// 		console.log("User token is not valid. Redirecting from " + window.location.pathname + "to /login ...");
-	// 		return <Navigate to="/login" replace />;
-	// 	}
-	// }).catch(() => {
-	// 	client.defaults.headers.common['Authorization'] = ``;
-	// });
 }
 
 const Logout = () => {
@@ -78,9 +62,8 @@ const router = createBrowserRouter([
 				path: "/events",
 				element: <Events />,
 				loader: async ({ params }) => {
-					const jwt = Cookie.get("jwt");
-					interface OrgResponse { orgs: IOrganisation[] };
 					let events: IEvent[] = [];
+					interface OrgResponse { orgs: IOrganisation[] };
 					client.post<OrgResponse>(`/organisation/authorized/by/user`).then(response => {
 						try {
 							const followingOrgIds = response.data.orgs.map(org => org.id );
@@ -92,13 +75,6 @@ const router = createBrowserRouter([
 					});
 					
 					return events;
-					
-					// console.log("Getting the organisation list now:\n" + test.data);
-					// return await client.post(`/event/authorized/following`, { token: jwt, orgIds: followingOrgIds });
-					// const response = await client.post("/user/validate", { token: jwt });
-					
-					
-					// return JSON.parse('[{"id": 1, "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning"}, {"id": 2, "location": "Monaden", "dateTime": "18:30", "name": "Mega6 Sittning"}]');
 				}
 			},
 			{
@@ -113,16 +89,30 @@ const router = createBrowserRouter([
 				path: "/organisations",
 				element: <Organisations />,
 				loader: async ({ params }) => {
-				// 	return client.get(`/api/memberships`);
-					return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}, {"id": 2, "name": "Mega6", "picture": ""}]');
+					let organisations: IOrganisation[] = [];
+					try {
+						interface OrgResponse { orgs: IOrganisation[] };
+						client.get<OrgResponse>("/organisation/all").then(response => {
+							organisations = response.data.orgs;
+						});
+					} catch (e: any) { }
+					return organisations;
+					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}, {"id": 2, "name": "Mega6", "picture": ""}]');
 				}
 			},
 			{
 				path: "/organisations/memberships",
 				element: <Organisations />,
 				loader: async ({ params }) => {
-					// return client.get(`/api/organisations/memberships`);
-					return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}]');
+					let memberships: IOrganisation[] = [];
+					try {
+						interface OrgResponse { orgs: IOrganisation[] };
+						client.post<OrgResponse>("/organisation/authorized/by/user").then(response => {
+							memberships = response.data.orgs;
+						});
+					} catch (e: any) { }
+					return memberships;
+					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}]');
 				}
 			},
 			{
@@ -146,9 +136,12 @@ const router = createBrowserRouter([
 				path: "/profile",
 				element: <Profile />,
 				loader: async ({ params }) => {
-					// curr_usr = get_user_id()
-					// return client.get(`api/user/${curr_usr}`);
-					return JSON.parse(`{"id": 1, "name": "Lukas", "email": "lukas@dvet.se", "regDate": "2024-02-20"}`);
+					const me = (await client.post("/user/authorized/me")).data as IUser;
+					const membershipCount = ((await client.post("/organisation/authorized/by/user")).data as IOrganisation[]).length
+					const savedEvents: IEvent[] = []; // TODO: create saved events collection
+
+					const data = { user: me, membershipCount: membershipCount, followingCount: -1, savedEvents: savedEvents }
+					return data;
 				}
 			},
 			{

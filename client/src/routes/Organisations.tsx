@@ -2,7 +2,7 @@ import '../stylesheets/Organisations.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { NavLink, useLoaderData } from 'react-router-dom';
-import { Organisation } from '../../../server/src/model/organisationModels';
+import { IOrganisation } from '../models/models';
 import OrganisationCard from '../components/OrganisationCard';
 
 function Organisations() {
@@ -14,12 +14,12 @@ function Organisations() {
         </>
     );
 
-    const orgs = useLoaderData() as Organisation[];
+    const orgs = useLoaderData() as IOrganisation[];
     return (
         <div className="App">
             <Header onSearch={onSearch} headerNav={navItems} />
             <main className="organisations">
-                { orgs.map(o => {return <OrganisationCard org={o} /> }) }
+                { orgs.map((org) => {return <OrganisationCard org={org} key={org.id} /> }) }
             </main>
             <Footer />
         </div>

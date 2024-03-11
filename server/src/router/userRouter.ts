@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from "express";
-import { DBUser, userServiceResponse } from "../model/UserModels";
+import { DBUser, IUser, userServiceResponse } from "../model/UserModels";
 import { UserLogin } from "../model/UserModels";
 import { UserService } from "../service/userService";
 import * as jwt from 'jsonwebtoken';
@@ -33,6 +33,25 @@ export function getUserRouter(userService : UserService) : Router {
 
     userRouter.post("/authorized/validate", async(req: AuthorizedRequest<{},{},{}>, res: Response<{valid: boolean}>) => {
         res.status(200).json({ valid: true });
+    });
+
+    userRouter.get("/:userId", async(req: Request<{userId: number},{},{}>, res: Response<IUser | string>) => {
+        const user = await userService.getUser(req.params.userId);
+        if (user) {
+            res.status(200).send(user);
+        } else {
+            res.status(404).send("User not found");
+        }
+    });
+
+    userRouter.post("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
+        const userId = req.userId as number;
+        const me = await userService.getUser(userId);
+        if (me !== null) {
+            res.status(200).send(me);
+        } else {
+            res.status(404).send("User with ID " + userId + " not found");
+        }
     });
 
     return userRouter;

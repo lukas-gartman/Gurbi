@@ -16,3 +16,19 @@ export interface IEvent {
     price: number;
     picture: string;
 }
+
+export interface IUser {
+    id: number;
+    name: string;
+    nickName: string
+    email: string;
+    regDate: Date;
+    picture: string;
+}
+
+export interface IProfile {
+    user: IUser;
+    membershipsCount: number;
+    followingCount: number;
+    savedEvents: IEvent[];
+}

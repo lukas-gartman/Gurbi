@@ -9,6 +9,7 @@ const userSchema: Schema = new Schema({
     encryptedPassword: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     regDate: { type: Date, required: true },
+	picture: {type: String, required: true }
 });
 
 //storage

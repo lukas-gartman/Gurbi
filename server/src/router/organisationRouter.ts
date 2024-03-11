@@ -94,6 +94,15 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             return res.status(500).send(e.message);
         }
     });
+
+    organisationRouter.get("/all", async (req: Request<{},{},{}>, res: Response<Organisation[]>) => {
+        try {
+            let orgs: Organisation[] = await organisationService.getOrganisations() as Organisation[];
+            return res.status(200).send(orgs);
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+    });
  
     return organisationRouter;
 }
