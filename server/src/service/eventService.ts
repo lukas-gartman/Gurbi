@@ -42,6 +42,14 @@ export class EventService{
         return await this.eventStorage.getEventsByHostId(orgId);
     }
 
+    async getEventsByOrganisations(orgIds : string[]) : Promise<Event[]> {
+        const promises: Promise<Event[]>[] = orgIds.map(orgId => this.eventStorage.getEventsByHostId(orgId));
+        const events = await Promise.all(promises);
+        return events.flat().sort((a: Event, b: Event) => {
+            return a.date.getTime() - b.date.getTime();
+        });
+    }
+
     async getAllEvents() : Promise<Event[]>{
         return await this.eventStorage.getAllEvents();
     }

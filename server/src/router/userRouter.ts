@@ -4,7 +4,7 @@ import { UserLogin } from "../model/UserModels";
 import { UserService } from "../service/userService";
 import * as jwt from 'jsonwebtoken';
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
-import { ServiceResponse } from "../model/dataModels";
+import { AuthorizedRequest, ServiceResponse } from "../model/dataModels";
 
 export function getUserRouter(userService : UserService) : Router {
     const userRouter : Router = express.Router();
@@ -31,18 +31,8 @@ export function getUserRouter(userService : UserService) : Router {
         }
     });
 
-    userRouter.post("/validate", async(req: Request<{},{},{token: string}>, res: Response<{valid: boolean, error: string}>) => {
-        const token = req.body.token;
-        if (!token) {
-            res.status(401).json({valid: false, error: "Token not provided" });
-        }
-
-        try {
-            jwt.verify(token, MY_NOT_VERY_SECURE_PRIVATE_KEY);
-            res.status(200).json({ valid: true, error: "" });
-        } catch (e) {
-            res.status(401).json({ valid: false, error: "Invalid or expired token" });
-        }
+    userRouter.post("/authorized/validate", async(req: AuthorizedRequest<{},{},{}>, res: Response<{valid: boolean}>) => {
+        res.status(200).json({ valid: true });
     });
 
     return userRouter;

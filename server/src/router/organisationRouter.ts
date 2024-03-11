@@ -96,9 +96,8 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     });
     
     
-    organisationRouter.get("/authorized/by/user", async (req : AuthorizedRequest<{},{},{}>, res : Response<Organisation[]> ) => {
+    organisationRouter.post("/authorized/by/user", async (req : AuthorizedRequest<{},{},{}>, res : Response<Organisation[]> ) => {
         try {
-    
             let orgs : Organisation[] = await organisationService.getUserOrganisations(req.userId as string);
             return res.status(200).send(orgs);
             

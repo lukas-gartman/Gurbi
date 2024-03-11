@@ -19,7 +19,7 @@ export function getApp(useDatabase: boolean) : Application {
     const app = express();
 
     //make some request work
-    app.use(cors());
+    app.use(cors({origin: "http://localhost:3000", credentials: true}));
 
     //JSON parse
     app.use(express.json());
