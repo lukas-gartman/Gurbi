@@ -228,14 +228,15 @@ export class OrganisationService{
             return OrgServiceResponse.getResponse(408);
         }
 
-        let user : Member | undefined = org.members.find(member => member.userId === userId);
-        if((targetRole.roleName === this.admin.roleName) && (user?.roleName !== this.admin.roleName)){
-            return OrgServiceResponse.getResponse(412)
-        }
 
         let index : number | undefined = org.members.findIndex(member => member.userId === targetMemberId);
         if (index === -1){
             return OrgServiceResponse.getResponse(409);
+        }
+
+        let user : Member | undefined = org.members.find(member => member.userId === userId);
+        if(((targetRole.roleName === this.admin.roleName) || (org.members[index].roleName === this.admin.roleName)) && (user?.roleName !== this.admin.roleName)){
+            return OrgServiceResponse.getResponse(412)
         }
 
         org.members[index].roleName = targetRole.roleName;
