@@ -19,13 +19,13 @@ export class UserService{
     async regNewUser(userInfo : {fullName: string, nickname: string, email: string, password: string, repeatPassword: string}) : Promise<userServiceResponse>{
        
         if (!userInfo.fullName.trim() || !userInfo.email.trim() || !userInfo.password.trim() || !userInfo.repeatPassword.trim()) {
-            return userServiceResponse.getRes(1);
+            return userServiceResponse.getResponse(1);
         };
         if(userInfo.password !== userInfo.repeatPassword){
-            return userServiceResponse.getRes(2);
+            return userServiceResponse.getResponse(2);
         }
         if(await this.userStorage.isEmailExists(userInfo.email)){
-            return userServiceResponse.getRes(3);
+            return userServiceResponse.getResponse(3);
         }
 
 
@@ -35,7 +35,7 @@ export class UserService{
 
         await this.userStorage.addUser(user);
 
-        return userServiceResponse.getRes(4);
+        return userServiceResponse.getResponse(4);
     }
     
     async loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean}>{

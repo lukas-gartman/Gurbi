@@ -42,12 +42,12 @@ export class OrganisationPermissionChecker{
         let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
 
         if(organisation === null){
-            return {serverRes: OrgServiceResponse.getRes(401), succes: false }; 
+            return {serverRes: OrgServiceResponse.getResponse(401), succes: false }; 
         }
 
         let member : Member | undefined = organisation.members.find(member => member.userId === userId);
         if(member === undefined){
-            return {serverRes: OrgServiceResponse.getRes(402), succes: false };
+            return {serverRes: OrgServiceResponse.getResponse(402), succes: false };
         }
 
 
@@ -55,10 +55,10 @@ export class OrganisationPermissionChecker{
 
         let permission : Permission | undefined =  organisation?.roles.find(role => role.roleName === roleName)?.permissions?.find(permission => permission === checkPermission)
         if(permission === undefined){
-            return {serverRes: OrgServiceResponse.getRes(403), succes: false };
+            return {serverRes: OrgServiceResponse.getResponse(403), succes: false };
         }
 
-        return {serverRes: OrgServiceResponse.getRes(201), succes: true};
+        return {serverRes: OrgServiceResponse.getResponse(201), succes: true};
     }
 
 }

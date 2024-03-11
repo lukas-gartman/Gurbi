@@ -31,10 +31,10 @@ export class EventService{
         try {
             await this.eventStorage.addEvent(event);
         } catch (e : any) {
-            return EventServiceResponse.getRes(0);
+            return EventServiceResponse.getResponse(0);
         }
 
-        return EventServiceResponse.getRes(1);
+        return EventServiceResponse.getResponse(1);
 
     }
 

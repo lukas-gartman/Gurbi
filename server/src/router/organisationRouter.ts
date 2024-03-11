@@ -28,7 +28,7 @@ export function getOrganisationRouter(organisationService : OrganisationService)
         }
     });
     
-    organisationRouter.post("/authorized/delete", async (req : AuthorizedRequest<{},{},{organisationId : string}>, res : Response<string> ) => {
+    organisationRouter.delete("/authorized", async (req : AuthorizedRequest<{},{},{organisationId : string}>, res : Response<string> ) => {
     
         try {
             let userId : string = req.userId as string;
@@ -58,6 +58,20 @@ export function getOrganisationRouter(organisationService : OrganisationService)
     
     })
     
+    organisationRouter.delete("/:orgId/authorized/user", async (req : AuthorizedRequest<{orgId : string},{},{}>, res : Response<string> ) => {
+        try {
+            let userId : string = req.userId as string;
+            let orgId : string = req.params.orgId.toString(); 
+
+            let response : ServiceResponse = await organisationService.removeMemberFromOrganisation(userId, orgId);
+            return res.status(response.httpStatusCode).send(response.msg);
+    
+    
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+    
+    })
     
     organisationRouter.post("/authorized/role", async (req : AuthorizedRequest<{},{},{userId : string, organisationId : string, role : Role}>, res : Response<string> ) => {
         try {
@@ -125,6 +139,17 @@ export function getOrganisationRouter(organisationService : OrganisationService)
             let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
 
             return res.status(200).send(permissions);
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+
+    });
+
+    organisationRouter.get("/all", async (req : Request<{},{},{}>, res : Response<Organisation[]>)  => {
+        try {
+            let orgs : Organisation[] = await organisationService.getOrganisations();
+            return res.status(200).send(orgs);
+
         } catch (e: any) {
             return res.status(500).send(e.message);
         }

@@ -17,7 +17,7 @@ test("test add organisation", async () => {
 
     let answer : ServiceResponse = await organisationService.addOrganisation(org1)
 
-    expect(answer).toStrictEqual(OrgServiceResponse.getRes(200));
+    expect(answer).toStrictEqual(OrgServiceResponse.getResponse(200));
 
 
 })
@@ -89,9 +89,9 @@ test("add member to organisation", async () => {
     //expect(organisationService.getOrganisationMembers(orgId as string).length).toBe(2);
     expect(( await organisationService.getOrganisation(orgId as string))?.members?.length).toBe(2)
     expect((await organisationService.getOrganisation(orgId as string))?.members.find(member => member.userId === "TestUser2")?.roleName).toBe("member")
-    expect(await organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname3", orgId  as string)).toStrictEqual(OrgServiceResponse.getRes(404))
-    expect(await organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname2", orgId  as string)).toStrictEqual(OrgServiceResponse.getRes(405))
-    expect(await organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname3", "wadawdawdfesgsegsegsegsegsdge12412412412412safasf")).toStrictEqual(OrgServiceResponse.getRes(401))
+    expect(await organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname3", orgId  as string)).toStrictEqual(OrgServiceResponse.getResponse(404))
+    expect(await organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname2", orgId  as string)).toStrictEqual(OrgServiceResponse.getResponse(405))
+    expect(await organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname3", "wadawdawdfesgsegsegsegsegsdge12412412412412safasf")).toStrictEqual(OrgServiceResponse.getResponse(401))
 
 });
 
@@ -108,11 +108,11 @@ test("delete organisation", async () =>{
     await organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
 
-    expect(await organisationService.deleteOrganisation("TestUser3", orgId)).toStrictEqual(OrgServiceResponse.getRes(402));
-    expect(await organisationService.deleteOrganisation("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual(OrgServiceResponse.getRes(401));
-    expect(await organisationService.deleteOrganisation("TestUser2", orgId)).toStrictEqual(OrgServiceResponse.getRes(403));
+    expect(await organisationService.deleteOrganisation("TestUser3", orgId)).toStrictEqual(OrgServiceResponse.getResponse(402));
+    expect(await organisationService.deleteOrganisation("TestUser2", "aawdawdawdsegseg1231234")).toStrictEqual(OrgServiceResponse.getResponse(401));
+    expect(await organisationService.deleteOrganisation("TestUser2", orgId)).toStrictEqual(OrgServiceResponse.getResponse(403));
     expect((await organisationService.getOrganisations()).length).toBe(1);
-    expect(await organisationService.deleteOrganisation("TestUser1", orgId)).toStrictEqual(OrgServiceResponse.getRes(202));
+    expect(await organisationService.deleteOrganisation("TestUser1", orgId)).toStrictEqual(OrgServiceResponse.getResponse(202));
     expect((await organisationService.getOrganisations()).length).toBe(0);
 
     
@@ -125,12 +125,12 @@ test("add role to organisation", async () => {
     let orgId : string = (await organisationService.getUserOrganisations("TestUser1")).at(0)?.id as string;
     await organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
-    expect(await organisationService.addRoleToOrganisation("TestUser1", "awdawfawfsegty456346ewraqwdawd", {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getRes(401))
-    expect(await organisationService.addRoleToOrganisation("TestUser3", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getRes(402));
-    expect(await organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getRes(403));
-    expect(await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getRes(204));
+    expect(await organisationService.addRoleToOrganisation("TestUser1", "awdawfawfsegty456346ewraqwdawd", {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getResponse(401))
+    expect(await organisationService.addRoleToOrganisation("TestUser3", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getResponse(402));
+    expect(await organisationService.addRoleToOrganisation("TestUser2", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getResponse(403));
+    expect(await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getResponse(204));
     expect((await organisationService.getOrganisation(orgId))?.roles.length).toBe(3);
-    expect(await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getRes(410));
+    expect(await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getResponse(410));
 });
 
 test("delete role from organisation", async () => {
@@ -141,17 +141,17 @@ test("delete role from organisation", async () => {
     await organisationService.addMemberToOrganisation("TestUser2", "TestUserNickname2", orgId);
 
 
-    expect(await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getRes(204));
-    expect(await organisationService.deleteRoleFromOrganistation("TestUser2", orgId, "myNewRole")).toStrictEqual(OrgServiceResponse.getRes(403))
+    expect(await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "myNewRole", permissions : [Permission.ChangeOrganisationName]})).toStrictEqual(OrgServiceResponse.getResponse(204));
+    expect(await organisationService.deleteRoleFromOrganistation("TestUser2", orgId, "myNewRole")).toStrictEqual(OrgServiceResponse.getResponse(403))
     expect((await organisationService.getOrganisation(orgId))?.roles.length).toBe(3);
 
-    expect(await organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "awfawfawd")).toStrictEqual(OrgServiceResponse.getRes(205))
+    expect(await organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "awfawfawd")).toStrictEqual(OrgServiceResponse.getResponse(205))
     expect((await organisationService.getOrganisation(orgId))?.roles.length).toBe(3);
 
     await organisationService.addMemberToOrganisation("TestUser3", "TestUserNickname3", orgId);
     await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser3", "myNewRole");
 
-    expect(await organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "myNewRole")).toStrictEqual(OrgServiceResponse.getRes(205))
+    expect(await organisationService.deleteRoleFromOrganistation("TestUser1", orgId, "myNewRole")).toStrictEqual(OrgServiceResponse.getResponse(205))
     expect((await organisationService.getOrganisation(orgId))?.roles.length).toBe(2);
     expect((await organisationService.getOrganisation(orgId))?.members?.find(member => member.userId === "TestUser3")?.roleName).toBe("member")
 })
@@ -165,9 +165,9 @@ test("change member role", async () => {
 
     await organisationService.addRoleToOrganisation("TestUser1", orgId, {roleName : "MyNewRole", permissions : [Permission.ChangeOrganisationName]})
 
-    expect(await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewawdawdRole")).toStrictEqual(OrgServiceResponse.getRes(408))
-    expect(await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser3", "MyNewRole")).toStrictEqual(OrgServiceResponse.getRes(409))
-    expect(await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewRole")).toStrictEqual(OrgServiceResponse.getRes(206))
+    expect(await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewawdawdRole")).toStrictEqual(OrgServiceResponse.getResponse(408))
+    expect(await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser3", "MyNewRole")).toStrictEqual(OrgServiceResponse.getResponse(409))
+    expect(await organisationService.changeRoleOfMember("TestUser1", orgId, "TestUser2", "MyNewRole")).toStrictEqual(OrgServiceResponse.getResponse(206))
     expect(( await organisationService.getOrganisation(orgId))?.members.find(member => member.userId === "TestUser2")?.roleName).toBe("MyNewRole")
 
 })
