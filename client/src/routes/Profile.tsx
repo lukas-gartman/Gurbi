@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import { IUser } from "../../../server/src/model/UserModels";
 import { ClientContext } from '../App';
 import { useContext } from 'react';
-import { IEvent } from '../models/models';
+import { IEvent, IProfile } from '../models/models';
 import EventCard from '../components/EventCard';
 
 function Profile() {
@@ -28,8 +28,7 @@ function Profile() {
         </>
     );
 
-    interface ProfileData { user: IUser, membershipCount: number, followingCount: number, savedEvents: IEvent[] }
-    const data = useLoaderData() as ProfileData;
+    const data = useLoaderData() as IProfile;
 
     return (
         <div className="App">
@@ -45,7 +44,7 @@ function Profile() {
                 </div>
                 <div className="profile-row">
                     <div className="profile-stats-block">
-                        <b>{data.membershipCount}</b>
+                        <b>{data.membershipsCount}</b>
                         <span>Memberships</span>
                     </div>
                     <div className="profile-stats-block">

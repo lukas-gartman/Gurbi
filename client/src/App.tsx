@@ -12,7 +12,7 @@ import Settings from './routes/Settings';
 import NewEvent from './routes/NewEvent';
 import axios from 'axios';
 import Cookie from 'js-cookie';
-import { IEvent, IOrganisation, IUser } from './models/models';
+import { IEvent, IOrganisation, IProfile, IUser } from './models/models';
 
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
@@ -140,7 +140,7 @@ const router = createBrowserRouter([
 					const membershipCount = ((await client.post("/organisation/authorized/by/user")).data as IOrganisation[]).length
 					const savedEvents: IEvent[] = []; // TODO: create saved events collection
 
-					const data = { user: me, membershipCount: membershipCount, followingCount: -1, savedEvents: savedEvents }
+					const data: IProfile = { user: me, membershipsCount: membershipCount, followingCount: -1, savedEvents: savedEvents }
 					return data;
 				}
 			},
