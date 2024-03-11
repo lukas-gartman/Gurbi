@@ -136,9 +136,14 @@ export class OrganisationService{
 
         organisation.members.splice(index, 1);
 
-        await this.organisationStorage.updateOrganisation(organisation);
-
-        return OrgServiceResponse.getResponse(207);
+        index = organisation.members.findIndex(member => member.roleName === this.admin.roleName);
+        if(index === -1){
+            return OrgServiceResponse.getResponse(412);
+        }
+        else{
+            await this.organisationStorage.updateOrganisation(organisation);
+            return OrgServiceResponse.getResponse(207);
+        }
     }
 
     async addRoleToOrganisation(userId : string, organisationId : string, role : Role) : Promise<ServiceResponse>{    
@@ -227,6 +232,10 @@ export class OrganisationService{
         let index : number | undefined = org.members.findIndex(member => member.userId === targetMemberId);
         if (index === -1){
             return OrgServiceResponse.getResponse(409);
+        }
+
+        if(org.members[index].roleName === this.admin.roleName){
+            return OrgServiceResponse.getResponse(411)
         }
 
         org.members[index].roleName = role.roleName;
