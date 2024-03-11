@@ -138,7 +138,7 @@ export class OrganisationService{
 
         index = organisation.members.findIndex(member => member.roleName === this.admin.roleName);
         if(index === -1){
-            return OrgServiceResponse.getResponse(412);
+            return OrgServiceResponse.getResponse(411);
         }
         else{
             await this.organisationStorage.updateOrganisation(organisation);
@@ -215,18 +215,22 @@ export class OrganisationService{
         return OrgServiceResponse.getResponse(205);
     }
 
-    async changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : Promise<ServiceResponse>{
+    async changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, wantedRoleName : string) : Promise<ServiceResponse>{
         let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
         if(!checkedUserPremission.succes){
             return checkedUserPremission.serverRes
         }
-    
+
         let org : Organisation = await this.organisationStorage.getOrganisationById(organisationId) as Organisation
 
-        
-        let role : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === roleName)
-        if(role === undefined){
+        let targetRole : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === wantedRoleName)
+        if(targetRole === undefined){
             return OrgServiceResponse.getResponse(408);
+        }
+
+        let user : Member | undefined = org.members.find(member => member.userId === userId);
+        if((targetRole.roleName === this.admin.roleName) && (user?.roleName !== this.admin.roleName)){
+            return OrgServiceResponse.getResponse(412)
         }
 
         let index : number | undefined = org.members.findIndex(member => member.userId === targetMemberId);
@@ -234,15 +238,16 @@ export class OrganisationService{
             return OrgServiceResponse.getResponse(409);
         }
 
-        if(org.members[index].roleName === this.admin.roleName){
-            return OrgServiceResponse.getResponse(411)
+        org.members[index].roleName = targetRole.roleName;
+
+        index = org.members.findIndex(member => member.roleName === this.admin.roleName);
+        if(index === -1){
+            return OrgServiceResponse.getResponse(411);
         }
-
-        org.members[index].roleName = role.roleName;
-
-        await this.organisationStorage.updateOrganisation(org);
-
-        return  OrgServiceResponse.getResponse(206);
+        else{
+            await this.organisationStorage.updateOrganisation(org);
+            return  OrgServiceResponse.getResponse(206);
+        }
 
     }
 
