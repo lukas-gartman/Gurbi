@@ -8,7 +8,6 @@ export interface IOrganisationService {
     getOrganisations() : Promise<Organisation[]>;
     getOrganisation(organisationId : number) : Promise<Organisation | null>;
     getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>;
-    // addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>;
     addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>;
     deleteOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
     addMemberToOrganisation(userId : number, nickName : string, organisationId : number) : Promise<ServiceResponse>;
@@ -60,17 +59,16 @@ export class OrganisationService implements IOrganisationService {
     async addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>{
         let roles : Role[] = newOrgData.roles;
         let creatorId : number = newOrgData.creatorId;
-        // let creatorNickName : string = newOrgData.creatorNickName;
+        let creatorNickName : string = newOrgData.creatorNickName;
         let organisationName : string = newOrgData.orgName;
 
         //add admin and member roles per default
-        // roles.push(this.admin);
-        // roles.push(this.member);
+        roles.push(this.admin);
+        roles.push(this.member);
 
         //creator added as admin per default
-        // let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
-        let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName: ""}];
-        this.organisationStorage.newOrganisation({members: members, roles: roles, name: organisationName, id: 0, picture: "/public/images/default-org-background.png"});
+        let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
+        this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : 0, picture:"/public/images/default-org-background.png"});
 
         return OrgServiceResponse.getResponse(200)
     }
