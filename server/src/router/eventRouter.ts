@@ -8,6 +8,9 @@ export function getEventRouter(eventService : IEventService) : Router {
 
     eventRouter.post("/authorized/organisation/:orgId", async (req : AuthorizedRequest<{orgId : number},{}, NewEventDTO>, res : Response<string>)  => {
         try {
+
+            console.log(req.body)
+
             let orgId : number = req.params.orgId;
             let response : ServiceResponse = await eventService.addEvent(req.body, orgId, req.userId as number)
             return res.status(response.httpStatusCode).send(response.msg);

@@ -4,6 +4,8 @@ import * as jwt from 'jsonwebtoken';
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "./app";
 
 export const authenticationMiddleware = async (req: AuthorizedRequest, res: Response, next: NextFunction) => {
+	console.log("awdawfda")
+	
 	let token : string | string[] | undefined = req.headers.authorization
 	if (typeof token !== 'string') {
 		return res.status(400).send("Not a valid authentication token (string error)")

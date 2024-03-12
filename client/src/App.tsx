@@ -64,17 +64,20 @@ const router = createBrowserRouter([
 				element: <Events />,
 				loader: async ({ params }) => {
 					let events: IEvent[] = [];
-					interface OrgResponse { orgs: IOrganisation[] };
-					client.get<OrgResponse>(`/organisation/authorized/by/user`).then(response => {
-						try {
-							const followingOrgIds = response.data.orgs.map(org => org.id );
-							interface EventResponse { events: IEvent[] };
-							client.post<EventResponse>(`/event/authorized/following`, {orgIds: followingOrgIds}).then(response => {
-								events = response.data.events;
+
+					try{
+						let orgs : IOrganisation[] = await client.get(`/organisation/authorized/by/user`);
+						orgs.forEach(async org => {
+							let response = await client.get(`/event/organisation/${org.id}/all`);
+							let orgEvents : IEvent[] = response.data;
+							orgEvents.forEach(event => {
+								events.push(event)
 							});
-						} catch (e: any) { }
-					});
-					
+						});
+					}
+					catch(error){
+						console.error("Error fetching data:", error);
+					}
 					return events;
 				}
 			},
