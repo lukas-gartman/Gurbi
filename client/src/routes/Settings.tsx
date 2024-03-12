@@ -59,6 +59,8 @@ function Profile() {
                         <input type="submit" value="Update password" />
                     </form>
                 </div>
+
+                <NavLink to={"/logout"} className="logout-btn">Logout</NavLink>
             </main>
         </div>
     );

@@ -1,13 +1,13 @@
-import { error } from "console";
+import { ServiceResponse } from "./dataModels";
 
 export interface DBUser {
-    id: string;
+    id: number;
     name: string;
     nickName: string
     encryptedPassword: string;
-    salt: string;
     email: string;
     regDate: Date;
+    picture: string;
 }
 
 export interface UserLogin {
@@ -24,7 +24,7 @@ export interface IUser {
     picture: string;
 }
 
-export class userServiceResponse {
+export class userServiceResponse implements ServiceResponse{
     httpStatusCode: number;
     msg: string;
     id: number;
@@ -43,10 +43,10 @@ export class userServiceResponse {
         {httpStatusCode: 400, msg: "incorrect password", id: 5},
     ];
 
-    static getRes(id: number): userServiceResponse {
+    static getResponse(id: number): userServiceResponse {
         let resposne: userServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
         if (resposne === undefined) {
-            throw error("not know id");
+            throw Error("not know id");
         }
         return new userServiceResponse(resposne.httpStatusCode, resposne.msg, resposne.id);
     }

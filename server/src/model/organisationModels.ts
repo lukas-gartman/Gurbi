@@ -1,37 +1,42 @@
 import { error } from "console";
-import {Permission} from "../model/dataModels"
-  
+import { Permission, ServiceResponse } from "../model/dataModels"
 
 export interface Role{
     roleName : string;
     permissions : Permission[];
 }
 
-export interface Member{
-    userId : string;
+export interface Member {
+    userId : number;
     roleName : string;
     nickName : string;
 }
 
-export interface Organisation{
+export interface Organisation {
+    id : number;
     members : Member[];
     roles : Role[];
     name : string;
-    id : string;
     picture : string;
 }
 
+export interface OrganisationUser {
+    userId : number;
+    organisationId : number;
+}
 
 //convince
-export interface NewOrganisationDTO{
+export interface NewOrganisationDTO {
     creatorNickName : string;
     orgName : string;
     roles : Role[];
 }
-export interface NewOrganisationData extends NewOrganisationDTO{
-    creatorId : string
+
+export interface NewOrganisationData extends NewOrganisationDTO {
+    creatorId : number
 }
-export class OrgServiceResponse {
+
+export class OrgServiceResponse implements ServiceResponse {
     httpStatusCode: number;
     msg: string;
     id: number;
@@ -43,37 +48,35 @@ export class OrgServiceResponse {
     }
 
     private static readonly serverResponses: OrgServiceResponse[] = [
-        { httpStatusCode: 404, msg: "organisation does not exsit", id: 401 },
-        { httpStatusCode: 401, msg: "not member in organisation", id: 402 },
+        { httpStatusCode: 400, msg: "missing data", id: 400 },
+        { httpStatusCode: 404, msg: "organisation does not exist", id: 401 },
+        { httpStatusCode: 401, msg: "not a member of organisation", id: 402 },
         { httpStatusCode: 401, msg: "member does not have permission", id: 403 },
-        { httpStatusCode: 409, msg: "user is already member in organisation", id: 404 },
+        { httpStatusCode: 409, msg: "user is already member of organisation", id: 404 },
         { httpStatusCode: 409, msg: "nickName is already used in organisation", id: 405 },
-        { httpStatusCode: 404, msg: "not an available premission", id: 406 },
-        { httpStatusCode: 403, msg: "cant delete this role", id: 407 },
-        { httpStatusCode: 404, msg: "role does not exsist in organisation", id: 408 },
-        { httpStatusCode: 404, msg: "target member does not exsist in organisation", id: 409 },
-        { httpStatusCode: 409, msg: "role already exsists", id: 410 },
+        { httpStatusCode: 404, msg: "not an available permission", id: 406 },
+        { httpStatusCode: 403, msg: "cannot delete this role", id: 407 },
+        { httpStatusCode: 404, msg: "role does not exist in organisation", id: 408 },
+        { httpStatusCode: 404, msg: "target member does not exist in organisation", id: 409 },
+        { httpStatusCode: 409, msg: "role already exists", id: 410 },
+        { httpStatusCode: 403, msg: "must be at minimum one admin", id: 411 },
+        { httpStatusCode: 403, msg: "must be an admin to change the role of a member to/from admin", id: 412 },
 
-        { httpStatusCode: 200, msg: "organistation successfuly added", id: 200 },
+        { httpStatusCode: 200, msg: "organistation successfully added", id: 200 },
         { httpStatusCode: 200, msg: "member does have permission", id: 201 },
-        { httpStatusCode: 200, msg: "succesfuly deleted organisation", id: 202 },
+        { httpStatusCode: 200, msg: "succesfully deleted organisation", id: 202 },
         { httpStatusCode: 200, msg: "user added as member to organisation", id: 203 },
         { httpStatusCode: 200, msg: "role added to organisation", id: 204 },
         { httpStatusCode: 200, msg: "role has been deleted from organisation", id: 205 },
         { httpStatusCode: 200, msg: "changed target member's role", id: 206 },
-        { httpStatusCode: 200, msg: "added event", id: 207 }
+        { httpStatusCode: 200, msg: "member removed from organisation", id: 207 },
     ];
 
-    static getRes(id: number): OrgServiceResponse {
+    static getResponse(id: number): OrgServiceResponse {
         let resposne: OrgServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
         if (resposne === undefined) {
-            throw error("not know id");
+            throw error("unknown id");
         }
         return new OrgServiceResponse(resposne.httpStatusCode, resposne.msg, resposne.id);
     }
-
 }
-
-
-
-

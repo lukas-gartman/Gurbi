@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookie from 'js-cookie';
 import '../stylesheets/Form.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { ClientContext } from '../App';
 
 function CreateAccount() {
+    const client = useContext(ClientContext);
+    const nav = useNavigate();
+
+    useEffect(() => {
+        const jwt = Cookie.get("jwt");
+        if (jwt) {
+            nav("/events");
+        }
+    }, []);
+
     interface CreateAccountFormData {
         fullName: string;
         nickname: string;
@@ -23,7 +35,13 @@ function CreateAccount() {
         e.preventDefault();
 
         try {
-            await axios.post("http://localhost:8080/user/register", formData);
+            client.post("/user/register", formData).then(r => {
+                if (r.status == 200) {
+                    nav("/");
+                }
+            }).catch(err => {
+                console.error(err);
+            });
         } catch (error) {
             console.error(error);
         }

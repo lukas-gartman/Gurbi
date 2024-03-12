@@ -1,8 +1,8 @@
-import { Organisation } from "../../../server/src/model/organisationModels";
+import { IOrganisation } from "../models/models";
 import '../stylesheets/Organisations.css';
 import { NavLink } from 'react-router-dom';
 
-function OrganisationCard(props: {org: Organisation}) {
+function OrganisationCard(props: {org: IOrganisation}) {
     return (
         <NavLink to={"/organisations/" + props.org.id} className="organisation-card">
             <img className="organisation-background" src="bild2.jpg" />

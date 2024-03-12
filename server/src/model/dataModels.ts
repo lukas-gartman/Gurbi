@@ -1,46 +1,56 @@
-import { error } from "console"
 import { Request} from "express";
+import { Member, OrgServiceResponse, Organisation } from "./organisationModels";
+import { OrganisationStorage } from "../db/organisation.db";
 
 export interface AuthorizedRequest<something = any, ReqBody = any, ResBody = any> extends Request<something, ReqBody ,ResBody> {
-    userId?: string;
-  }
+    userId?: number;
+}
 
-export class Permission {
-    permissionName : string;
-    permissionId : number;
+export interface ServiceResponse {
+    httpStatusCode : number;
+    msg : string;
+}
 
-    private constructor (permissionName : string, permissionId : number){
-        this.permissionId = permissionId;
-        this.permissionName = permissionName;
+export enum Permission {
+    ChangeOrganisationName = "ChangeOrganisationName",
+    DeleteOrganisation = "DeleteOrganisation", 
+    RoleManipulator = "RoleManipulator", 
+    CreateNewEvent = "CreateNewEvent",
+    ChangeEventPrice = "ChangeEventPrice",
+    ChangeEventDescription = "ChangeEventDescription",
+    ChangeEventName = "ChangeEventName",
+    ChangeEventLocation = "ChangeEventLocation",
+}
+
+export function getAllPermissions() : Permission[] {
+    return Object.values(Permission)
+}
+
+export class OrganisationPermissionChecker {
+    private organisationStorage : OrganisationStorage;
+
+    constructor(organisationStorage : OrganisationStorage) {
+        this.organisationStorage = organisationStorage;
     }
 
-    private static readonly permissions : Permission[] = [
-        {permissionName : "ChangeOrginsationName", permissionId : 0},
-        {permissionName : "DeleteOrganisation", permissionId : 1},
-        {permissionName : "RoleManipulator", permissionId : 2},
-        {permissionName : "CreateNewEvent", permissionId : 3},
-        {permissionName : "ChangeEventPrice", permissionId : 4},
-        {permissionName : "ChangeEventDescription", permissionId : 5},
-        {permissionName : "ChangeEventName", permissionId : 6},
-        {permissionName : "ChangeLocation", permissionId : 7}
-    ];
-    
-    static getPermission(permissionId : number) : Permission{
-        let premission : Permission | undefined = this.permissions.find(permission => permission.permissionId === permissionId);
-        if(premission === undefined){
-            throw error("premission does not exsist");
+    async memberPermissionCheck(organisationId : number, userId : number, checkPermission : Permission) : Promise<{ serverRes: ServiceResponse; succes: boolean; }> {
+        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
+
+        if (organisation === null) {
+            return {serverRes: OrgServiceResponse.getResponse(401), succes: false }; 
         }
-        return new Permission(premission.permissionName, premission.permissionId);
+
+        let member : Member | undefined = organisation.members.find(member => member.userId === userId);
+        if (member === undefined) {
+            return {serverRes: OrgServiceResponse.getResponse(402), succes: false };
+        }
+
+        let roleName : string | undefined = organisation?.members.find(member => member.userId === userId)?.roleName;
+        let permission : Permission | undefined = organisation?.roles.find(role => role.roleName === roleName)?.permissions?.find(permission => permission === checkPermission)
+        if (permission === undefined) {
+            return {serverRes: OrgServiceResponse.getResponse(403), succes: false };
+        }
+
+        return {serverRes: OrgServiceResponse.getResponse(201), succes: true};
     }
-
-    static getAllPermissions() : Permission[]{
-        let premissions : Permission[] = [];
-        this.permissions.forEach(element => {
-            premissions.push(new Permission(element.permissionName, element.permissionId));
-        });
-
-        return premissions;
-    }
-
-  }
-
+}

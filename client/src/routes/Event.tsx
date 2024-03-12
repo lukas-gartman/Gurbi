@@ -1,13 +1,11 @@
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { Event } from "../models/modles";
-import { Organisation } from "../../../server/src/model/organisationModels";
+import { IEvent } from "../models/models";
+import { IOrganisation } from "../models/models";
 import { NavLink, useLoaderData } from 'react-router-dom';
 
 function EventPage() {
-    const event = useLoaderData() as Event;
-    const h: Organisation = JSON.parse('{"id": 1, "name": "MatNatSex", "picture": ""}')
-    event.host = h;
+    const event = useLoaderData() as IEvent;
 
     return (
         <div className="App">
@@ -58,13 +56,12 @@ function EventPage() {
                         <div>
                             <i className="bi bi-people"></i>
                             <span>1337</span>
-                            <a href={`/organisations/${event.host.id}/unfollow`} className="event-organiser-follow-btn following">Following</a>
+                            <NavLink to={`/organisations/${event.host.id}/unfollow`} className="event-organiser-follow-btn following">Following</NavLink>
                         </div>
                     </div>
                 </NavLink>
                 <div className="event-organiser">
                     <img src={event.host.picture} />
-                    
                 </div>
             </main>
             <Footer />

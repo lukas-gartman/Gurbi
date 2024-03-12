@@ -1,86 +1,64 @@
-
-import { NewOrganisationData, Role, Organisation, Member} from "../model/organisationModels";
-import {Permission} from "../model/dataModels"
+import { NewOrganisationData, Role, Organisation, Member, OrganisationUser} from "../model/organisationModels";
+import { OrganisationPermissionChecker, Permission, ServiceResponse, getAllPermissions} from "../model/dataModels"
 import { OrgServiceResponse } from "../model/organisationModels";
-import { MemoryOrganisationStorageHandler, MongoDBOrganisationStorageHandler, OrganisationStorageHandler } from "../db/organisation.db";
+import { OrganisationStorage } from "../db/organisation.db";
 
+export interface IOrganisationService {
+    getUserOrganisations(userId : number) : Promise<Organisation[]>;
+    getOrganisations() : Promise<Organisation[]>;
+    getOrganisation(organisationId : number) : Promise<Organisation | null>;
+    getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>;
+    addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>;
+    deleteOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
+    addMemberToOrganisation(userId : number, nickName : string, organisationId : number) : Promise<ServiceResponse>;
+    removeMemberFromOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
+    addRoleToOrganisation(userId : number, organisationId : number, role : Role) : Promise<ServiceResponse>;
+    deleteRoleFromOrganistation(userId : number, organisationId : number, roleName : string) : Promise<ServiceResponse>;
+    changeRoleOfMember(userId : number, organisationId : number, targetMemberId : number, wantedRoleName : string) : Promise<ServiceResponse>;
+}
 
-
-export class OrganisationService{
-
+export class OrganisationService implements IOrganisationService {
     //replace with mongoDB class
-
-
-    private organisationStorage : OrganisationStorageHandler;
+    private organisationStorage : OrganisationStorage;
+    private organisationPermissionChecker : OrganisationPermissionChecker;
 
     //standard roles
-    private readonly admin : Role = {roleName : "admin", permissions : Permission.getAllPermissions()};
+    private readonly admin : Role = {roleName : "admin", permissions : getAllPermissions()};
     private readonly member : Role = {roleName : "member", permissions : [] as Permission[]};
     
-
-     constructor (useDatabase : boolean){
-
-        if(useDatabase){
-            this.organisationStorage = new MongoDBOrganisationStorageHandler()
-        }
-        else{
-            this.organisationStorage = new MemoryOrganisationStorageHandler()
-        }
-        
-     }
-
-    private async memberPermissionCheckHelper(organisationId : string, userId : string, checkPermission : Permission) : Promise<{ serverRes: OrgServiceResponse; succes: boolean; }>{
-        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
-
-        if(organisation === null){
-            return {serverRes:OrgServiceResponse.getRes(401), succes: false }; 
-        }
-
-        let member : Member | undefined = organisation.members.find(member => member.userId === userId);
-        if(member === undefined){
-            return {serverRes:OrgServiceResponse.getRes(402), succes: false };
-        }
-
-
-        let roleName : string | undefined = organisation?.members.find(member => member.userId === userId)?.roleName;
-
-        let permission : Permission | undefined =  organisation?.roles.find(role => role.roleName === roleName)?.permissions?.find(permission => permission.permissionId === checkPermission.permissionId)
-        if(permission === undefined){
-            return {serverRes:OrgServiceResponse.getRes(403), succes: false };
-        }
-
-        return {serverRes:OrgServiceResponse.getRes(201), succes: true};
+    constructor (organisationStorage : OrganisationStorage) {
+        this.organisationStorage = organisationStorage;
+        this.organisationPermissionChecker = new OrganisationPermissionChecker(organisationStorage);
     }
 
-
-    async getUserOrganisations(userId : string) : Promise<Organisation[]>{
+    async getUserOrganisations(userId : number) : Promise<Organisation[]> {
         return await this.organisationStorage.getOrganisationsByUser(userId);
     }
 
-    async getOrganisations() : Promise<Organisation[]>{
+    async getOrganisations() : Promise<Organisation[]> {
         return await this.organisationStorage.getAllOrganisations();
     }
 
-    async getOrganisation(organisationId : string) : Promise<Organisation | null>{
+    async getOrganisation(organisationId : number) : Promise<Organisation | null> {
         return await this.organisationStorage.getOrganisationById(organisationId);
     }
 
-    async getMemberPermissions(userId : string, organisationId : string) : Promise<Permission[] | undefined>{
-        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
+    async getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]> {
+        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(orguser.organisationId);
+        let roleName : string | undefined = organisation?.members.find(member => member.userId === orguser.userId)?.roleName;
+        let premissions : Permission[] | undefined = organisation?.roles.find(role => role.roleName === roleName)?.permissions
 
-        let roleName : string | undefined = organisation?.members.find(member => member.userId === userId)?.roleName;
-
-        return organisation?.roles.find(role => role.roleName === roleName)?.permissions
+        if (premissions === undefined) {
+            return [] as Permission[];
+        } else {
+            return premissions;
+        }
     }
 
-
     //Create new organisation 
-    async addOrganisation(newOrgData : NewOrganisationData) : Promise<OrgServiceResponse>{
-
-    
-
+    async addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>{
         let roles : Role[] = newOrgData.roles;
-        let creatorId : string = newOrgData.creatorId;
+        let creatorId : number = newOrgData.creatorId;
         let creatorNickName : string = newOrgData.creatorNickName;
         let organisationName : string = newOrgData.orgName;
 
@@ -90,112 +68,115 @@ export class OrganisationService{
 
         //creator added as admin per default
         let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
+        this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : 0, picture:"/public/images/default-event-picture.png"});
 
-        await this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : "0", picture:"wdaw"});
-
-        return OrgServiceResponse.getRes(200)
-
+        return OrgServiceResponse.getResponse(200)
     }
 
     //Delete an organisation
-    async deleteOrginsitaion(userId : string, organisationId : string) : Promise<OrgServiceResponse>{
-        
-        let checkedUserPremission : {serverRes:OrgServiceResponse, succes:boolean} = await this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(1))
-        if(!checkedUserPremission.succes){
+    async deleteOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse> {
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.DeleteOrganisation)
+        if (!checkedUserPremission.succes) {
             return checkedUserPremission.serverRes;
         }
         
         await this.organisationStorage.deleteOrganisationById(organisationId);
 
-        return OrgServiceResponse.getRes(202)
+        return OrgServiceResponse.getResponse(202)
     }
 
-    async addMemberToOrganisation(userId : string, nickName : string, organisationId : string) : Promise<OrgServiceResponse>{
-        
-        
+    async addMemberToOrganisation(userId : number, nickName : string, organisationId : number) : Promise<ServiceResponse> {
         let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
 
-        if(organisation === null){
-            return OrgServiceResponse.getRes(401)
+        if (organisation === null) {
+            return OrgServiceResponse.getResponse(401)
         }
 
-        if(organisation.members.find(member => member.userId === userId)){
-            return OrgServiceResponse.getRes(404)
+        if (organisation.members.find(member => member.userId === userId)) {
+            return OrgServiceResponse.getResponse(404)
         }
 
-        if(organisation.members.find(member => member.nickName === nickName)){
-            return OrgServiceResponse.getRes(405)
+        if (organisation.members.find(member => member.nickName === nickName)) {
+            return OrgServiceResponse.getResponse(405)
         }
 
         organisation.members.push({userId : userId, nickName : nickName, roleName : this.member.roleName})
-
         await this.organisationStorage.updateOrganisation(organisation);
 
-        return OrgServiceResponse.getRes(203); 
+        return OrgServiceResponse.getResponse(203); 
 
     }
 
-    
-
-    async addRoleToOrganisation(userId : string, organisationId : string, role : Role) : Promise<OrgServiceResponse>{    
+    async removeMemberFromOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse> {
+        let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(organisationId);
         
-        let checkedUserPremission : {serverRes:OrgServiceResponse, succes:boolean} = await this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
-        if(!checkedUserPremission.succes){
+        if (organisation === null) {
+            return OrgServiceResponse.getResponse(401);
+        }
+
+        let index : number = organisation.members.findIndex(member => member.userId === userId);
+        if (index === -1) {
+            return OrgServiceResponse.getResponse(402);
+        }
+
+        organisation.members.splice(index, 1);
+
+        index = organisation.members.findIndex(member => member.roleName === this.admin.roleName);
+        if (index === -1) {
+            return OrgServiceResponse.getResponse(411);
+        } else {
+            await this.organisationStorage.updateOrganisation(organisation);
+            return OrgServiceResponse.getResponse(207);
+        }
+    }
+
+    async addRoleToOrganisation(userId : number, organisationId : number, role : Role) : Promise<ServiceResponse> {
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
+        if (!checkedUserPremission.succes) {
             return checkedUserPremission.serverRes
         }
 
-
-
         for (let index = 0; index < role.permissions.length; index++) {
             const newPremission = role.permissions[index];
-            let exsit : Permission | undefined = Permission.getAllPermissions().find(permission => permission.permissionName === newPremission.permissionName);
-            if(exsit === undefined){
-                return OrgServiceResponse.getRes(406);
+          
+            let exist : Permission | undefined = getAllPermissions().find(permission => permission === newPremission);
+            if (exist === undefined) {
+                return OrgServiceResponse.getResponse(406);
             }
         }
         
         let organisation : Organisation = await this.organisationStorage.getOrganisationById(organisationId) as Organisation
-
         if (organisation.roles.find(orgRole => orgRole.roleName === role.roleName) !== undefined){
-            return OrgServiceResponse.getRes(410);
+            return OrgServiceResponse.getResponse(410);
         }
-        
-        
         organisation.roles.push(role);
-        
         await this.organisationStorage.updateOrganisation(organisation);
         
-        return OrgServiceResponse.getRes(204)
-        
-
+        return OrgServiceResponse.getResponse(204)
     }
 
-    
-
-    async deleteRoleFromOrganistation(userId : string, organisationId : string, roleName : string) : Promise<OrgServiceResponse>{
-        
-        let checkedUserPremission : {serverRes:OrgServiceResponse, succes:boolean} = await this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
-        if(!checkedUserPremission.succes){
+    async deleteRoleFromOrganistation(userId : number, organisationId : number, roleName : string) : Promise<ServiceResponse> {
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
+        if (!checkedUserPremission.succes) {
             return checkedUserPremission.serverRes
         }
 
-        if(this.member.roleName === roleName){
-            return OrgServiceResponse.getRes(407);
+        if (this.member.roleName === roleName) {
+            return OrgServiceResponse.getResponse(407);
         }
 
-        if(this.admin.roleName === roleName){
-            return OrgServiceResponse.getRes(407);
+        if (this.admin.roleName === roleName) {
+            return OrgServiceResponse.getResponse(407);
         }
 
-        let organisation : Organisation =  await this.organisationStorage.getOrganisationById(organisationId) as Organisation
-
-        let index : number = organisation.roles.findIndex(role => role.roleName === roleName)
+        let organisation : Organisation =  await this.organisationStorage.getOrganisationById(organisationId) as Organisation;
+        let index : number = organisation.roles.findIndex(role => role.roleName === roleName);
 
         // make members with role to only have the role member.
-        if (index !== -1){
-            organisation.roles.splice(index, 1)
+        if (index !== -1) {
+            organisation.roles.splice(index, 1);
             organisation.members.forEach(member => {
-                if(member.roleName === roleName){
+                if (member.roleName === roleName) {
                     member.roleName = this.member.roleName;
                 }
             });
@@ -203,34 +184,39 @@ export class OrganisationService{
 
         await this.organisationStorage.updateOrganisation(organisation);
 
-        return OrgServiceResponse.getRes(205);
+        return OrgServiceResponse.getResponse(205);
     }
 
-    async changeRoleOfMember(userId : string, organisationId : string, targetMemberId : string, roleName : string) : Promise<OrgServiceResponse>{
-        let checkedUserPremission : {serverRes:OrgServiceResponse, succes:boolean} = await this.memberPermissionCheckHelper(organisationId, userId, Permission.getPermission(2))
-        if(!checkedUserPremission.succes){
+    async changeRoleOfMember(userId : number, organisationId : number, targetMemberId : number, wantedRoleName : string) : Promise<ServiceResponse>{
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.RoleManipulator)
+        if (!checkedUserPremission.succes) {
             return checkedUserPremission.serverRes
         }
-    
-        let org : Organisation = await this.organisationStorage.getOrganisationById(organisationId) as Organisation
 
-        
-        let role : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === roleName)
-        if(role === undefined){
-            return OrgServiceResponse.getRes(408);
+        let org : Organisation = await this.organisationStorage.getOrganisationById(organisationId) as Organisation;
+        let targetRole : Role | undefined =  org.roles.find(roleElement => roleElement.roleName === wantedRoleName);
+        if (targetRole === undefined) {
+            return OrgServiceResponse.getResponse(408);
         }
+
 
         let index : number | undefined = org.members.findIndex(member => member.userId === targetMemberId);
         if (index === -1){
-            return OrgServiceResponse.getRes(409);
+            return OrgServiceResponse.getResponse(409);
         }
 
-        org.members[index].roleName = role.roleName;
+        let user : Member | undefined = org.members.find(member => member.userId === userId);
+        if (((targetRole.roleName === this.admin.roleName) || (org.members[index].roleName === this.admin.roleName)) && (user?.roleName !== this.admin.roleName)){
+            return OrgServiceResponse.getResponse(412)
+        }
 
-        await this.organisationStorage.updateOrganisation(org);
-
-        return  OrgServiceResponse.getRes(206);
-
+        org.members[index].roleName = targetRole.roleName;
+        index = org.members.findIndex(member => member.roleName === this.admin.roleName);
+        if (index === -1) {
+            return OrgServiceResponse.getResponse(411);
+        } else {
+            await this.organisationStorage.updateOrganisation(org);
+            return  OrgServiceResponse.getResponse(206);
+        }
     }
-
 }
