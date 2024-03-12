@@ -94,9 +94,9 @@
     {
         "description": "Get organisation by Id",
         "httpRequest": "get",
-        "route": "/organisation/by/id",
+        "route": "/organisation/:orgId",
         "RequestHeaders": {},
-        "RequestBody": {organisationId : string},
+        "RequestBody": {},
         "ResponseBody": Organisation,
         "ResponseStatusCodes": [200, 500]
     },
@@ -114,9 +114,9 @@
     {
         "description": "Get member permissions",
         "httpRequest": "get",
-        "route": "/organisation/:orgId/permissions/by/user,
+        "route": "/organisation/:orgId/user/:userId/permissions,
         "RequestHeaders": {},
-        "RequestBody": {userId: string, organisationId: string},
+        "RequestBody": {},
         "ResponseBody": Permission[],
         "ResponseStatusCodes": [200, 500]
     },

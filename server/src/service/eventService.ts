@@ -28,6 +28,7 @@ export class EventService implements IEventService {
         let event : Event = eventData as Event;
         event.id = 0;
         event.hostId = orgId;
+        event.picture = "/public/images/default-event-picture.png";
 
         try {
             await this.eventStorage.addEvent(event);
@@ -43,9 +44,18 @@ export class EventService implements IEventService {
     }
 
     async getEventsByOrganisations(orgIds : number[]) : Promise<Event[]> {
-        const promises: Promise<Event[]>[] = orgIds.map(orgId => this.eventStorage.getEventsByHostId(orgId));
-        const events = await Promise.all(promises);
-        return events.flat().sort((a: Event, b: Event) => {
+        let unsortedEvents: Event[] = [];
+        for (let i = 0; i < orgIds.length; i++) {
+            const orgId = orgIds[i];
+            let orgEvents: Event[] = await this.eventStorage.getEventsByHostId(orgId);
+            for (let j = 0; j < orgEvents.length; j++) {
+                const event = orgEvents[j];
+                unsortedEvents.push(event);
+            }
+        }
+//        const promises: Promise<Event[]>[] = orgIds.map(async orgId => await this.eventStorage.getEventsByHostId(orgId));
+//        const events = await Promise.all(promises);
+        return unsortedEvents.flat().sort((a: Event, b: Event) => {
             return a.date.getTime() - b.date.getTime();
         });
     }

@@ -3,9 +3,10 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useLoaderData, NavLink, useNavigate } from 'react-router-dom';
 import { Organisation } from '../../../server/src/model/organisationModels';
+import { IOrganisation } from '../models/models';
 
 function OrganisationPage() {
-    const organisation = useLoaderData() as Organisation;
+    const organisation = useLoaderData() as IOrganisation;
     
     let nav = useNavigate();
     const goBack = () => {
@@ -36,7 +37,7 @@ function OrganisationPage() {
                     <div>
                         <div>
                             <i className="bi bi-people"></i>
-                            <span>1337</span>
+                            <span>{organisation.members.length}</span>
                             <NavLink to={`/organisations/${organisation.id}/unfollow`} className="organisation-follow-btn following">Following</NavLink>
                         </div>
                         <div>
@@ -45,7 +46,7 @@ function OrganisationPage() {
                     </div>
                 </div>
 
-                <p>text about the organisation here (todo: add property)</p>
+                <p>{organisation.description}</p>
 
                 <h3>Contact</h3>
                 <div>

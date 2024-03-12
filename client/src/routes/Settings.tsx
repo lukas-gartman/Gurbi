@@ -5,8 +5,12 @@ import '../stylesheets/Form.css';
 import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { IUser } from "../../../server/src/model/UserModels";
+import { ClientContext } from '../App';
+import { useContext } from 'react';
+
 
 function Profile() {
+    const client = useContext(ClientContext);
     const user = useLoaderData() as IUser;
 
     let nav = useNavigate();
@@ -40,7 +44,7 @@ function Profile() {
         e.preventDefault();
 
         try {
-            await axios.post("/profile/settings/update_password", formData);
+            await client.post("user/authorized/profile/settings/update_password", formData);
         } catch (error) {
             console.error(error);
         }

@@ -9,7 +9,7 @@ export function getOrganisationRouter(organisationService : IOrganisationService
     organisationRouter.post("/authorized/new", async (req : AuthorizedRequest<{},{},NewOrganisationDTO>, res : Response<string>) => {
         try {
             let userId = req.userId as number;
-            let newOrgData : NewOrganisationData = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};
+            let newOrgData : NewOrganisationData = {name : req.body.name, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles, description : req.body.description};
             let response : ServiceResponse = await organisationService.addOrganisation(newOrgData);
             return res.status(response.httpStatusCode).send(response.msg);
         } catch (e: any) {
@@ -76,7 +76,7 @@ export function getOrganisationRouter(organisationService : IOrganisationService
         }
     });
     
-    organisationRouter.post("/authorized/by/user", async (req : AuthorizedRequest<{},{},{}>, res : Response<Organisation[]>) => {
+    organisationRouter.get("/authorized/by/user", async (req : AuthorizedRequest<{},{},{}>, res : Response<Organisation[]>) => {
         try {
             let orgs : Organisation[] = await organisationService.getUserOrganisations(req.userId as number);
             return res.status(200).send(orgs);
@@ -85,26 +85,6 @@ export function getOrganisationRouter(organisationService : IOrganisationService
         }
     });
     
-    organisationRouter.get("/by/id", async (req : Request<{},{},{organisationId : number}>, res : Response<Organisation>) => {
-        try {
-            let orgs : Organisation = await organisationService.getOrganisation(req.body.organisationId) as Organisation;
-            return res.status(200).send(orgs);
-        } catch (e: any) {
-            return res.status(500).send(e.message);
-        }
-    });
-    
-    organisationRouter.get("/:orgId/permissions/by/user", async (req : AuthorizedRequest<{orgId : number},{},OrganisationUser>, res : Response<Permission[]>) => {
-        try {
-            const userId = req.userId as number;
-            const orgId = req.params.orgId as number;
-            const orgUser: OrganisationUser = { userId: userId, organisationId: orgId};
-            let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
-            return res.status(200).send(permissions);
-        } catch (e: any) {
-            return res.status(500).send(e.message);
-        }
-    });
 
     organisationRouter.get("/all", async (req: Request<{},{},{}>, res: Response<Organisation[]>) => {
         try {
@@ -115,16 +95,28 @@ export function getOrganisationRouter(organisationService : IOrganisationService
         }
     });
 
-    organisationRouter.get("/all", async (req : Request<{},{},{}>, res : Response<Organisation[]>)  => {
+    organisationRouter.get("/:orgId", async (req : Request<{orgId : number},{},{}>, res : Response<Organisation>) => {
         try {
-            let orgs : Organisation[] = await organisationService.getOrganisations();
+            let orgs : Organisation = await organisationService.getOrganisation(req.params.orgId as number) as Organisation;
             return res.status(200).send(orgs);
-
         } catch (e: any) {
             return res.status(500).send(e.message);
         }
-
     });
+    
+    organisationRouter.get("/:orgId/user/:userId/permissions", async (req : Request<{orgId : number, userId : number},{},{}>, res : Response<Permission[]>) => {
+        try {
+
+            let userId = req.params.userId as number;
+            let orgId = req.params.orgId as number;
+            let orgUser: OrganisationUser = { userId: userId, organisationId: orgId};
+            let permissions : Permission[] = await organisationService.getMemberPermissions(orgUser);
+            return res.status(200).send(permissions);
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+    });
+
  
     return organisationRouter;
 }

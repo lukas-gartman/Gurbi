@@ -1,0 +1,21 @@
+.new-organisation {
+    display: flex;
+	flex-direction: column;
+    width: 300px;
+	min-height: 100vh;
+	margin: 0;
+}
+
+.preview-card > .organisation-card > .organisation-background {
+    width: 300px;
+    height: 150px;
+}
+
+.preview-card > .organisation-card > .organisation-card-title > .organisation-card-title-image {
+    width: 40px;
+    height: 40px;
+}
+
+.preview-card > .organisation-card > .organisation-card-title {
+    -webkit-text-stroke: 0;
+}
