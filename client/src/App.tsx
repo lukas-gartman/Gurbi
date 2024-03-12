@@ -90,15 +90,15 @@ const router = createBrowserRouter([
 				path: "/organisations",
 				element: <Organisations />,
 				loader: async ({ params }) => {
-					let organisations: IOrganisation[] = [];
 					try {
-						interface OrgResponse { orgs: IOrganisation[] };
-						client.get<OrgResponse>("/organisation/all").then(response => {
-							organisations = response.data.orgs;
-							console.log("result is\n" + response.data.orgs);
-						});
-					} catch (e: any) { }
-					return organisations;
+						const response = await client.get("/organisation/all");
+						const organisations: IOrganisation[] = response.data;
+						console.log("all org result is\n", organisations);
+						return organisations;
+					  } catch (error) {
+						console.error("Error fetching organisations:", error);
+						return []; // Return an empty array or handle the error as needed
+					  }
 					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}, {"id": 2, "name": "Mega6", "picture": ""}]');
 				}
 			},

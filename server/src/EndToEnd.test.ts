@@ -87,6 +87,12 @@ test("/organisation/by/id", async () => {
 	expect(res.body.id).toBe(2);
 });
 
+test("get /organisation/all", async () => {
+	//get an organisation
+	const res = await request.get("/organisation/all").send();
+	expect(res.body.length).toBe(5);
+});
+
 test("post /organisation/authorized/user", async () =>{
   //login testUser2
   let res = await request.post("/user/login").send({email : "test2@gmail.se", password : "123", rememberMe : true});
