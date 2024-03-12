@@ -8,7 +8,7 @@ function EventCard(props: {event: IEvent}) {
         <NavLink to={"/events/" + props.event.id} className="event-card">
             <img className="event-img" src={props.event.picture} />
             <div className="event-info">
-                <span>{props.event.dateTime.toString()}</span>
+                <span>{props.event.dateTime.toDateString()} {props.event.dateTime.getHours()}:{props.event.dateTime.getMinutes()}</span>
                 <p>{props.event.name}</p>
                 <div className="event-card-row">
                     <img className="event-host-img" src={props.event.picture} />

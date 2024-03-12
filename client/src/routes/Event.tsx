@@ -20,7 +20,7 @@ function EventPage() {
                 
                 <div className="event-card-row">
                     <i className="bi bi-calendar3"></i>
-                    <span>{event.dateTime.toString()}</span>
+                    <span>{event.dateTime.toDateString()} {event.dateTime.getHours()}:{event.dateTime.getMinutes()}</span>
                 </div>
 
                 <div className="event-card-row">

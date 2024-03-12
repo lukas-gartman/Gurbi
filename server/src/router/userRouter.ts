@@ -41,7 +41,7 @@ export function getUserRouter(userService : IUserService) : Router {
         }
     });
 
-    userRouter.post("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
+    userRouter.get("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
         const userId = req.userId as number;
         const me = await userService.getUser(userId);
         if (me !== null) {

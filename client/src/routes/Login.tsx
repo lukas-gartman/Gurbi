@@ -1,24 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import Cookie from 'js-cookie';
 import '../stylesheets/Login.css'
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { ClientContext } from '../App';
 
-// const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
-
 function Login() {
     const client = useContext(ClientContext);
     const nav = useNavigate();
 
     const jwt = Cookie.get("jwt");
-    const isValid = async () : Promise<boolean> => {
-        const response = await client.post("/user/authorized/validate", { token: jwt });
-        return response.data.valid;
-    }
 
     useEffect(() => {
+        const isValid = async () : Promise<boolean> => {
+            const response = await client.post("/user/authorized/validate", { token: jwt });
+            return response.data.valid;
+        }
+        
         if (jwt) {
             isValid().then(isValid => {
                 if (isValid) {

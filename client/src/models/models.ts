@@ -1,10 +1,16 @@
 export interface IOrganisation {
     id: number;
     name: string;
-    members: string[];
+    members: IMember[];
     roles: string[];
     picture: string;
     description: string;
+}
+
+export interface IMember {
+    userId : number;
+    roleName : string;
+    nickName? : string;
 }
 
 export interface IEvent {
