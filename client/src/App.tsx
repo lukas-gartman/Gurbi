@@ -112,7 +112,6 @@ const router = createBrowserRouter([
 						let event = (await client.get(`/event/${params.eventId}`)).data;
 						let thehost : IOrganisation = (await client.get(`/organisation/${event.hostId}`)).data
 
-
 						let IEvent : IEvent = {
 							host: thehost,
 							dateTime: new Date(event.date),
@@ -127,11 +126,6 @@ const router = createBrowserRouter([
 					} catch (error) {
 						
 					}
-					
-					
-
-
-					return JSON.parse('{"id":' + params.eventId + ', "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning", "description": "come and eat semlor with us lol"}');
 				}
 			},
 			{
