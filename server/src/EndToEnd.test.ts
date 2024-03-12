@@ -36,6 +36,50 @@ test("/user/register", async () => {
   let res4 = await request.post("/user/register").send({fullName: "testUser4", nickname: "d", email: "test4@gmail.se", password: "123", repeatPassword: "123"});
   expect(res4.statusCode).toBe(200);
   expect(res4.text).toStrictEqual(userServiceResponse.getResponse(4).msg);
+  
+  /* Create new user without nickname */
+  const newUser5 = {
+    fullName: "Kalle Anka",
+    email: "kalle@anka.se",
+    password: "abc123",
+    repeatPassword: "abc123",
+  };
+  let res5 = await request.post("/user/register").send(newUser5);
+  expect(res5.statusCode).toBe(400);
+  expect(res5.text).toStrictEqual(userServiceResponse.getResponse(1).msg);
+  
+  /* Create new user with nonmatching password ns*/
+  const newUser6 = {
+        fullName: "Kalle Anka",
+        nickname: "Kalle",
+        email: "kalle@anka.se",
+        password: "abc123",
+        repeatPassword: "123abc", /* Different order */
+  };
+  let res6 = await request.post("/user/register").send(newUser6);
+  expect(res6.statusCode).toBe(400);
+  expect(res6.text).toStrictEqual(userServiceResponse.getResponse(2).msg);
+  
+  /* Create multiple users with same email  */
+  const newUserKalle = {
+        fullName: "Kalle Anka",
+        nickname: "Kalle",
+        email: "kalle@anka.se",
+        password: "abc123",
+        repeatPassword: "abc123",
+    };
+    
+  const newUserKajsa = {
+      fullName: "Kajsa Anka",
+      nickname: "Kaja",
+      email: "kalle@anka.se",
+      password: "abc123",
+      repeatPassword: "abc123",
+  };
+  await request.post("/user/register").send(newUserKalle);
+  let res7 = await request.post("/user/register").send(newUserKajsa);
+  expect(res7.statusCode).toBe(400);
+  expect(res7.text).toStrictEqual(userServiceResponse.getResponse(3).msg);
 });
 
 test("/user/login", async () => {
@@ -45,6 +89,25 @@ test("/user/login", async () => {
   expect(res1.body.succes).toBe(true);
   expect((res1.body.token as string).length).toBeGreaterThan(0);
 });
+
+test("POST /authorized/profile/settings/update_password", async () => {
+  const newUser = {
+    fullName: "Joakim",
+    nickname: "a",
+    email: "jocke@jva.se",
+    password: "123",
+    repeatPassword: "123"
+  };
+  await request.post("/user/register").send(newUser);
+  let res = await request.post("/user/login").send({email : "jocke@jva.se", password : "123", rememberMe : true});
+  const token: string = res.body.token;
+  const changePassword = {
+    currentPassword = "123",
+    newPassword = "abc",
+    repeatPassword = "abc",
+  };
+  expect(res1.statusCode).toBe(200);
+})
 
 test("/organisation/authorized/new", async () => {
   //login testUser1
