@@ -37,10 +37,10 @@ export function getOrganisationRouter(organisationService : IOrganisationService
         }
     });
     
-    organisationRouter.delete("/:orgId/authorized/user", async (req : AuthorizedRequest<{orgId : string},{},{}>, res : Response<string> ) => {
+    organisationRouter.delete("/:orgId/authorized/user", async (req : AuthorizedRequest<{orgId : number},{},{}>, res : Response<string> ) => {
         try {
-            let userId : string = req.userId as string;
-            let orgId : string = req.params.orgId.toString(); 
+            let userId = req.userId as number;
+            let orgId = req.params.orgId;
 
             let response : ServiceResponse = await organisationService.removeMemberFromOrganisation(userId, orgId);
             return res.status(response.httpStatusCode).send(response.msg);
