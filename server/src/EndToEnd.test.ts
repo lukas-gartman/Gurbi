@@ -81,9 +81,9 @@ test("/organisation/authorized/new", async () => {
   expect(res6.statusCode).toBe(200);
 });
 
-test("/organisation/by/id", async () => {
+test("/organisation/:orgId", async () => {
 	//get an organisation
-	const res = await request.get("/organisation/by/id").send({organisationId: 2});
+	const res = await request.get("/organisation/2").send();
 	expect(res.body.id).toBe(2);
 });
 
@@ -112,7 +112,7 @@ test("post /organisation/authorized/user", async () =>{
   let res3 = await request.post("/organisation/authorized/user").set('Authorization', token2).send({nickName : "nickname3", organisationId : 0});
   expect(res3.statusCode).toBe(200);
 
-  let res4 = await request.get("/organisation/by/id").send({organisationId: 0});
+  let res4 = await request.get("/organisation/0").send();
   expect(res4.body.members.length).toBe(3);
 
 });
@@ -127,7 +127,7 @@ test("delete /organisation/:orgId/authorized/user", async () => {
   let res2 = await request.delete("/organisation/0/authorized/user").set('Authorization', token);
   expect(res2.statusCode).toBe(200);
 
-  let res3 = await request.get("/organisation/by/id").send({organisationId: 0});
+  let res3 = await request.get("/organisation/0").send();
   expect(res3.body.members.length).toBe(2);
 
   //login testUser1

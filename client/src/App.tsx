@@ -65,7 +65,7 @@ const router = createBrowserRouter([
 				loader: async ({ params }) => {
 					let events: IEvent[] = [];
 					interface OrgResponse { orgs: IOrganisation[] };
-					client.post<OrgResponse>(`/organisation/authorized/by/user`).then(response => {
+					client.get<OrgResponse>(`/organisation/authorized/by/user`).then(response => {
 						try {
 							const followingOrgIds = response.data.orgs.map(org => org.id );
 							interface EventResponse { events: IEvent[] };
@@ -106,14 +106,17 @@ const router = createBrowserRouter([
 				path: "/organisations/memberships",
 				element: <Organisations />,
 				loader: async ({ params }) => {
-					let memberships: IOrganisation[] = [];
 					try {
-						interface OrgResponse { orgs: IOrganisation[] };
-						client.post<OrgResponse>("/organisation/authorized/by/user").then(response => {
-							memberships = response.data.orgs;
-						});
-					} catch (e: any) { }
-					return memberships;
+
+						const response = await client.get("/organisation/authorized/by/user");
+						//interface OrgResponse { orgs: IOrganisation[] };
+						const organisations: IOrganisation[] = response.data;
+						console.log("all memberships result is\n", organisations);
+						return organisations;
+					} catch (error) {
+						console.error("Error fetching organisations:", error);
+						return []; // Return an empty array or handle the error as needed
+					}
 					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}]');
 				}
 			},
@@ -126,9 +129,18 @@ const router = createBrowserRouter([
 				element: <Organisation />,
 				loader: async ({ params }) => {
 					// return client.get(`/api/organisations/${params.orgId}`);
-					const permissions = await client.get(`/organisation/${params.orgId}/permissions/by/user`);
-					console.log(permissions);
-					return JSON.parse('{"id":'+params.orgId+', "name": "Mega6", "picture": ""}');
+					//const permissions = await client.get(`/organisation/${params.orgId}/permissions/by/user`);
+					//console.log(permissions);
+					try {
+						console.log("The org id\n", params.orgId)
+						let res = await client.get(`/organisation/${params.orgId}`);
+						return res.data
+					}
+
+					catch(error) {
+						console.error("Error fetching organisation:", error);
+					}
+					//return JSON.parse('{"id":'+params.orgId+', "name": "Mega6", "picture": ""}');
 				}
 			},
 			{
@@ -143,7 +155,7 @@ const router = createBrowserRouter([
 				element: <Profile />,
 				loader: async ({ params }) => {
 					const me = (await client.post("/user/authorized/me")).data as IUser;
-					const membershipCount = ((await client.post("/organisation/authorized/by/user")).data as IOrganisation[]).length
+					const membershipCount = ((await client.get("/organisation/authorized/by/user")).data as IOrganisation[]).length
 					const savedEvents: IEvent[] = []; // TODO: create saved events collection
 
 					const data: IProfile = { user: me, membershipsCount: membershipCount, followingCount: -1, savedEvents: savedEvents }

@@ -4,6 +4,7 @@ export interface IOrganisation {
     members: string[];
     roles: string[];
     picture: string;
+    description: string;
 }
 
 export interface IEvent {

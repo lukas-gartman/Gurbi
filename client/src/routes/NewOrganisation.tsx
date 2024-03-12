@@ -11,7 +11,7 @@ import { ClientContext } from '../App';
 // TODO: load baseURL from client (current issue: ClientContext must be inside NewOrganisation element
 //       and the previewOrg object will reset to default if it is not outside)
 const defaultPic = "http://localhost:8080/public/images/default-org-background.png";
-let previewOrg: IOrganisation = { id: -1, name: "Title", members: [], roles: [], picture: defaultPic }
+let previewOrg: IOrganisation = { id: -1, name: "Title", members: [], roles: [], picture: defaultPic, description : "" }
 
 function NewOrganisation() {
     const client = useContext(ClientContext);
