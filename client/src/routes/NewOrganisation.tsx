@@ -71,7 +71,7 @@ function NewOrganisation() {
 
         try {
             client.post(client.defaults.baseURL + "/organisation/authorized/new", formData)
-            .then(r => { if (r.status == 200) {nav(`/organisations/${1}`) }})
+            .then(r => { if (r.status == 200) {nav(`/organisations/memberships`) }})
             .catch(err => {console.error(err)});
         } catch (error) {
             console.error(error);
