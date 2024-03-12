@@ -37,7 +37,7 @@ export class MongoDBEventStorage implements EventStorage {
     }
 
     async updateEvent(updatedEvent: Event): Promise<void> {
-        await this.eventModel.findOneAndUpdate({id: updatedEvent.id}, updatedEvent, { new: true }).exec();
+        await this.eventModel.findOneAndUpdate({id: updatedEvent.id}, updatedEvent, { upsert: true, new: false }).exec();
     }
 
     async addEvent(newEvent: Event): Promise<void> {
