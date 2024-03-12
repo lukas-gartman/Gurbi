@@ -4,8 +4,11 @@ import '../stylesheets/NewEvent.css'
 import '../stylesheets/Form.css';
 import { useNavigate, useLoaderData, redirect } from 'react-router-dom';
 import Header from '../components/Header';
+import { ClientContext } from '../App';
+import { useContext } from 'react';
 
 function NewEvent() {
+    const client = useContext(ClientContext);
     const orgId = useLoaderData() as number;
 
     let nav = useNavigate();
@@ -39,8 +42,8 @@ function NewEvent() {
         e.preventDefault();
 
         try {
-            axios.post(`http://localhost:8080/event/authorized/organisation/${orgId}`, formData)
-            .then(r => { if (r.status == 200) {redirect(`/organisations/${orgId}`) }})
+            client.post(`/event/authorized/organisation/${orgId}`, formData)
+            .then(r => { if (r.status == 200) {nav(`/organisations/${orgId}`) }})
             .catch(err => {console.error(err)});
         } catch (error) {
             console.error(error);

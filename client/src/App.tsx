@@ -18,6 +18,17 @@ import NewOrganisation from './routes/NewOrganisation';
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
 
+
+interface ServerEvent {
+	hostId : number
+	id : number
+	title : string
+	location : string
+	description : string
+	date : Date
+	picture : string
+}
+
 // Takes care of page refreshes (axios configs are not saved)
 const jwt = Cookie.get("jwt");
 if (jwt !== undefined) {
@@ -63,22 +74,40 @@ const router = createBrowserRouter([
 				path: "/events",
 				element: <Events />,
 				loader: async ({ params }) => {
-					let events: IEvent[] = [];
-
-					try{
-						let orgs : IOrganisation[] = await client.get(`/organisation/authorized/by/user`);
-						orgs.forEach(async org => {
-							let response = await client.get(`/event/organisation/${org.id}/all`);
-							let orgEvents : IEvent[] = response.data;
-							orgEvents.forEach(event => {
-								events.push(event)
-							});
+					const orgsResponse = await client.get<IOrganisation[]>('/organisation/authorized/by/user');
+					const orgs = orgsResponse.data;
+				
+					const orgsHash = new Map<number, IOrganisation>();
+					const orgIds: number[] = [];
+				
+					orgs.forEach(org => {
+						orgsHash.set(org.id, org);
+						orgIds.push(org.id);
+					});
+				
+					const eventsResponse = await client.post<ServerEvent[]>('/event/authorized/following', { orgIds });
+					const events = eventsResponse.data;
+				
+					const iEvents: IEvent[] = [];
+				
+					for (const event of events) {
+						const thehost = orgsHash.get(event.hostId);
+						if (!thehost) {
+							throw new Error('Host not found for event');
+						}
+				
+						iEvents.push({
+							host: thehost,
+							dateTime: new Date(event.date),
+							description: event.description,
+							id: event.id,
+							location: event.location,
+							picture: event.picture,
+							name: event.title
 						});
 					}
-					catch(error){
-						console.error("Error fetching data:", error);
-					}
-					return events;
+				
+					return iEvents;
 				}
 			},
 			{
@@ -135,12 +164,10 @@ const router = createBrowserRouter([
 					//const permissions = await client.get(`/organisation/${params.orgId}/permissions/by/user`);
 					//console.log(permissions);
 					try {
-						console.log("The org id\n", params.orgId)
+						console.log("The org id\n", params.orgId);
 						let res = await client.get(`/organisation/${params.orgId}`);
-						return res.data
-					}
-
-					catch(error) {
+						return res.data;
+					} catch(error: any) {
 						console.error("Error fetching organisation:", error);
 					}
 					//return JSON.parse('{"id":'+params.orgId+', "name": "Mega6", "picture": ""}');

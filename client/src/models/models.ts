@@ -14,9 +14,16 @@ export interface IEvent {
     location: string;
     description: string;
     dateTime: Date;
-    price: number;
     picture: string;
 }
+
+// hostId : number
+// id : number
+// title : string
+// location : string
+// description : string
+// date : Date
+// picture : string
 
 export interface IUser {
     id: number;
