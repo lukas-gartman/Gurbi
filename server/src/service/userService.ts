@@ -1,12 +1,13 @@
 import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
 import { UserStorage } from "../db/user.db";
-import { DBUser, userServiceResponse } from "../model/UserModels";
+import { DBUser, IUser, userServiceResponse } from "../model/UserModels";
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
 export interface IUserService {
     regNewUser(userInfo : {fullName: string, nickname: string, email: string, password: string, repeatPassword: string}) : Promise<userServiceResponse>;
     loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean}>;
+    getUser(userId: number): Promise<IUser | null>;
 }
 
 export class UserService implements IUserService {

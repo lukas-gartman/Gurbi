@@ -93,7 +93,7 @@ test("post /organisation/authorized/user", async () =>{
   let token : string = res.body.token
 
   //add testUser2 as member of organisation id = 0 
-  let res2 = await request.post("/organisation/authorized/user").set('Authorization', token).send({nickName : "nickname2", organisationId : "0"});
+  let res2 = await request.post("/organisation/authorized/user").set('Authorization', token).send({nickName : "nickname2", organisationId : 0});
   expect(res2.statusCode).toBe(200);
 
 
@@ -103,10 +103,10 @@ test("post /organisation/authorized/user", async () =>{
   
 
   //add testUser3 as member of organisation id = 0 
-  let res3 = await request.post("/organisation/authorized/user").set('Authorization', token2).send({nickName : "nickname3", organisationId : "0"});
+  let res3 = await request.post("/organisation/authorized/user").set('Authorization', token2).send({nickName : "nickname3", organisationId : 0});
   expect(res3.statusCode).toBe(200);
 
-  let res4 = await request.get("/organisation/by/id").send({organisationId: "0"});
+  let res4 = await request.get("/organisation/by/id").send({organisationId: 0});
   expect(res4.body.members.length).toBe(3);
 
 });
@@ -121,7 +121,7 @@ test("delete /organisation/:orgId/authorized/user", async () => {
   let res2 = await request.delete("/organisation/0/authorized/user").set('Authorization', token);
   expect(res2.statusCode).toBe(200);
 
-  let res3 = await request.get("/organisation/by/id").send({organisationId: "0"});
+  let res3 = await request.get("/organisation/by/id").send({organisationId: 0});
   expect(res3.body.members.length).toBe(2);
 
   //login testUser1
@@ -142,7 +142,7 @@ test("post /organisation/authorized/user/role", async () => {
   let token : string = res1.body.token;
   
   //try to change the role of testUser1 as member of orgId = 0, but is the only admin left
-  let res2 = await request.put("/organisation/authorized/user/role").set('Authorization', token).send({organisationId : "0", targetMemberId : "0", roleName : "member"});
+  let res2 = await request.put("/organisation/authorized/user/role").set('Authorization', token).send({organisationId : 0, targetMemberId : 0, roleName : "member"});
   expect(res2.statusCode).toBe(403);
 
 

@@ -7,6 +7,7 @@ export interface IEventService {
     getOrganisationEvents(orgId : number) : Promise<Event[]>;
     getAllEvents() : Promise<Event[]>;
     getEvent(eventId : number) : Promise<Event | undefined>;
+    getEventsByOrganisations(orgIds: number[]): Promise<Event[]>;
 }
 
 export class EventService implements IEventService {
