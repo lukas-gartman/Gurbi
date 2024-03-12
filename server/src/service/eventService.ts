@@ -28,6 +28,7 @@ export class EventService implements IEventService {
         let event : Event = eventData as Event;
         event.id = 0;
         event.hostId = orgId;
+        event.picture = "/public/images/default-event-picture.png";
 
         try {
             await this.eventStorage.addEvent(event);

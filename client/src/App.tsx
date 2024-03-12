@@ -13,6 +13,7 @@ import NewEvent from './routes/NewEvent';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import { IEvent, IOrganisation, IProfile, IUser } from './models/models';
+import NewOrganisation from './routes/NewOrganisation';
 
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
@@ -94,6 +95,7 @@ const router = createBrowserRouter([
 						interface OrgResponse { orgs: IOrganisation[] };
 						client.get<OrgResponse>("/organisation/all").then(response => {
 							organisations = response.data.orgs;
+							console.log("result is\n" + response.data.orgs);
 						});
 					} catch (e: any) { }
 					return organisations;
@@ -114,6 +116,10 @@ const router = createBrowserRouter([
 					return memberships;
 					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}]');
 				}
+			},
+			{
+				path: "/organisations/new",
+				element: <NewOrganisation />
 			},
 			{
 				path: "/organisations/:orgId",

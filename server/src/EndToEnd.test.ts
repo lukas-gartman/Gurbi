@@ -148,8 +148,7 @@ test("post /organisation/authorized/user/role", async () => {
 
 })
 
-test("post /event/authorized/organisation/:orgId", async () =>{
-  
+test("post /event/authorized/organisation/:orgId", async () => {
   //login testUser2
   let res = await request.post("/user/login").send({email : "test2@gmail.se", password : "123", rememberMe : true});
   let token : string = res.body.token
@@ -160,6 +159,7 @@ test("post /event/authorized/organisation/:orgId", async () =>{
   event.description = "my event description";
   event.location = "göteborg";
   event.title = "";
+  event.picture = "";
 
   //let testUser2 that does not have prem for orgId = 2 try add an event
   let res2 = await request.post("/event/authorized/organisation/2").set('Authorization', token).send(event);

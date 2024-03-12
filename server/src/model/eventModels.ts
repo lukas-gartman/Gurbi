@@ -16,6 +16,7 @@ export interface NewEventDTO {
     date: Date;
     location: string;
     description: string;
+    picture: string;
 }
 
 export class EventServiceResponse implements ServiceResponse {
