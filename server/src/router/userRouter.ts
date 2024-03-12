@@ -40,7 +40,7 @@ export function getUserRouter(userService : IUserService) : Router {
             res.status(404).send("User not found");
         }
     });
-
+  
     userRouter.post("/authorized/profile/settings/update_password", async(req: AuthorizedRequest<{}, {}, { currentPassword: string, newPassword: string, repeatPassword: string}>, res: Response<string>) => {
         try {
             let response: ServiceResponse = await userService.changePassword(req.userId as number, req.body.currentPassword, req.body.newPassword, req.body.repeatPassword);
@@ -50,7 +50,7 @@ export function getUserRouter(userService : IUserService) : Router {
         }
 	  });
 
-    userRouter.post("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
+    userRouter.get("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
         const userId = req.userId as number;
         const me = await userService.getUser(userId);
         if (me !== null) {

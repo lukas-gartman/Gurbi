@@ -18,9 +18,6 @@ import NewOrganisation from './routes/NewOrganisation';
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
 
-
-
-
 // Takes care of page refreshes (axios configs are not saved)
 const jwt = Cookie.get("jwt");
 if (jwt !== undefined) {
@@ -170,17 +167,18 @@ const router = createBrowserRouter([
 				path: "/organisations/:orgId",
 				element: <Organisation />,
 				loader: async ({ params }) => {
-					// return client.get(`/api/organisations/${params.orgId}`);
-					//const permissions = await client.get(`/organisation/${params.orgId}/permissions/by/user`);
-					//console.log(permissions);
 					try {
-						console.log("The org id\n", params.orgId);
 						let res = await client.get(`/organisation/${params.orgId}`);
-						return res.data;
+						const user = await client.get("/user/authorized/me");
+						// const events = await client.get(`/event/organisation/${params.orgId}/all`);
+						// const permissions = await client.get(`/organisation/${params.orgId}/permissions/by/user`);
+
+						console.log(res.data.members)
+
+						return { organisation: res.data, user: user };
 					} catch(error: any) {
 						console.error("Error fetching organisation:", error);
 					}
-					//return JSON.parse('{"id":'+params.orgId+', "name": "Mega6", "picture": ""}');
 				}
 			},
 			{
@@ -194,7 +192,7 @@ const router = createBrowserRouter([
 				path: "/profile",
 				element: <Profile />,
 				loader: async ({ params }) => {
-					const me = (await client.post("/user/authorized/me")).data as IUser;
+					const me = (await client.get("/user/authorized/me")).data as IUser;
 					const membershipCount = ((await client.get("/organisation/authorized/by/user")).data as IOrganisation[]).length
 					const savedEvents: IEvent[] = []; // TODO: create saved events collection
 

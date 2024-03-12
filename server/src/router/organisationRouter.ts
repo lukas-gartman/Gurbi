@@ -106,7 +106,6 @@ export function getOrganisationRouter(organisationService : IOrganisationService
     
     organisationRouter.get("/:orgId/user/:userId/permissions", async (req : Request<{orgId : number, userId : number},{},{}>, res : Response<Permission[]>) => {
         try {
-
             let userId = req.params.userId as number;
             let orgId = req.params.orgId as number;
             let orgUser: OrganisationUser = { userId: userId, organisationId: orgId};
@@ -116,7 +115,6 @@ export function getOrganisationRouter(organisationService : IOrganisationService
             return res.status(500).send(e.message);
         }
     });
-
  
     return organisationRouter;
 }

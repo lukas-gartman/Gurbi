@@ -2,11 +2,17 @@ import '../stylesheets/Organisations.css';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useLoaderData, NavLink, useNavigate } from 'react-router-dom';
-import { Organisation } from '../../../server/src/model/organisationModels';
-import { IOrganisation } from '../models/models';
+import { IEvent, IOrganisation, IUser } from '../models/models';
+import { useContext } from 'react';
+import { ClientContext } from '../App';
 
 function OrganisationPage() {
-    const organisation = useLoaderData() as IOrganisation;
+    interface OrgData {
+        organisation: IOrganisation;
+        user: IUser;
+    }
+    const data = useLoaderData() as OrgData;
+    const client = useContext(ClientContext);
     
     let nav = useNavigate();
     const goBack = () => {
@@ -25,28 +31,52 @@ function OrganisationPage() {
         </>
     );
 
+    const handleJoin = () => {
+        try {
+
+        } catch(e: any) {
+
+        }
+    };
+
+    const handleLeave = () => {
+        try {
+
+        } catch(e: any) {
+
+        }
+    };
+
+    const joinButton = (
+        data.organisation.members.find(member => member.userId === data.user.id) ? (
+            <a onClick={handleLeave} className="organisation-join-btn joined">Leave organisation</a>
+        ) : (
+            <a onClick={handleJoin} className="organisation-join-btn">Join organisation</a>
+        )
+    );
+
     return (
         <div className="App">
             <Header headerContent={header} />
             <main className="organisation">
                 <div className="organisation-title">
                     <div>
-                        <img src={organisation.picture} className="organisation-img" />
-                        <h2>{organisation.name}</h2>
+                        <img src={data.organisation.picture} className="organisation-img" />
+                        <h2>{data.organisation.name}</h2>
                     </div>
                     <div>
                         <div>
                             <i className="bi bi-people"></i>
-                            <span>{organisation.members.length}</span>
-                            <NavLink to={`/organisations/${organisation.id}/unfollow`} className="organisation-follow-btn following">Following</NavLink>
+                            <span>{data.organisation.members.length}</span>
+                            { joinButton }
                         </div>
                         <div>
-                            <NavLink to={`/organisations/${organisation.id}/event/new`} className="organisation-new-event-btn">New event</NavLink>
+                            <NavLink to={`/organisations/${data.organisation.id}/event/new`} className="organisation-new-event-btn">New event</NavLink>
                         </div>
                     </div>
                 </div>
 
-                <p>{organisation.description}</p>
+                <p>{data.organisation.description}</p>
 
                 <h3>Contact</h3>
                 <div>
@@ -57,6 +87,9 @@ function OrganisationPage() {
                     <i className="bi bi-globe2"></i>
                     <span>sample URL (no property yet)</span>
                 </div>
+
+                {/* <h3>Events</h3>
+                { (data.events as IEvent[]).map((event) => { return <EventCard event={event} key={event.id} /> }) } */}
             </main>
             <Footer />
         </div>

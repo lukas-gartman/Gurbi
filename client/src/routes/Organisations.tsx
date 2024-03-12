@@ -10,7 +10,7 @@ function Organisations() {
         <>
         <NavLink to="/organisations/memberships" className="nav-button" end>My memberships</NavLink>
         <NavLink to="/organisations" className="nav-button" end>All organisations</NavLink>
-        <NavLink to="/organisations/invites" className="nav-button" end>Invites</NavLink>
+        <NavLink to="" className="nav-button" end>Invites</NavLink>
         </>
     );
 

@@ -10,7 +10,7 @@ function Events() {
     const navItems = (
         <>
         <NavLink to="/events" className="nav-button" end>Following</NavLink>
-        <NavLink to="/events/upcoming" className="nav-button" end>Upcoming</NavLink>
+        <NavLink to="" className="nav-button" end>Upcoming</NavLink>
         </>
     );
 
