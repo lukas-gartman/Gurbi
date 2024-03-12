@@ -19,15 +19,7 @@ const client = axios.create({baseURL: "http://localhost:8080", withCredentials: 
 export const ClientContext = React.createContext(client);
 
 
-interface ServerEvent {
-	hostId : number
-	id : number
-	title : string
-	location : string
-	description : string
-	date : Date
-	picture : string
-}
+
 
 // Takes care of page refreshes (axios configs are not saved)
 const jwt = Cookie.get("jwt");
@@ -76,7 +68,7 @@ const router = createBrowserRouter([
 				loader: async ({ params }) => {
 					const orgsResponse = await client.get<IOrganisation[]>('/organisation/authorized/by/user');
 					const orgs = orgsResponse.data;
-				
+
 					const orgsHash = new Map<number, IOrganisation>();
 					const orgIds: number[] = [];
 				
@@ -85,7 +77,7 @@ const router = createBrowserRouter([
 						orgIds.push(org.id);
 					});
 				
-					const eventsResponse = await client.post<ServerEvent[]>('/event/authorized/following', { orgIds });
+					const eventsResponse = await client.post('/event/authorized/following', { orgIds });
 					const events = eventsResponse.data;
 				
 					const iEvents: IEvent[] = [];
@@ -115,6 +107,30 @@ const router = createBrowserRouter([
 				element: <Event />,
 				loader: async ({ params }) => {
 					// return client.get(`/event/:eventId"}`);
+
+					try {
+						let event = (await client.get(`/event/${params.eventId}`)).data;
+						let thehost : IOrganisation = (await client.get(`/organisation/${event.hostId}`)).data
+
+
+						let IEvent : IEvent = {
+							host: thehost,
+							dateTime: new Date(event.date),
+							description: event.description,
+							id: event.id,
+							location: event.location,
+							picture: event.picture,
+							name: event.title
+						}
+
+						return IEvent;
+					} catch (error) {
+						
+					}
+					
+					
+
+
 					return JSON.parse('{"id":' + params.eventId + ', "location": "Studenternas Hus", "dateTime": "19:00", "name": "Semlesittning", "description": "come and eat semlor with us lol"}');
 				}
 			},
