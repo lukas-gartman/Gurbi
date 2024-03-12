@@ -1,7 +1,7 @@
 import '../stylesheets/Organisations.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { NavLink, useLoaderData } from 'react-router-dom';
+import { Link, NavLink, useLoaderData } from 'react-router-dom';
 import { IOrganisation } from '../models/models';
 import OrganisationCard from '../components/OrganisationCard';
 
@@ -10,7 +10,7 @@ function Organisations() {
         <>
         <NavLink to="/organisations/memberships" className="nav-button" end>My memberships</NavLink>
         <NavLink to="/organisations" className="nav-button" end>All organisations</NavLink>
-        <NavLink to="" className="nav-button" end>Invites</NavLink>
+        <Link to="" className="nav-button">Invites</Link>
         </>
     );
 

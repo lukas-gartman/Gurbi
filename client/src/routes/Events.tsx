@@ -4,13 +4,13 @@ import Footer from '../components/Footer';
 import { IEvent } from "../models/models";
 import { IOrganisation } from "../models/models";
 import EventCard from '../components/EventCard';
-import { NavLink, useLoaderData } from 'react-router-dom';
+import { Link, NavLink, useLoaderData } from 'react-router-dom';
 
 function Events() {
     const navItems = (
         <>
         <NavLink to="/events" className="nav-button" end>Following</NavLink>
-        <NavLink to="" className="nav-button" end>Upcoming</NavLink>
+        <Link to="" className="nav-button">Upcoming</Link>
         </>
     );
 
