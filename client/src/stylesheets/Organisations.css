@@ -51,10 +51,7 @@
     flex-direction: column;
     position: relative;
     border-radius: 8px;
-    cursor: pointer;
     margin: 10px 0;
-    /* height: fit-content; */
-    /* height: 200px; */
 }
 
 .organisation-background {
@@ -68,11 +65,13 @@
     transition: 0.1s linear 0s;
 }
 
-.organisation-card img:hover {
+.organisation-card a:hover {
+    cursor: pointer;
     filter: brightness(40%);
 }
 
-.organisation-card img:active:hover {
+.organisation-card a:active:hover {
+    cursor: pointer;
     filter: brightness(50%);
 }
 
@@ -91,7 +90,7 @@
     font-size: 1em;
 }
 
-.title-image {
+.organisation-card-title-image {
     border-radius: 50%;
     width: 60px;
     height: 60px;

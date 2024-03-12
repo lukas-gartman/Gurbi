@@ -16,12 +16,14 @@ export function getEventRouter(eventService : IEventService) : Router {
         }
     });
 
-    eventRouter.post("/authorized/following", async (req: AuthorizedRequest<{orgIds: number[]},{},{}>, res : Response<Event[]>) => {
+    eventRouter.post("/authorized/following", async (req: AuthorizedRequest<{},{},{orgIds: number[]}>, res : Response<Event[]>) => {
         try {
-            const orgIds = req.params.orgIds as number[];
+            const orgIds = req.body.orgIds as number[];
             const events: Event[] = await eventService.getEventsByOrganisations(orgIds);
+
             return res.status(200).send(events);
         } catch (e: any) {
+            console.log(e.message)
             return res.status(500).send(e.message);
         }
     });

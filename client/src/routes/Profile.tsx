@@ -53,7 +53,7 @@ function Profile() {
                     </div>
                 </div>
                 <div className="profile-stats-block">
-                    <NavLink to={"/organisation/new"} className={"new-org-btn"}>New organisation</NavLink>
+                    <NavLink to={"/organisations/new"} className={"new-org-btn"}>New organisation</NavLink>
                 </div>
 
                 <h4>Saved events</h4>

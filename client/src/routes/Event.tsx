@@ -55,7 +55,7 @@ function EventPage() {
                         <i className="bi bi-three-dots-vertical"></i>
                         <div>
                             <i className="bi bi-people"></i>
-                            <span>1337</span>
+                            <span>{event.host.members.length}</span>
                             <NavLink to={`/organisations/${event.host.id}/unfollow`} className="event-organiser-follow-btn following">Following</NavLink>
                         </div>
                     </div>

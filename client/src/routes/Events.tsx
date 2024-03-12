@@ -16,6 +16,7 @@ function Events() {
 
     const events = useLoaderData() as IEvent[];
 
+
     return (
         <div className="App">
             <Header onSearch={onSearch} headerNav={navItems} />
@@ -28,7 +29,7 @@ function Events() {
 }
 
 function onSearch(content: JSON): void {
-    console.log(content);
+    //console.log(content);
 }
 
 export default Events;
