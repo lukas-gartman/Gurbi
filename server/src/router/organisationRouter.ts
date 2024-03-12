@@ -9,7 +9,7 @@ export function getOrganisationRouter(organisationService : IOrganisationService
     organisationRouter.post("/authorized/new", async (req : AuthorizedRequest<{},{},NewOrganisationDTO>, res : Response<string>) => {
         try {
             let userId = req.userId as number;
-            let newOrgData : NewOrganisationData = {orgName : req.body.orgName, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles};
+            let newOrgData : NewOrganisationData = {name : req.body.name, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles, description : req.body.description};
             let response : ServiceResponse = await organisationService.addOrganisation(newOrgData);
             return res.status(response.httpStatusCode).send(response.msg);
         } catch (e: any) {

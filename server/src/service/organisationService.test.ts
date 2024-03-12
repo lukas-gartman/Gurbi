@@ -8,7 +8,7 @@ import {OrganisationService} from "./organisationService";
 test("test add organisation", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     
-    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname", orgName : "TestOrg"}
+    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname", name : "TestOrg", description : "my desc"}
     let answer : ServiceResponse = await organisationService.addOrganisation(org1)
 
     expect(answer).toStrictEqual(OrgServiceResponse.getResponse(200));
@@ -17,9 +17,9 @@ test("test add organisation", async () => {
 test("get organisations of user", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
-    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
-    let org2 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname2", orgName : "TestOrg2"};
-    let org3 : NewOrganisationData = {roles : [], creatorId : 2, creatorNickName : "TestUserNickname3", orgName : "TestOrg3"};
+    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
+    let org2 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname2", name : "TestOrg2", description : "my desc"};
+    let org3 : NewOrganisationData = {roles : [], creatorId : 2, creatorNickName : "TestUserNickname3", name : "TestOrg3", description : "my desc"};
 
     await organisationService.addOrganisation(org1);
     await organisationService.addOrganisation(org2);
@@ -34,9 +34,9 @@ test("get organisations of user", async () => {
 test("get all organisations", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
-    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
-    let org2 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname2", orgName : "TestOrg2"};
-    let org3 : NewOrganisationData = {roles : [], creatorId : 2, creatorNickName : "TestUserNickname3", orgName : "TestOrg3"};
+    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
+    let org2 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname2", name : "TestOrg2", description : "my desc"};
+    let org3 : NewOrganisationData = {roles : [], creatorId : 2, creatorNickName : "TestUserNickname3", name : "TestOrg3", description : "my desc"};
 
     await organisationService.addOrganisation(org1);
     await organisationService.addOrganisation(org2);
@@ -50,7 +50,7 @@ test("get all organisations", async () => {
 test("get user permissionns", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
-    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
     await organisationService.addOrganisation(org1);
 
     let orgId : number | undefined = (await organisationService.getUserOrganisations(1))?.at(0)?.id;
@@ -61,7 +61,7 @@ test("get user permissionns", async () => {
 test("add member to organisation", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
-    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
     await organisationService.addOrganisation(org1);
 
     let orgId : number | undefined= (await organisationService.getUserOrganisations(1)).at(0)?.id;
@@ -78,7 +78,7 @@ test("add member to organisation", async () => {
 test("delete organisation", async () =>{
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
 
-    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
     await organisationService.addOrganisation(orgData);
 
     let orgId = (await organisationService.getUserOrganisations(1)).at(0)?.id as number;
@@ -94,7 +94,7 @@ test("delete organisation", async () =>{
 
 test("add role to organisation", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
-    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
     await organisationService.addOrganisation(orgData);
     let orgId = (await organisationService.getUserOrganisations(1)).at(0)?.id as number;
     await organisationService.addMemberToOrganisation(2, "TestUserNickname2", orgId);
@@ -109,7 +109,7 @@ test("add role to organisation", async () => {
 
 test("delete role from organisation", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
-    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
     await organisationService.addOrganisation(orgData);
     let orgId = (await organisationService.getUserOrganisations(1)).at(0)?.id as number;
     await organisationService.addMemberToOrganisation(2, "TestUserNickname2", orgId);
@@ -131,7 +131,7 @@ test("delete role from organisation", async () => {
 test("change member role", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     
-    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", orgName : "TestOrg"};
+    let orgData : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname1", name : "TestOrg", description : "my desc"};
     await organisationService.addOrganisation(orgData);
 
     let orgId = (await organisationService.getUserOrganisations(1)).at(0)?.id as number;

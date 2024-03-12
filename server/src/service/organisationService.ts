@@ -57,20 +57,31 @@ export class OrganisationService implements IOrganisationService {
 
     //Create new organisation 
     async addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>{
-        let roles : Role[] = newOrgData.roles;
-        let creatorId : number = newOrgData.creatorId;
-        let creatorNickName : string = newOrgData.creatorNickName;
-        let organisationName : string = newOrgData.orgName;
+        
+        let roles : Role[] = [];
+        if(Array.isArray(newOrgData.roles)){
+            newOrgData.roles.forEach(role => {
+                roles.push(role);
+            });
+        }
+
 
         //add admin and member roles per default
         roles.push(this.admin);
         roles.push(this.member);
 
-        //creator added as admin per default
-        let members : Member[] = [{userId : creatorId, roleName : this.admin.roleName, nickName : creatorNickName}];
-        this.organisationStorage.newOrganisation({members : members, roles : roles, name : organisationName, id : 0, picture:"/public/images/default-org-background.png"});
 
-        return OrgServiceResponse.getResponse(200)
+        //creator added as admin per default
+        let members : Member[] = [{userId : newOrgData.creatorId, roleName : this.admin.roleName, nickName : newOrgData.creatorNickName}];
+
+
+        try {
+            await this.organisationStorage.newOrganisation({members : members, roles : roles, name : newOrgData.name, description : newOrgData.description, id : 0, picture:"/public/images/default-org-background.png"} as Organisation);
+            return OrgServiceResponse.getResponse(200)
+
+        } catch (error) {
+            return OrgServiceResponse.getResponse(400)   
+        }
     }
 
     //Delete an organisation

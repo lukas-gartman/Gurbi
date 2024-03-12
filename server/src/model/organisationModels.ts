@@ -18,6 +18,7 @@ export interface Organisation {
     roles : Role[];
     name : string;
     picture : string;
+    description : string;
 }
 
 export interface OrganisationUser {
@@ -28,7 +29,8 @@ export interface OrganisationUser {
 //convince
 export interface NewOrganisationDTO {
     creatorNickName : string;
-    orgName : string;
+    name : string;
+    description : string;
     roles : Role[];
 }
 

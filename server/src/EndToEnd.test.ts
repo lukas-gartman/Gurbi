@@ -52,23 +52,23 @@ test("/organisation/authorized/new", async () => {
   let token : string = res.body.token
 
   //testUser1 makes another org 
-  let org1 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg1"};
+  let org1 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", name : "TestOrg1", description : "my desc"};
   let res1 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org1);
   expect(res1.statusCode).toBe(200);
 
   //testUser1 makes another org 
-  let org2 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg2"};
-  let res2 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org1);
+  let org2 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", name : "TestOrg2", description : "my desc"};
+  let res2 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org2);
   expect(res2.statusCode).toBe(200);
 
   //testUser1 makes another org 
-  let org3 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg3"};
-  let res3 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org1);
+  let org3 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", name : "TestOrg3", description : "my desc"};
+  let res3 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org3);
   expect(res3.statusCode).toBe(200);
 
   //testUser1 makes another org 
-  let org4 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg4"};
-  let res4 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org1);
+  let org4 : NewOrganisationDTO = {roles : [], creatorNickName : "", name : "TestOrg4", description : "my desc"};
+  let res4 = await request.post("/organisation/authorized/new").set('Authorization', token).send(org4);
   expect(res4.statusCode).toBe(200);
 
   //login TestUser2
@@ -76,7 +76,7 @@ test("/organisation/authorized/new", async () => {
   let token2 : string = res5.body.token
 
   //testUser2 makes an org
-  let org5 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", orgName : "TestOrg5"};
+  let org5 : NewOrganisationDTO = {roles : [], creatorNickName : "TestUserNickname", name : "TestOrg5", description : "my desc"};
   let res6 = await request.post("/organisation/authorized/new").set('Authorization', token2).send(org5);
   expect(res6.statusCode).toBe(200);
 });
