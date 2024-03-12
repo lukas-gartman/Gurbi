@@ -37,3 +37,17 @@
     border-radius: 5px;
     font-weight: 300;
 }
+
+.new-org-btn {
+    margin-top: 15px;
+    padding: 10px 15px;
+    color: white;
+    background-color: rgb(175, 0, 175);
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 10px;
+}
+
+.new-org-btn:hover {
+    background-color: rgb(200, 0, 200);
+}

@@ -1,9 +1,9 @@
-import { Event } from "../models/modles";
-import { Organisation } from "../../../server/src/model/organisationModels";
+import { IEvent } from "../models/models";
+import { IOrganisation } from "../models/models";
 import '../stylesheets/Events.css';
 import { NavLink } from 'react-router-dom';
 
-function EventCard(props: {event: Event}) {
+function EventCard(props: {event: IEvent}) {
     return (
         <NavLink to={"/events/" + props.event.id} className="event-card">
             <img className="event-img" src={props.event.picture} />

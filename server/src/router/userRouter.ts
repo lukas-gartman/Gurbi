@@ -1,8 +1,6 @@
 import express, { Request, Response, Router } from "express";
-import { IUserService} from "../service/userService";
-import * as jwt from 'jsonwebtoken';
-import { MY_NOT_VERY_SECURE_PRIVATE_KEY } from "../app";
-import { ServiceResponse } from "../model/dataModels";
+import { IUserService } from "../service/userService";
+import { AuthorizedRequest, ServiceResponse } from "../model/dataModels";
 
 export function getUserRouter(userService : IUserService) : Router {
     const userRouter : Router = express.Router();
@@ -29,17 +27,26 @@ export function getUserRouter(userService : IUserService) : Router {
         }
     });
 
-    userRouter.post("/validate", async(req: Request<{},{},{token: string}>, res: Response<{valid: boolean, error: string}>) => {
-        const token = req.body.token;
-        if (!token) {
-            res.status(401).json({valid: false, error: "Token not provided" });
-        }
+    userRouter.post("/authorized/validate", async(req: AuthorizedRequest<{},{},{}>, res: Response<{valid: boolean}>) => {
+        res.status(200).json({ valid: true });
+    });
 
-        try {
-            jwt.verify(token, MY_NOT_VERY_SECURE_PRIVATE_KEY);
-            res.status(200).json({ valid: true, error: "" });
-        } catch (e) {
-            res.status(401).json({ valid: false, error: "Invalid or expired token" });
+    userRouter.get("/:userId", async(req: Request<{userId: number},{},{}>, res: Response<IUser | string>) => {
+        const user = await userService.getUser(req.params.userId);
+        if (user) {
+            res.status(200).send(user);
+        } else {
+            res.status(404).send("User not found");
+        }
+    });
+
+    userRouter.post("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
+        const userId = req.userId as number;
+        const me = await userService.getUser(userId);
+        if (me !== null) {
+            res.status(200).send(me);
+        } else {
+            res.status(404).send("User with ID " + userId + " not found");
         }
     });
 

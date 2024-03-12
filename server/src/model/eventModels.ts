@@ -1,8 +1,8 @@
 import { ServiceResponse } from "./dataModels"
 
-export interface Event{
-    hostId : string
-    id : string
+export interface Event {
+    hostId : number
+    id : number
     title : string
     location : string
     description : string
@@ -10,17 +10,15 @@ export interface Event{
     picture : string
 }
 
-
 //data transfer object
-export interface NewEventDTO{
+export interface NewEventDTO {
     title: string;
     date: Date;
     location: string;
     description: string;
 }
 
-
-export class EventServiceResponse implements ServiceResponse{
+export class EventServiceResponse implements ServiceResponse {
     httpStatusCode: number;
     msg: string;
     id: number;
@@ -32,10 +30,8 @@ export class EventServiceResponse implements ServiceResponse{
     }
 
     private static readonly serverResponses: EventServiceResponse[] = [
-        { httpStatusCode: 400, msg : "missing data", id: 0},
-        
-        { httpStatusCode: 200, msg: "added event", id: 1}
-
+        { httpStatusCode: 400, msg : "missing data", id: 0 },
+        { httpStatusCode: 200, msg : "added event", id: 1 }
     ];
 
     static getResponse(id: number): EventServiceResponse {
@@ -45,5 +41,4 @@ export class EventServiceResponse implements ServiceResponse{
         }
         return new EventServiceResponse(resposne.httpStatusCode, resposne.msg, resposne.id);
     }
-
 }

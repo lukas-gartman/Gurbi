@@ -18,9 +18,7 @@ export class DBconnHandler{
     static closeConn(){
         this.conn.close();
     }
-
 }
-
 
 interface CounterDocument extends Document {
     _id: string;
@@ -41,7 +39,6 @@ class TotalCounter {
 
     private readonly model: Model<CounterDocument> = DBconnHandler.getConn().model<CounterDocument>('TotalCounters', counterSchema);
     private collectionName : string;
-
    
     constructor(collectionName: string) {
         this.collectionName = collectionName;

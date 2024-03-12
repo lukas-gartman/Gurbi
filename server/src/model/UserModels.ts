@@ -1,12 +1,13 @@
 import { ServiceResponse } from "./dataModels";
 
 export interface DBUser {
-    id: string;
+    id: number;
     name: string;
     nickName: string
     encryptedPassword: string;
     email: string;
     regDate: Date;
+    picture: string;
 }
 
 export interface UserLogin {

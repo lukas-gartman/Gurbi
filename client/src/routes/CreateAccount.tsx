@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { ClientContext } from '../App';
 
 function CreateAccount() {
+    const client = useContext(ClientContext);
     const nav = useNavigate();
 
     useEffect(() => {
@@ -33,7 +35,7 @@ function CreateAccount() {
         e.preventDefault();
 
         try {
-            axios.post("http://localhost:8080/user/register", formData).then(r => {
+            client.post("/user/register", formData).then(r => {
                 if (r.status == 200) {
                     nav("/");
                 }

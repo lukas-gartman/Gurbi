@@ -1,10 +1,9 @@
-
 import express, { Application } from "express";
-import {getUserRouter} from "./router/userRouter";
-import {getOrganisationRouter} from "./router/organisationRouter"
-import {authenticationMiddleware} from "./authenticationMiddleware"
-import { OrganisationService } from "./service/organisationService";
 import cors from 'cors';
+import { getUserRouter } from "./router/userRouter";
+import { getOrganisationRouter } from "./router/organisationRouter"
+import { authenticationMiddleware } from "./authenticationMiddleware"
+import { OrganisationService } from "./service/organisationService";
 import { UserService } from "./service/userService";
 import { MemoryOrganisationStorage, MongoDBOrganisationStorage, OrganisationStorage } from "./db/organisation.db";
 import { MongoDBUserStorage, UserStorage } from "./db/user.db";
@@ -19,10 +18,14 @@ export function getApp(useDatabase: boolean) : Application {
     const app = express();
 
     //make some request work
-    app.use(cors());
+    app.use(cors({origin: "http://localhost:3000", credentials: true}));
 
     //JSON parse
     app.use(express.json());
+
+    // public resources
+    const path = require('path');
+    app.use('/public', express.static(path.join(__dirname, 'public')));
 
     //Add middleware for user token authentication for root /authorized
     app.use(/\/.*\/authorized/, authenticationMiddleware)
