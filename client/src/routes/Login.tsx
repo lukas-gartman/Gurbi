@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookie from 'js-cookie';
 import '../stylesheets/Login.css'
@@ -18,14 +18,16 @@ function Login() {
         return response.data.valid;
     }
 
-    if (jwt) {
-        isValid().then(isValid => {
-            if (isValid) {
-                console.log("login evaluated to true");
-                nav("/events");
-            }
-        });
-    }
+    useEffect(() => {
+        if (jwt) {
+            isValid().then(isValid => {
+                if (isValid) {
+                    console.log("login evaluated to true");
+                    nav("/events");
+                }
+            });
+        }
+    }, [jwt]);
 
     interface LoginFormData {
         email: string;
