@@ -9,7 +9,7 @@ const userSchema: Schema = new Schema({
     encryptedPassword: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     regDate: { type: Date, required: true },
-	picture: {type: String, required: true }
+	  picture: {type: String, required: true }
 });
 
 //storage
@@ -20,6 +20,7 @@ export interface UserStorage {
     addUser(DBUser: DBUser): Promise<void>;
     deleteUserById(id: number): Promise<void>;
     isEmailExists(email: string) : Promise<boolean>;
+    changePassword(userId: string, newPassword: string): Promise<void>;
 }
 
 export class MongoDBUserStorage implements UserStorage {
@@ -39,6 +40,11 @@ export class MongoDBUserStorage implements UserStorage {
     async updateUser(updatedUser: DBUser): Promise<void> {
 		await this.userModel.findOneAndUpdate({id: updatedUser.id}, updatedUser, { new: true }).exec();
     }
+
+	async changePassword(userId: string, newPassword: string): Promise<void>
+	{
+		this.updateUser(this.getUserBysid(userId).encryptedPassword = newPassword);
+	}
 
     async addUser(newUser: DBUser): Promise<void> {
 		newUser.id = (await this.idCounter.getCounterValue());

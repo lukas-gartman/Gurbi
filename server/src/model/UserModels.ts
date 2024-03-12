@@ -40,6 +40,7 @@ export class userServiceResponse implements ServiceResponse{
         {httpStatusCode: 400, msg: "password are not matching", id: 2},
         {httpStatusCode: 400, msg: "mail is already used", id: 3},
         {httpStatusCode: 200, msg: "successfully registered", id: 4},
+        {httpStatusCode: 400, msg: "incorrect password", id: 5},
     ];
 
     static getResponse(id: number): userServiceResponse {
