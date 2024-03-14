@@ -4,6 +4,7 @@ import Cookie from 'js-cookie';
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { ClientContext } from '../App';
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 
 function CreateAccount() {
     const client = useContext(ClientContext);
@@ -34,12 +35,14 @@ function CreateAccount() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         try {
             client.post("/user/register", formData).then(r => {
                 if (r.status == 200) {
                     nav("/");
                 }
             }).catch(err => {
+                toast.error(err.response.data, toastConfig);
                 console.error(err);
             });
         } catch (error) {
@@ -50,6 +53,7 @@ function CreateAccount() {
     return (
         <div className="App">
             <main className="form-container">
+                <ToastContainer />
                 <h1>Create account</h1>
                 <form className="form" onSubmit={handleSubmit}>
                     <input name="fullName" type="text" onChange={handleChange} placeholder="Full name" required />
