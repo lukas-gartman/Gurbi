@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from "react-router-dom";
+import React from 'react';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider} from "react-router-dom";
 import './stylesheets/App.css';
 import Events from './routes/Events';
 import Event from './routes/Event';
@@ -182,7 +182,7 @@ const router = createBrowserRouter([
 
 						console.log(res.data.members)
 
-						return { organisation: res.data, user: user };
+						return { organisation: res.data, user: user.data };
 					} catch(error: any) {
 						console.error("Error fetching organisation:", error);
 					}

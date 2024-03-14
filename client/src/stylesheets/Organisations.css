@@ -29,9 +29,13 @@
     cursor: pointer;
 }
 
-.organisation-join-btn.joined {
+.organisation-join-btn.join {
     color: white;
     background-color: black;
+}
+
+#member-count {
+    margin-left: 5px;
 }
 
 .organisation-new-event-btn {

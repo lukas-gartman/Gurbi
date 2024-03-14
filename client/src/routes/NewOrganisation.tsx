@@ -1,8 +1,7 @@
 import React, { useContext, useState } from 'react';
-import axios from 'axios';
 import '../stylesheets/NewOrganisation.css'
 import '../stylesheets/Form.css';
-import { useNavigate, useLoaderData, redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import OrganisationCard from '../components/OrganisationCard';
 import { IOrganisation } from '../models/models';
@@ -73,7 +72,7 @@ function NewOrganisation() {
 
         const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         client.post(client.defaults.baseURL + "/organisation/authorized/new", formData).then(r => {
-            if (r.status == 200) {
+            if (r.status === 200) {
                 console.log("new orgId is: " + r.data.orgId);
                 nav(`/organisations/${r.data.orgId}`);
             }

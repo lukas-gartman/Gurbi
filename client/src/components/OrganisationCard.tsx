@@ -11,17 +11,17 @@ function OrganisationCard(props: {org: IOrganisation}) {
     return (
         hasUrl ? (
         <NavLink to={"/organisations/" + props.org.id} className="organisation-card">
-            <img className="organisation-background" src={client.defaults.baseURL + props.org.banner} />
+            <img className="organisation-background" src={client.defaults.baseURL + props.org.banner} alt="Organisation banner" />
             <div className="organisation-card-title">
-                <img className="organisation-card-title-image" src={client.defaults.baseURL + props.org.picture} />
+                <img className="organisation-card-title-image" src={client.defaults.baseURL + props.org.picture} alt="Organisation" />
                 <span>{props.org.name}</span>
             </div>
         </NavLink>
         ) : (
         <div className="organisation-card">
-            <img className="organisation-background" src={client.defaults.baseURL + props.org.banner} />
+            <img className="organisation-background" src={client.defaults.baseURL + props.org.banner} alt="Organisation banner" />
             <div className="organisation-card-title">
-                <img className="organisation-card-title-image" src={client.defaults.baseURL + props.org.picture} />
+                <img className="organisation-card-title-image" src={client.defaults.baseURL + props.org.picture} alt="Organisation" />
                 <span>{props.org.name}</span>
             </div>
         </div>

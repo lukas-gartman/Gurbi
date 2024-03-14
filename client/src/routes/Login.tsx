@@ -27,7 +27,7 @@ function Login() {
                 }
             });
         }
-    }, [jwt]);
+    }, [jwt, client, nav]);
 
     interface LoginFormData {
         email: string;
@@ -48,7 +48,7 @@ function Login() {
 
         const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         client.post("/user/login", formData).then(r => {
-            if (r.status == 200) {
+            if (r.status === 200) {
                 const jwt = r.data.token;
                 Cookie.set("jwt", jwt, { sameSite: "lax" });
                 client.defaults.headers.common['Authorization'] = `Bearer ${jwt}`;
@@ -56,8 +56,12 @@ function Login() {
                 nav("/events");
             }
         }).catch(err => {
-            console.log(err);
-            toast.error(err.response.data.response.msg, toastConfig);
+            try {
+                console.log(err);
+                toast.error(err.response.data.response.msg, toastConfig);
+            } catch(err: any) {
+                toast.error("Server is offline.", toastConfig);
+            }
         });
     };
 

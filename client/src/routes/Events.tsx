@@ -2,7 +2,6 @@ import '../stylesheets/Events.css';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { IEvent } from "../models/models";
-import { IOrganisation } from "../models/models";
 import EventCard from '../components/EventCard';
 import { Link, NavLink, useLoaderData } from 'react-router-dom';
 
