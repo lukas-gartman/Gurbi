@@ -45,13 +45,13 @@ export class OrganisationService implements IOrganisationService {
 
     async getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]> {
         let organisation : Organisation | null = await this.organisationStorage.getOrganisationById(orguser.organisationId);
-        let roleName : string | undefined = organisation?.members.find(member => member.userId === orguser.userId)?.roleName;
-        let premissions : Permission[] | undefined = organisation?.roles.find(role => role.roleName === roleName)?.permissions
+        let roleName : string | undefined = organisation?.members.find(member => member.userId.toString() === orguser.userId.toString())?.roleName; // IDs are not same type unless converted to string
+        let permissions : Permission[] | undefined = organisation?.roles.find(role => role.roleName === roleName)?.permissions
 
-        if (premissions === undefined) {
+        if (permissions === undefined) {
             return [] as Permission[];
         } else {
-            return premissions;
+            return permissions;
         }
     }
 

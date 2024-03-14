@@ -2,7 +2,7 @@ import '../stylesheets/Organisations.css';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useLoaderData, NavLink, useNavigate } from 'react-router-dom';
-import { IOrganisation, IUser } from '../models/models';
+import { IOrganisation, IUser, Permission } from '../models/models';
 import { useContext, useState } from 'react';
 import { ClientContext } from '../App';
 import { ToastContainer, ToastOptions, toast } from 'react-toastify';
@@ -11,6 +11,7 @@ function OrganisationPage() {
     interface OrgData {
         organisation: IOrganisation;
         user: IUser;
+        permissions: Permission[];
     }
 
     const data = useLoaderData() as OrgData;
@@ -73,7 +74,7 @@ function OrganisationPage() {
                 <ToastContainer />
                 <div className="organisation-title">
                     <div>
-                        <img src={data.organisation.picture} className="organisation-img" alt="Organisation" />
+                        <img src={client.defaults.baseURL + data.organisation.picture} className="organisation-img" alt="Organisation" />
                         <h2>{data.organisation.name}</h2>
                     </div>
                     <div>
@@ -82,9 +83,10 @@ function OrganisationPage() {
                             <span id="member-count">{memberCount}</span>
                             { joinButton }
                         </div>
+                        {isMember && data.permissions.some(p => p === Permission.CreateNewEvent) &&
                         <div>
                             <NavLink to={`/organisations/${data.organisation.id}/event/new`} className="organisation-new-event-btn">New event</NavLink>
-                        </div>
+                        </div>}
                     </div>
                 </div>
 

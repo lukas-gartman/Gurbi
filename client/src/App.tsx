@@ -113,8 +113,9 @@ const router = createBrowserRouter([
 					// return client.get(`/event/:eventId"}`);
 
 					try {
-						let event = (await client.get(`/event/${params.eventId}`)).data;
-						let thehost : IOrganisation = (await client.get(`/organisation/${event.hostId}`)).data
+						const event = (await client.get(`/event/${params.eventId}`)).data;
+						const thehost : IOrganisation = (await client.get(`/organisation/${event.hostId}`)).data;
+						const user: IUser = (await client.get("/user/authorized/me")).data;
 
 						let IEvent : IEvent = {
 							host: thehost,
@@ -126,9 +127,9 @@ const router = createBrowserRouter([
 							name: event.title
 						}
 
-						return IEvent;
+						return { event: IEvent, user: user };
 					} catch (error) {
-						
+						console.log("Unable to fetch event: " + error);
 					}
 				}
 			},
@@ -139,11 +140,10 @@ const router = createBrowserRouter([
 					try {
 						const response = await client.get("/organisation/all");
 						const organisations: IOrganisation[] = response.data;
-						console.log("all org result is\n", organisations);
 						return organisations;
 					  } catch (error) {
 						console.error("Error fetching organisations:", error);
-						return []; // Return an empty array or handle the error as needed
+						return [];
 					  }
 					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}, {"id": 2, "name": "Mega6", "picture": ""}]');
 				}
@@ -153,15 +153,12 @@ const router = createBrowserRouter([
 				element: <Organisations />,
 				loader: async ({ params }) => {
 					try {
-
 						const response = await client.get("/organisation/authorized/by/user");
-						//interface OrgResponse { orgs: IOrganisation[] };
 						const organisations: IOrganisation[] = response.data;
-						console.log("all memberships result is\n", organisations);
 						return organisations;
 					} catch (error) {
 						console.error("Error fetching organisations:", error);
-						return []; // Return an empty array or handle the error as needed
+						return [];
 					}
 					// return JSON.parse('[{"id": "1", "name": "Datavetenskapsdivisionen", "picture": "bild.jpg"}]');
 				}
@@ -176,13 +173,10 @@ const router = createBrowserRouter([
 				loader: async ({ params }) => {
 					try {
 						let res = await client.get(`/organisation/${params.orgId}`);
-						const user = await client.get("/user/authorized/me");
+						const user: IUser = (await client.get("/user/authorized/me")).data;
+						const permissions = (await client.get(`/organisation/${params.orgId}/user/${user.id}/permissions`)).data;
 						// const events = await client.get(`/event/organisation/${params.orgId}/all`);
-						// const permissions = await client.get(`/organisation/${params.orgId}/permissions/by/user`);
-
-						console.log(res.data.members)
-
-						return { organisation: res.data, user: user.data };
+						return { organisation: res.data, user: user, permissions: permissions };
 					} catch(error: any) {
 						console.error("Error fetching organisation:", error);
 					}

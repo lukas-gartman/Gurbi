@@ -1,42 +1,99 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ClientContext } from '../App';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { IEvent } from "../models/models";
-import { NavLink, useLoaderData } from 'react-router-dom';
+import { IEvent, IUser } from "../models/models";
+import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
+import { ToastOptions, toast } from 'react-toastify';
 
 function EventPage() {
+    interface EventData {
+        event: IEvent;
+        user: IUser;
+    }
+
+    const data = useLoaderData() as EventData;
     const client = useContext(ClientContext);
-    const event = useLoaderData() as IEvent;
+    const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
+
+    const [isMember, setIsMember] = useState(data.event.host.members.some(member => member.userId === data.user.id)); 
+    const [memberCount, setMemberCount] = useState(data.event.host.members.length);
+
+    let nav = useNavigate();
+    const goBack = () => {
+        nav(-1);
+    };
+    const navOptions = () => {
+        // TODO: option floating menu
+    };
+
+    const header = (
+        <>
+        <div className="header-row">
+            <i id="back-button" onClick={goBack} className="bi bi-arrow-left-short" />
+        </div>
+        <i id="options-button" onClick={navOptions} className="bi bi-three-dots-vertical" />
+        </>
+    );
+
+    const handleJoin = async () => {
+        try {
+            await client.post("/organisation/authorized/user", { nickName: "", organisationId: data.event.host.id });
+            toast.success("Joined organisation!", toastConfig);
+            setIsMember(true);
+            setMemberCount(memberCount + 1);
+        } catch (e: any) {
+            toast.error(e.response.data, toastConfig);
+        }
+    };
+
+    const handleLeave = async () => {
+        try {
+            await client.delete(`/organisation/${data.event.host.id}/authorized/user`);
+            toast.success("Left organisation!", toastConfig);
+            setIsMember(false);
+            setMemberCount(memberCount - 1);
+        } catch (e: any) {
+            toast.error(e.response.data, toastConfig);
+        }
+    };
+
+    const joinButton = (
+        isMember ? (
+            <button onClick={handleLeave} className="organisation-join-btn">Leave organisation</button>
+        ) : (
+            <button onClick={handleJoin} className="organisation-join-btn join">Join organisation</button>
+        )
+    );
 
     return (
         <div className="App">
-            <Header />
+            <Header headerContent={header} />
             <main className="event">
-                <h2>{event.name}</h2>
+                <h2>{data.event.name}</h2>
 
                 <div className="event-card-row">
-                    <img src={client.defaults.baseURL + event.host.picture} className="event-host-img" alt="Host" />
-                    <span>{event.host.name}</span>
+                    <img src={client.defaults.baseURL + data.event.host.picture} className="event-host-img" alt="Host" />
+                    <span>{data.event.host.name}</span>
                 </div>
                 
                 <div className="event-card-row">
                     <i className="bi bi-calendar3"></i>
-                    <span>{event.dateTime.toDateString()} {event.dateTime.getHours()}:{event.dateTime.getMinutes()}</span>
+                    <span>{data.event.dateTime.toDateString()} {data.event.dateTime.getHours()}:{data.event.dateTime.getMinutes()}</span>
                 </div>
 
                 <div className="event-card-row">
                     <i className="bi bi-geo-alt" />
-                    <span>{event.location}</span>
+                    <span>{data.event.location}</span>
                 </div>
 
                 <h3>About</h3>
-                <p>{event.description}</p>
+                <p>{data.event.description}</p>
                 
                 <h3>Contact</h3>
                 <div className="event-card-row">
                     <i className="bi bi-person"></i>
-                    <span>{event.host.name}</span>
+                    <span>{data.event.host.name}</span>
                 </div>
                 <div className="event-card-row">
                     <i className="bi bi-envelope"></i>
@@ -47,18 +104,18 @@ function EventPage() {
                 <p>discussion here</p>
 
                 <h3>Organiser</h3>
-                <NavLink to={"/organisations/" + event.host.id} className="event-card">
-                    <img className="event-organiser-img" src={client.defaults.baseURL + event.host.picture} alt="Host" />
+                <NavLink to={"/organisations/" + data.event.host.id} className="event-card">
+                    <img className="event-organiser-img" src={client.defaults.baseURL + data.event.host.picture} alt="Host" />
                     <div className="event-info">
-                        <span>{event.host.name}</span>
+                        <span>{data.event.host.name}</span>
                         <span>organisation section here</span>
                     </div>
                     <div className="event-organiser-options">
                         <i className="bi bi-three-dots-vertical"></i>
                         <div>
                             <i className="bi bi-people"></i>
-                            <span>{event.host.members.length}</span>
-                            <NavLink to={`/organisations/${event.host.id}/unfollow`} className="event-organiser-follow-btn following">Following</NavLink>
+                            <span>{memberCount}</span>
+                            { joinButton }
                         </div>
                     </div>
                 </NavLink>
