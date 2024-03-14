@@ -182,7 +182,7 @@ const router = createBrowserRouter([
 
 						console.log(res.data.members)
 
-						return { organisation: res.data, user: user };
+						return { organisation: res.data, user: user.data };
 					} catch(error: any) {
 						console.error("Error fetching organisation:", error);
 					}

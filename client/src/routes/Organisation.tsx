@@ -2,17 +2,22 @@ import '../stylesheets/Organisations.css';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { useLoaderData, NavLink, useNavigate } from 'react-router-dom';
-import { IEvent, IOrganisation, IUser } from '../models/models';
-import { useContext } from 'react';
+import { IOrganisation, IUser } from '../models/models';
+import { useContext, useState } from 'react';
 import { ClientContext } from '../App';
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 
 function OrganisationPage() {
     interface OrgData {
         organisation: IOrganisation;
         user: IUser;
     }
+
     const data = useLoaderData() as OrgData;
     const client = useContext(ClientContext);
+    const [isMember, setIsMember] = useState(data.organisation.members.find(member => member.userId === data.user.id) !== undefined); 
+    const [memberCount, setMemberCount] = useState(data.organisation.members.length);
+    const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
     
     let nav = useNavigate();
     const goBack = () => {
@@ -31,27 +36,33 @@ function OrganisationPage() {
         </>
     );
 
-    const handleJoin = () => {
+    const handleJoin = async () => {
         try {
-
-        } catch(e: any) {
-
+            await client.post("/organisation/authorized/user", { nickName: "", organisationId: data.organisation.id });
+            toast.success("Joined organisation!", toastConfig);
+            setIsMember(true);
+            setMemberCount(memberCount + 1);
+        } catch (e: any) {
+            toast.error(e.response.data, toastConfig);
         }
     };
 
-    const handleLeave = () => {
+    const handleLeave = async () => {
         try {
-
-        } catch(e: any) {
-
+            await client.delete(`/organisation/${data.organisation.id}/authorized/user`);
+            toast.success("Left organisation!", toastConfig);
+            setIsMember(false);
+            setMemberCount(memberCount - 1);
+        } catch (e: any) {
+            toast.error(e.response.data, toastConfig);
         }
     };
 
     const joinButton = (
-        data.organisation.members.find(member => member.userId === data.user.id) ? (
-            <a onClick={handleLeave} className="organisation-join-btn joined">Leave organisation</a>
+        isMember ? (
+            <a onClick={handleLeave} className="organisation-join-btn">Leave organisation</a>
         ) : (
-            <a onClick={handleJoin} className="organisation-join-btn">Join organisation</a>
+            <a onClick={handleJoin} className="organisation-join-btn join">Join organisation</a>
         )
     );
 
@@ -59,6 +70,7 @@ function OrganisationPage() {
         <div className="App">
             <Header headerContent={header} />
             <main className="organisation">
+                <ToastContainer />
                 <div className="organisation-title">
                     <div>
                         <img src={data.organisation.picture} className="organisation-img" />
@@ -67,7 +79,7 @@ function OrganisationPage() {
                     <div>
                         <div>
                             <i className="bi bi-people"></i>
-                            <span>{data.organisation.members.length}</span>
+                            <span id="member-count">{memberCount}</span>
                             { joinButton }
                         </div>
                         <div>
