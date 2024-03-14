@@ -42,6 +42,10 @@ const organisationSchema: Schema = new Schema({
         type: String,
         required: true,
     },
+    banner: {
+        type: String,
+        required: true,
+    },
     description:{
         type: String,
         required: true,
@@ -57,7 +61,7 @@ export interface OrganisationStorage {
     getAllOrganisations(): Promise<Organisation[]>;
     getOrganisationById(organisationId: number): Promise<Organisation | null>;
     updateOrganisation(org: Organisation): Promise<boolean>;
-    newOrganisation(org: Organisation): Promise<boolean>;
+    newOrganisation(org: Organisation): Promise<number>;
     deleteOrganisationById(organisationId: number): Promise<boolean>;
   }
 
@@ -66,11 +70,11 @@ export class MongoDBOrganisationStorage implements OrganisationStorage {
     private organisationModel = DBconnHandler.getConn().model<Organisation>("organisation", organisationSchema);
     private idCounter : TotalCounter = new TotalCounter("organisation");
 
-    async newOrganisation(org: Organisation): Promise<boolean>{
+    async newOrganisation(org: Organisation): Promise<number>{
         org.id = (await this.idCounter.getCounterValue());
         await this.idCounter.incrementCounter();
         await this.organisationModel.create(org)
-        return true;
+        return org.id;
     }
 
     async getOrganisationsByUser(userId: number): Promise<Organisation[]> {
@@ -103,11 +107,11 @@ export class MemoryOrganisationStorage implements OrganisationStorage {
     private organisations : Organisation[] = [];
     private idCounter : number = 0;
 
-    async newOrganisation(org: Organisation) : Promise<boolean>{
+    async newOrganisation(org: Organisation) : Promise<number> {
         this.idCounter++;
         org.id = this.idCounter;
         this.organisations.push(org);
-        return true;
+        return org.id;
     }
 
     async updateOrganisation(inOrg: Organisation): Promise<boolean> {

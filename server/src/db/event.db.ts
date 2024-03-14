@@ -17,7 +17,7 @@ const eventSchema: Schema = new Schema({
 export interface EventStorage {
     getEventById(id: number): Promise<Event | null>;
     updateEvent(updatedEvent: Event): Promise<void>;
-    addEvent(newEvent: Event): Promise<void>;
+    addEvent(newEvent: Event): Promise<number>;
     deleteEventById(id: number): Promise<void>;
     getEventsByHostId(hostId : number) : Promise<Event[]>;
     getAllEvents(): Promise<Event[]>;
@@ -40,10 +40,11 @@ export class MongoDBEventStorage implements EventStorage {
         await this.eventModel.findOneAndUpdate({id: updatedEvent.id}, updatedEvent, { upsert: true, new: false }).exec();
     }
 
-    async addEvent(newEvent: Event): Promise<void> {
+    async addEvent(newEvent: Event): Promise<number> {
         newEvent.id = (await this.idCounter.getCounterValue());
         await this.idCounter.incrementCounter();
         await this.eventModel.create(newEvent);
+        return newEvent.id;
     }
 
     async deleteEventById(id: number): Promise<void> {

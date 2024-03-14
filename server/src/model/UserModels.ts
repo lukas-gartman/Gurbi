@@ -36,11 +36,14 @@ export class userServiceResponse implements ServiceResponse{
     }
 
     private static readonly serverResponses: userServiceResponse[] = [
-        {httpStatusCode: 400, msg: "missing feild value", id: 1},
-        {httpStatusCode: 400, msg: "password are not matching", id: 2},
-        {httpStatusCode: 400, msg: "mail is already used", id: 3},
-        {httpStatusCode: 200, msg: "successfully registered", id: 4},
-        {httpStatusCode: 400, msg: "incorrect password", id: 5},
+        {httpStatusCode: 400, msg: "Please fill in all required fields.", id: 1},
+        {httpStatusCode: 400, msg: "The passwords you entered do not match.", id: 2},
+        {httpStatusCode: 400, msg: "This email address is already in use.", id: 3},
+        {httpStatusCode: 200, msg: "Registration successful!", id: 4},
+        {httpStatusCode: 400, msg: "Incorrect password.", id: 5},
+        {httpStatusCode: 200, msg: "Password updated!", id: 6},
+        {httpStatusCode: 400, msg: "Incorrect username or password.", id: 7},
+        {httpStatusCode: 200, msg: "Login successful!", id: 8},
     ];
 
     static getResponse(id: number): userServiceResponse {

@@ -31,8 +31,8 @@ export class EventServiceResponse implements ServiceResponse {
     }
 
     private static readonly serverResponses: EventServiceResponse[] = [
-        { httpStatusCode: 400, msg : "missing data", id: 0 },
-        { httpStatusCode: 200, msg : "added event", id: 1 }
+        { httpStatusCode: 400, msg : "Please fill in all required fields.", id: 0 },
+        { httpStatusCode: 200, msg : "Event added!", id: 1 }
     ];
 
     static getResponse(id: number): EventServiceResponse {

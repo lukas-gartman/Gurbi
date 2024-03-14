@@ -7,11 +7,13 @@ import Header from '../components/Header';
 import OrganisationCard from '../components/OrganisationCard';
 import { IOrganisation } from '../models/models';
 import { ClientContext } from '../App';
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 
 // TODO: load baseURL from client (current issue: ClientContext must be inside NewOrganisation element
 //       and the previewOrg object will reset to default if it is not outside)
-const defaultPic = "http://localhost:8080/public/images/default-org-background.png";
-let previewOrg: IOrganisation = { id: -1, name: "Title", members: [], roles: [], picture: defaultPic, description : "" }
+const defaultPic = "/public/images/default-org-profile-picture.png";
+const defaultBan = "/public/images/default-org-banner.png";
+let previewOrg: IOrganisation = { id: -1, name: "Title", members: [], roles: [], picture: defaultPic, banner: defaultBan, description : "" }
 
 function NewOrganisation() {
     const client = useContext(ClientContext);
@@ -69,23 +71,26 @@ function NewOrganisation() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        try {
-            client.post(client.defaults.baseURL + "/organisation/authorized/new", formData)
-            .then(r => { if (r.status == 200) {nav(`/organisations/memberships`) }})
-            .catch(err => {console.error(err)});
-        } catch (error) {
-            console.error(error);
-        }
+        const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
+        client.post(client.defaults.baseURL + "/organisation/authorized/new", formData).then(r => {
+            if (r.status == 200) {
+                console.log("new orgId is: " + r.data.orgId);
+                nav(`/organisations/${r.data.orgId}`);
+            }
+        }).catch(err => {
+            toast.error(err.response.data.msg, toastConfig);
+        });
     };
 
     return (
         <div className="App">
             <Header headerContent={header} />
             <main className="new-organisation form-container">
+                <ToastContainer />
                 <h1>New organisation</h1>
                 <form className="form" onSubmit={handleSubmit}>
                     <input name="name" type="text" onChange={handleChange} placeholder="Organisation name" required />
-                    <textarea name="description" rows={4} onChange={handleChange} placeholder="Description" />
+                    <textarea name="description" rows={4} onChange={handleChange} placeholder="Description" required />
                     <input type="file" onChange={handlePicture} accept="image/*" />
                     {preview && (
                         <div className="preview-card">

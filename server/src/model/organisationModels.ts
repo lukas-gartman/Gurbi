@@ -18,6 +18,7 @@ export interface Organisation {
     roles : Role[];
     name : string;
     picture : string;
+    banner : string;
     description : string;
 }
 
@@ -50,12 +51,12 @@ export class OrgServiceResponse implements ServiceResponse {
     }
 
     private static readonly serverResponses: OrgServiceResponse[] = [
-        { httpStatusCode: 400, msg: "missing data", id: 400 },
-        { httpStatusCode: 404, msg: "organisation does not exist", id: 401 },
-        { httpStatusCode: 401, msg: "not a member of organisation", id: 402 },
-        { httpStatusCode: 401, msg: "member does not have permission", id: 403 },
-        { httpStatusCode: 409, msg: "user is already member of organisation", id: 404 },
-        { httpStatusCode: 409, msg: "nickName is already used in organisation", id: 405 },
+        { httpStatusCode: 400, msg: "Please fill in all required fields.", id: 400 },
+        { httpStatusCode: 404, msg: "The organisation does not exist.", id: 401 },
+        { httpStatusCode: 401, msg: "You are not a member of the organisation.", id: 402 },
+        { httpStatusCode: 401, msg: "You do not have permission to do that.", id: 403 },
+        { httpStatusCode: 409, msg: "You are already a member of the organisation.", id: 404 },
+        { httpStatusCode: 409, msg: "Your nickname is already taken in this organisation.", id: 405 },
         { httpStatusCode: 404, msg: "not an available permission", id: 406 },
         { httpStatusCode: 403, msg: "cannot delete this role", id: 407 },
         { httpStatusCode: 404, msg: "role does not exist in organisation", id: 408 },
@@ -64,21 +65,21 @@ export class OrgServiceResponse implements ServiceResponse {
         { httpStatusCode: 403, msg: "must be at minimum one admin", id: 411 },
         { httpStatusCode: 403, msg: "must be an admin to change the role of a member to/from admin", id: 412 },
 
-        { httpStatusCode: 200, msg: "organistation successfully added", id: 200 },
+        { httpStatusCode: 200, msg: "Organistation successfully added!", id: 200 },
         { httpStatusCode: 200, msg: "member does have permission", id: 201 },
-        { httpStatusCode: 200, msg: "succesfully deleted organisation", id: 202 },
+        { httpStatusCode: 200, msg: "Succesfully deleted organisation!", id: 202 },
         { httpStatusCode: 200, msg: "user added as member to organisation", id: 203 },
         { httpStatusCode: 200, msg: "role added to organisation", id: 204 },
         { httpStatusCode: 200, msg: "role has been deleted from organisation", id: 205 },
         { httpStatusCode: 200, msg: "changed target member's role", id: 206 },
-        { httpStatusCode: 200, msg: "member removed from organisation", id: 207 },
+        { httpStatusCode: 200, msg: "Member was removed from the organisation.", id: 207 },
     ];
 
     static getResponse(id: number): OrgServiceResponse {
-        let resposne: OrgServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
-        if (resposne === undefined) {
+        let response: OrgServiceResponse | undefined = this.serverResponses.find(res => res.id === id);
+        if (response === undefined) {
             throw error("unknown id");
         }
-        return new OrgServiceResponse(resposne.httpStatusCode, resposne.msg, resposne.id);
+        return new OrgServiceResponse(response.httpStatusCode, response.msg, response.id);
     }
 }

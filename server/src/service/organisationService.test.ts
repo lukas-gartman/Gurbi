@@ -9,9 +9,9 @@ test("test add organisation", async () => {
     const organisationService = new OrganisationService(new MemoryOrganisationStorage());
     
     let org1 : NewOrganisationData = {roles : [], creatorId : 1, creatorNickName : "TestUserNickname", name : "TestOrg", description : "my desc"}
-    let answer : ServiceResponse = await organisationService.addOrganisation(org1)
+    let {response, orgId} : {response: ServiceResponse, orgId?: number | undefined} = await organisationService.addOrganisation(org1)
 
-    expect(answer).toStrictEqual(OrgServiceResponse.getResponse(200));
+    expect(response).toStrictEqual(OrgServiceResponse.getResponse(200));
 })
 
 test("get organisations of user", async () => {

@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import '../stylesheets/Settings.css';
 import '../stylesheets/Form.css';
 import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { IUser } from "../../../server/src/model/UserModels";
 import { ClientContext } from '../App';
 import { useContext } from 'react';
-
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Profile() {
     const client = useContext(ClientContext);
-    const user = useLoaderData() as IUser;
 
     let nav = useNavigate();
     const goBack = () => {
@@ -43,17 +41,21 @@ function Profile() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        try {
-            await client.post("user/authorized/profile/settings/update_password", formData);
-        } catch (error) {
-            console.error(error);
-        }
+        const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
+        client.post("user/authorized/profile/settings/update_password", formData).then(response => {
+            if (response.status === 200) {
+                toast.success(response.data, toastConfig);
+            }
+        }).catch(error => {
+            toast.error(error.response.data, toastConfig);
+        });
     };
 
     return (
         <div className="App">
             <Header headerContent={header} />
             <main className="settings">
+                <ToastContainer />
                 <h3>Update password</h3>
                 <div className="form-container">
                     <form className="form" onSubmit={handleSubmit}>

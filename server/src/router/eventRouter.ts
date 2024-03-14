@@ -6,11 +6,11 @@ import {IEventService } from "../service/eventService";
 export function getEventRouter(eventService : IEventService) : Router {
     const eventRouter : Router = express.Router();
 
-    eventRouter.post("/authorized/organisation/:orgId", async (req : AuthorizedRequest<{orgId : number},{}, NewEventDTO>, res : Response<string>)  => {
+    eventRouter.post("/authorized/organisation/:orgId", async (req : AuthorizedRequest<{orgId : number},{}, NewEventDTO>, res : Response<{ msg: string, eventId: number }>)  => {
         try {
             let orgId : number = req.params.orgId;
-            let response : ServiceResponse = await eventService.addEvent(req.body, orgId, req.userId as number)
-            return res.status(response.httpStatusCode).send(response.msg);
+            let { response, eventId } : { response: ServiceResponse, eventId?: number | undefined } = await eventService.addEvent(req.body, orgId, req.userId as number)
+            return res.status(response.httpStatusCode).send({msg: response.msg, eventId: eventId as number});
         } catch (e: any) {
             return res.status(500).send(e.message);
         }
@@ -20,7 +20,6 @@ export function getEventRouter(eventService : IEventService) : Router {
         try {
             const orgIds = req.body.orgIds as number[];
             const events: Event[] = await eventService.getEventsByOrganisations(orgIds);
-
             return res.status(200).send(events);
         } catch (e: any) {
             console.log(e.message)

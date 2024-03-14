@@ -1,10 +1,12 @@
+import { useContext } from 'react';
+import { ClientContext } from '../App';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import { IEvent } from "../models/models";
-import { IOrganisation } from "../models/models";
 import { NavLink, useLoaderData } from 'react-router-dom';
 
 function EventPage() {
+    const client = useContext(ClientContext);
     const event = useLoaderData() as IEvent;
 
     return (
@@ -14,7 +16,7 @@ function EventPage() {
                 <h2>{event.name}</h2>
 
                 <div className="event-card-row">
-                    <img src={event.picture} className="event-host-img" />
+                    <img src={client.defaults.baseURL + event.host.picture} className="event-host-img" />
                     <span>{event.host.name}</span>
                 </div>
                 
@@ -46,7 +48,7 @@ function EventPage() {
 
                 <h3>Organiser</h3>
                 <NavLink to={"/organisations/" + event.host.id} className="event-card">
-                    <img className="event-organiser-img" src={event.host.picture} />
+                    <img className="event-organiser-img" src={client.defaults.baseURL + event.host.picture} />
                     <div className="event-info">
                         <span>{event.host.name}</span>
                         <span>organisation section here</span>
@@ -60,9 +62,6 @@ function EventPage() {
                         </div>
                     </div>
                 </NavLink>
-                <div className="event-organiser">
-                    <img src={event.host.picture} />
-                </div>
             </main>
             <Footer />
         </div>

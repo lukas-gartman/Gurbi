@@ -3,9 +3,8 @@ import {getApp} from "./app";
 import { NewOrganisationDTO,  Organisation} from "./model/organisationModels";
 import { Event, NewEventDTO} from "./model/eventModels";
 import { DBconnHandler } from "./db/database";
-import mongoose, { Connection } from "mongoose";
+import { Connection } from "mongoose";
 import { userServiceResponse } from "./model/UserModels";
-import e from "express";
 
 const uri : string = "mongodb://localhost:27017/dat076Test"
 let request : any;

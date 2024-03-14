@@ -3,7 +3,7 @@ import {Event, EventServiceResponse, NewEventDTO} from "../model/eventModels"
 import { EventStorage } from "../db/event.db";
 
 export interface IEventService {
-    addEvent(eventData : NewEventDTO, orgId : number, userId : number) : Promise<ServiceResponse>;
+    addEvent(eventData : NewEventDTO, orgId : number, userId : number) : Promise<{response: ServiceResponse, eventId?: number | undefined}>;
     getOrganisationEvents(orgId : number) : Promise<Event[]>;
     getAllEvents() : Promise<Event[]>;
     getEvent(eventId : number) : Promise<Event | undefined>;
@@ -19,10 +19,10 @@ export class EventService implements IEventService {
         this.orgPremChecker = orgPremChecker;
     }
 
-    async addEvent(eventData : NewEventDTO, orgId : number, userId : number) : Promise<ServiceResponse> {
+    async addEvent(eventData : NewEventDTO, orgId : number, userId : number) : Promise<{ response: ServiceResponse, eventId?: number | undefined }> {
         let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.CreateNewEvent)
         if (!checkedUserPremission.succes) {
-            return checkedUserPremission.serverRes
+            return { response: checkedUserPremission.serverRes }
         }
 
         let event : Event = eventData as Event;
@@ -31,12 +31,11 @@ export class EventService implements IEventService {
         event.picture = "/public/images/default-event-picture.png";
 
         try {
-            await this.eventStorage.addEvent(event);
+            const eventId = await this.eventStorage.addEvent(event);
+            return { response: EventServiceResponse.getResponse(1), eventId: eventId };
         } catch (e : any) {
-            return EventServiceResponse.getResponse(0);
+            return { response: EventServiceResponse.getResponse(0) };
         }
-
-        return EventServiceResponse.getResponse(1);
     }
 
     async getOrganisationEvents(orgId : number) : Promise<Event[]> {
