@@ -56,8 +56,12 @@ function Login() {
                 nav("/events");
             }
         }).catch(err => {
-            console.log(err);
-            toast.error(err.response.data.response.msg, toastConfig);
+            try {
+                console.log(err);
+                toast.error(err.response.data.response.msg, toastConfig);
+            } catch(err: any) {
+                toast.error("Server is offline.", toastConfig);
+            }
         });
     };
 
