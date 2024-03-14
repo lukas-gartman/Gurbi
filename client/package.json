@@ -45,6 +45,7 @@
   },
   "homepage": "/",
   "devDependencies": {
-    "js-cookie": "^3.0.5"
+    "js-cookie": "^3.0.5",
+    "react-toastify": "^10.0.4"
   }
 }

@@ -1,8 +1,9 @@
-import React, { HTMLProps } from 'react';
+import React, { HTMLProps, useContext, useEffect, useState } from 'react';
 import {useLocation} from 'react-router';
-import axios, {AxiosResponse} from 'axios';
 import '../stylesheets/Header.css';
 import { Link } from 'react-router-dom';
+import { ClientContext, UserContext } from '../App';
+import { IUser } from '../models/models';
 
 interface Header {
 	onSearch?: (searchResults: JSON) => void,
@@ -11,6 +12,15 @@ interface Header {
 }
 
 function Header({ onSearch, headerContent, headerNav }: Header) {
+	const client = useContext(ClientContext);
+	const [user, setUser] = useState<IUser>();
+	useEffect(() => {
+		const loadUser = async () => {
+			setUser((await client.get("/user/authorized/me")).data);
+		}
+		loadUser();
+	}, []);
+
 	const curr: string = useLocation().pathname.split("/")[1];
 	function defaultOnSearch(content: JSON): void {
 		console.log(content);
@@ -24,7 +34,7 @@ function Header({ onSearch, headerContent, headerNav }: Header) {
 			<input id="search-bar" type="text" placeholder={"Search " + curr} onKeyUp={onSearchChange} />
 			<span id="clear-search" onClick={clearText}><i className="bi bi-x-circle"></i></span>
 		</div>
-		<Link to="/profile"><img className="profile-image" src="logo.svg"></img></Link>
+		<Link to="/profile"><img className="profile-image" src={user && (client.defaults.baseURL + user.picture)}></img></Link>
 		</>
 	);
 
@@ -34,7 +44,7 @@ function Header({ onSearch, headerContent, headerNav }: Header) {
 		if (x.value) {
 			clearSearch.style.visibility = "visible";
 
-			axios.get<JSON>("/" + curr + "/search?q=" + x.value)
+			client.get<JSON>("/" + curr + "/search?q=" + x.value)
 			.then(response => onSearch?.(response.data) || defaultOnSearch(response.data))
 			.catch(error => onSearch?.(error) || defaultOnSearch(error));
 		} else {

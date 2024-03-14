@@ -8,7 +8,7 @@ export interface IOrganisationService {
     getOrganisations() : Promise<Organisation[]>;
     getOrganisation(organisationId : number) : Promise<Organisation | null>;
     getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>;
-    addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>;
+    addOrganisation(newOrgData : NewOrganisationData) : Promise<{response: ServiceResponse, orgId?: number | undefined}>;
     deleteOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
     addMemberToOrganisation(userId : number, nickName : string, organisationId : number) : Promise<ServiceResponse>;
     removeMemberFromOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
@@ -56,7 +56,7 @@ export class OrganisationService implements IOrganisationService {
     }
 
     //Create new organisation 
-    async addOrganisation(newOrgData : NewOrganisationData) : Promise<ServiceResponse>{
+    async addOrganisation(newOrgData : NewOrganisationData) : Promise<{ response: ServiceResponse, orgId?: number }> {
         
         let roles : Role[] = [];
         if(Array.isArray(newOrgData.roles)){
@@ -65,22 +65,20 @@ export class OrganisationService implements IOrganisationService {
             });
         }
 
-
         //add admin and member roles per default
         roles.push(this.admin);
         roles.push(this.member);
 
-
         //creator added as admin per default
         let members : Member[] = [{userId : newOrgData.creatorId, roleName : this.admin.roleName, nickName : newOrgData.creatorNickName}];
 
-
         try {
-            await this.organisationStorage.newOrganisation({members : members, roles : roles, name : newOrgData.name, description : newOrgData.description, id : 0, picture:"/public/images/default-org-background.png"} as Organisation);
-            return OrgServiceResponse.getResponse(200)
-
+            const picture = "/public/images/default-org-profile-picture.png";
+            const banner = "/public/images/default-org-banner.png";
+            const orgId = await this.organisationStorage.newOrganisation({members: members, roles: roles, name: newOrgData.name, description: newOrgData.description, id: 0, picture: picture, banner: banner } as Organisation);
+            return {response: OrgServiceResponse.getResponse(200), orgId: orgId };
         } catch (error) {
-            return OrgServiceResponse.getResponse(400)   
+            return {response: OrgServiceResponse.getResponse(400)};
         }
     }
 

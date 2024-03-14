@@ -6,12 +6,12 @@ import { IOrganisationService } from "../service/organisationService"
 export function getOrganisationRouter(organisationService : IOrganisationService) : Router {
     const organisationRouter : Router = express.Router();
 
-    organisationRouter.post("/authorized/new", async (req : AuthorizedRequest<{},{},NewOrganisationDTO>, res : Response<string>) => {
+    organisationRouter.post("/authorized/new", async (req : AuthorizedRequest<{},{},NewOrganisationDTO>, res : Response<{msg: string, orgId: number}>) => {
         try {
             let userId = req.userId as number;
             let newOrgData : NewOrganisationData = {name : req.body.name, creatorNickName : req.body.creatorNickName, creatorId : userId, roles : req.body.roles, description : req.body.description};
-            let response : ServiceResponse = await organisationService.addOrganisation(newOrgData);
-            return res.status(response.httpStatusCode).send(response.msg);
+            let {response, orgId} : {response: ServiceResponse, orgId?: number | undefined} = await organisationService.addOrganisation(newOrgData);
+            return res.status(response.httpStatusCode).send({msg: response.msg, orgId: orgId as number});
         } catch (e: any) {
             return res.status(500).send(e.message);
         }

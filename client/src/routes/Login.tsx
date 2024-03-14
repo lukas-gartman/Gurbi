@@ -4,6 +4,8 @@ import '../stylesheets/Login.css'
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { ClientContext } from '../App';
+import React from 'react';
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 
 function Login() {
     const client = useContext(ClientContext);
@@ -16,7 +18,7 @@ function Login() {
             const response = await client.post("/user/authorized/validate", { token: jwt });
             return response.data.valid;
         }
-        
+
         if (jwt) {
             isValid().then(isValid => {
                 if (isValid) {
@@ -44,6 +46,7 @@ function Login() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         client.post("/user/login", formData).then(r => {
             if (r.status == 200) {
                 const jwt = r.data.token;
@@ -52,11 +55,15 @@ function Login() {
                 console.log("[Login: setting jwt cookie]" + Cookie.get("jwt"));
                 nav("/events");
             }
-        }).catch(err => console.error(err));
+        }).catch(err => {
+            console.log(err);
+            toast.error(err.response.data.response.msg, toastConfig);
+        });
     };
 
     return (
         <div className="App">
+            <ToastContainer />
             <main className="login form-container">
                 <h1>Login</h1>
                 <form className="form" onSubmit={handleSubmit}>

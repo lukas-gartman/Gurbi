@@ -15,9 +15,9 @@ export function getUserRouter(userService : IUserService) : Router {
         }
     });
 
-    userRouter.post("/login", async(req: Request<{},{},{email: string, password: string, rememberMe: boolean}>, res: Response<{token: string, succes: boolean}>) => {
+    userRouter.post("/login", async(req: Request<{},{},{email: string, password: string, rememberMe: boolean}>, res: Response<{token: string, succes: boolean, response: ServiceResponse}>) => {
         try {
-            let response : {token: string, succes: boolean} = await userService.loginUser(req.body);
+            let response : {token: string, succes: boolean, response: ServiceResponse} = await userService.loginUser(req.body);
             if (response.succes) {
                 return res.status(200).send(response);
             } else {
@@ -48,7 +48,7 @@ export function getUserRouter(userService : IUserService) : Router {
         } catch (e: any) {
             res.status(500).send(e.message);
         }
-	  });
+    });
 
     userRouter.get("/authorized/me", async(req: AuthorizedRequest<{},{},{}>, res: Response<IUser | string>) => {
         const userId = req.userId as number;

@@ -4,6 +4,7 @@ export interface IOrganisation {
     members: IMember[];
     roles: string[];
     picture: string;
+    banner: string;
     description: string;
 }
 

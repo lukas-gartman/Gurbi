@@ -6,6 +6,7 @@ import { useNavigate, useLoaderData, redirect } from 'react-router-dom';
 import Header from '../components/Header';
 import { ClientContext } from '../App';
 import { useContext } from 'react';
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 
 function NewEvent() {
     const client = useContext(ClientContext);
@@ -40,13 +41,19 @@ function NewEvent() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
+        
+        const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         try {
-            client.post(`/event/authorized/organisation/${orgId}`, formData)
-            .then(r => { if (r.status == 200) {nav(`/organisations/${orgId}`) }})
-            .catch(err => {console.error(err)});
-        } catch (error) {
-            console.error(error);
+            client.post(`/event/authorized/organisation/${orgId}`, formData).then(r => {
+                if (r.status == 200) {
+                    nav(`/events/${r.data.eventId}`);
+                }
+            }).catch(err => {
+                toast.error(err.response.data.msg, toastConfig);
+                console.error(err.response.data.msg)
+            });
+        } catch (error: any) {
+            console.error(error.response.data);
         }
     };
 
@@ -54,6 +61,7 @@ function NewEvent() {
         <div className="App">
             <Header headerContent={header} />
             <main className="new-event form-container">
+                <ToastContainer />
                 <h1>New event</h1>
                 <form className="form" onSubmit={handleSubmit}>
                     <input name="title" type="text" onChange={handleChange} placeholder="Event title" required />

@@ -17,6 +17,7 @@ import NewOrganisation from './routes/NewOrganisation';
 
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
+export let UserContext: React.Context<IUser>;
 
 // Takes care of page refreshes (axios configs are not saved)
 const jwt = Cookie.get("jwt");
@@ -40,6 +41,12 @@ const AuthGuard = () => {
 		console.log("User token is not valid. Redirecting from " + window.location.pathname + "to /login ...");
 		return <Navigate to="/login" replace />;
 	});
+
+	const loadUser = async () => {
+		const user = await client.get("/user/authorized/me");
+		UserContext = user.data;
+	}
+	loadUser();
 
 	return <Outlet />;
 }

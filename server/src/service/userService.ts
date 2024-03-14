@@ -6,7 +6,7 @@ import * as jwt from 'jsonwebtoken';
 
 export interface IUserService {
     regNewUser(userInfo : {fullName: string, nickname: string, email: string, password: string, repeatPassword: string}) : Promise<userServiceResponse>;
-    loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean}>;
+    loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean, response: userServiceResponse}>;
     getUser(userId: number): Promise<IUser | null>;
     changePassword(userId: number, password: string, repeatPassword: string, newPassword: string): Promise<userServiceResponse>;
 }
@@ -73,25 +73,25 @@ export class UserService implements IUserService {
        
     }
 
-    async loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean}> {
+    async loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean, response: userServiceResponse}> {
         if (!userInput.email.trim() || !userInput.password.trim()) {
-            return {token : "", succes : false};
+            return {token : "", succes : false, response: userServiceResponse.getResponse(1)};
         }
 
         let user : DBUser | null = await this.userStorage.getUserByEmail(userInput.email);
         if (user === null) {
-            return {token : "", succes : false};
+            return {token : "", succes : false, response: userServiceResponse.getResponse(7)};
         }
 
         let isPassword : boolean = await bcrypt.compare(userInput.password, user.encryptedPassword);
         if (!isPassword) {
-            return {token : "", succes : false};
+            return {token : "", succes : false, response: userServiceResponse.getResponse(7)};
         }
 
         if (userInput.rememberMe) {
-            return {token: jwt.sign({userId : user.id} , MY_NOT_VERY_SECURE_PRIVATE_KEY), succes: true};
+            return {token: jwt.sign({userId : user.id} , MY_NOT_VERY_SECURE_PRIVATE_KEY), succes: true, response: userServiceResponse.getResponse(8)};
         } else {
-            return {token: jwt.sign({userId : user.id} , MY_NOT_VERY_SECURE_PRIVATE_KEY, { expiresIn: '24h' }), succes: true};
+            return {token: jwt.sign({userId : user.id} , MY_NOT_VERY_SECURE_PRIVATE_KEY, { expiresIn: '24h' }), succes: true, response: userServiceResponse.getResponse(8)};
         }
     }
 
