@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import '../stylesheets/NewEvent.css'
 import '../stylesheets/Form.css';
-import { useNavigate, useLoaderData, redirect } from 'react-router-dom';
+import { useNavigate, useLoaderData } from 'react-router-dom';
 import Header from '../components/Header';
 import { ClientContext } from '../App';
 import { useContext } from 'react';
@@ -45,7 +44,7 @@ function NewEvent() {
         const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         try {
             client.post(`/event/authorized/organisation/${orgId}`, formData).then(r => {
-                if (r.status == 200) {
+                if (r.status === 200) {
                     nav(`/events/${r.data.eventId}`);
                 }
             }).catch(err => {

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import axios from 'axios';
 import Cookie from 'js-cookie';
 import '../stylesheets/Form.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,7 +14,7 @@ function CreateAccount() {
         if (jwt) {
             nav("/events");
         }
-    }, []);
+    });
 
     interface CreateAccountFormData {
         fullName: string;
@@ -38,7 +37,7 @@ function CreateAccount() {
         const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         try {
             client.post("/user/register", formData).then(r => {
-                if (r.status == 200) {
+                if (r.status === 200) {
                     nav("/");
                 }
             }).catch(err => {

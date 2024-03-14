@@ -9,12 +9,12 @@ function EventCard(props: {event: IEvent}) {
     
     return (
         <NavLink to={"/events/" + props.event.id} className="event-card">
-            <img className="event-img" src={client.defaults.baseURL + props.event.picture} />
+            <img className="event-img" src={client.defaults.baseURL + props.event.picture} alt="Event" />
             <div className="event-info">
                 <span>{props.event.dateTime.toDateString()} {props.event.dateTime.getHours()}:{props.event.dateTime.getMinutes()}</span>
                 <p>{props.event.name}</p>
                 <div className="event-card-row">
-                    <img className="event-host-img" src={client.defaults.baseURL + props.event.host.picture} />
+                    <img className="event-host-img" src={client.defaults.baseURL + props.event.host.picture} alt="Host" />
                     <NavLink to={"/organisations/" + props.event.host.id}>{props.event.host.name}</NavLink>
                 </div>
                 <div className="event-card-row">

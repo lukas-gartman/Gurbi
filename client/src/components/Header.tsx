@@ -1,17 +1,17 @@
-import React, { HTMLProps, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {useLocation} from 'react-router';
 import '../stylesheets/Header.css';
 import { Link } from 'react-router-dom';
-import { ClientContext, UserContext } from '../App';
+import { ClientContext } from '../App';
 import { IUser } from '../models/models';
 
-interface Header {
+interface IHeader {
 	onSearch?: (searchResults: JSON) => void,
 	headerContent?: React.ReactNode,
 	headerNav?: React.ReactNode;
 }
 
-function Header({ onSearch, headerContent, headerNav }: Header) {
+function Header({ onSearch, headerContent, headerNav }: IHeader) {
 	const client = useContext(ClientContext);
 	const [user, setUser] = useState<IUser>();
 	useEffect(() => {
@@ -19,7 +19,7 @@ function Header({ onSearch, headerContent, headerNav }: Header) {
 			setUser((await client.get("/user/authorized/me")).data);
 		}
 		loadUser();
-	}, []);
+	});
 
 	const curr: string = useLocation().pathname.split("/")[1];
 	function defaultOnSearch(content: JSON): void {
@@ -34,7 +34,7 @@ function Header({ onSearch, headerContent, headerNav }: Header) {
 			<input id="search-bar" type="text" placeholder={"Search " + curr} onKeyUp={onSearchChange} />
 			<span id="clear-search" onClick={clearText}><i className="bi bi-x-circle"></i></span>
 		</div>
-		<Link to="/profile"><img className="profile-image" src={user && (client.defaults.baseURL + user.picture)}></img></Link>
+		<Link to="/profile"><img className="profile-image" src={user && (client.defaults.baseURL + user.picture)} alt="Profile"></img></Link>
 		</>
 	);
 

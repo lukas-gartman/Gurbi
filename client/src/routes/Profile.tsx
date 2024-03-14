@@ -2,10 +2,9 @@ import '../stylesheets/Profile.css';
 import '../stylesheets/Form.css';
 import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
-import { IUser } from "../../../server/src/model/UserModels";
 import { ClientContext } from '../App';
 import { useContext } from 'react';
-import { IEvent, IProfile } from '../models/models';
+import { IProfile } from '../models/models';
 import EventCard from '../components/EventCard';
 
 function Profile() {
@@ -35,7 +34,7 @@ function Profile() {
             <Header headerContent={header} />
             <main className="profile">
                 <div className="profile-row">
-                    <img src={client.defaults.baseURL + data.user.picture} className="profile-pic" />
+                    <img src={client.defaults.baseURL + data.user.picture} className="profile-pic" alt="Profile" />
                     <h3>{data.user.name}</h3>
                 </div>
 

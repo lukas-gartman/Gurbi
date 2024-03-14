@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../stylesheets/Settings.css';
 import '../stylesheets/Form.css';
-import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import { ClientContext } from '../App';
 import { useContext } from 'react';

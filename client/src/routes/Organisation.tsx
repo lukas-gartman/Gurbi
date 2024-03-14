@@ -60,9 +60,9 @@ function OrganisationPage() {
 
     const joinButton = (
         isMember ? (
-            <a onClick={handleLeave} className="organisation-join-btn">Leave organisation</a>
+            <button onClick={handleLeave} className="organisation-join-btn">Leave organisation</button>
         ) : (
-            <a onClick={handleJoin} className="organisation-join-btn join">Join organisation</a>
+            <button onClick={handleJoin} className="organisation-join-btn join">Join organisation</button>
         )
     );
 
@@ -73,7 +73,7 @@ function OrganisationPage() {
                 <ToastContainer />
                 <div className="organisation-title">
                     <div>
-                        <img src={data.organisation.picture} className="organisation-img" />
+                        <img src={data.organisation.picture} className="organisation-img" alt="Organisation" />
                         <h2>{data.organisation.name}</h2>
                     </div>
                     <div>
