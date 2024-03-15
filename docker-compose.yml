@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  gurbi-frontend:
+    build:
+      context: .
+      dockerfile: ./client/Containerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - gurbi-backend
+    environment:
+      - BACKEND_URI=http://gurbi-backend:8080
+  
+  gurbi-backend:
+    build:
+      context: .
+      dockerfile: ./server/Containerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/dat076
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data_container:/data/db
+
+volumes:
+  mongodb_data_container:

@@ -15,7 +15,11 @@ import Cookie from 'js-cookie';
 import { IEvent, IOrganisation, IProfile, IUser } from './models/models';
 import NewOrganisation from './routes/NewOrganisation';
 
-const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
+const backendUri : string = process.env.BACKEND_URI || "http://localhost:8080";
+const client = axios.create({
+	baseURL: backendUri,
+	withCredentials: true
+});
 export const ClientContext = React.createContext(client);
 export let UserContext: React.Context<IUser>;
 

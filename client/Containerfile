@@ -1,0 +1,9 @@
+FROM node:16
+
+EXPOSE 3000
+
+WORKDIR /usr/Gurbi
+COPY ./client /usr/Gurbi
+RUN npm install
+
+CMD ["npm", "start"]
