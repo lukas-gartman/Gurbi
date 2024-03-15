@@ -38,6 +38,7 @@ function CreateAccount() {
         try {
             client.post("/user/register", formData).then(r => {
                 if (r.status === 200) {
+                    toast.success(r.data, toastConfig);
                     nav("/");
                 }
             }).catch(err => {

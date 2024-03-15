@@ -38,12 +38,7 @@ export class UserService implements IUserService {
         return userServiceResponse.getResponse(4);
     }
     
-	  async changePassword(userId: number, password: string, repeatPassword: string, newPassword: string): Promise<userServiceResponse> {
-        // {httpStatusCode: 400, msg: "missing feild value", id: 1},
-        // {httpStatusCode: 400, msg: "password are not matching", id: 2},
-        // {httpStatusCode: 400, msg: "mail is already used", id: 3},
-        // {httpStatusCode: 200, msg: "successfully registered", id: 4},
-        // {httpStatusCode: 400, msg: "incorrect password", id: 5},
+    async changePassword(userId: number, password: string, repeatPassword: string, newPassword: string): Promise<userServiceResponse> {
         if (!password.trim() || !repeatPassword.trim() || !newPassword.trim()){
             return userServiceResponse.getResponse(1)
         }
@@ -54,23 +49,20 @@ export class UserService implements IUserService {
 
         let user : DBUser | null = await this.userStorage.getUserById(userId);
 
-        if(user === null){
+        if (user === null) {
             return userServiceResponse.getResponse(1)
         }
 
         let isPassword : boolean = await bcrypt.compare(password, user.encryptedPassword);
 
-        if(isPassword){
+        if (isPassword) {
             let hashedPassword : string = await bcrypt.hash(newPassword, 10);
             user.encryptedPassword = hashedPassword;
             await this.userStorage.updateUser(user);
-            return userServiceResponse.getResponse(4);
-        }
-        else{
+            return userServiceResponse.getResponse(6);
+        } else {
             return userServiceResponse.getResponse(5)
         }
-
-       
     }
 
     async loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean, response: userServiceResponse}> {
