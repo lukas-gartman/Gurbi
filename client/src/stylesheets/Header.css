@@ -1,6 +1,7 @@
 .header-row {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
 }
@@ -38,7 +39,8 @@
   border-width: 1px;
   border-color: rgb(185, 185, 185);
   padding: 8px 5px;
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 135px;
 }
 
 .search-bar > input {
