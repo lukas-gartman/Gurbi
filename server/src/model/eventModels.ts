@@ -32,7 +32,10 @@ export class EventServiceResponse implements ServiceResponse {
 
     private static readonly serverResponses: EventServiceResponse[] = [
         { httpStatusCode: 400, msg : "Please fill in all required fields.", id: 0 },
-        { httpStatusCode: 200, msg : "Event added!", id: 1 }
+        { httpStatusCode: 200, msg : "Event added!", id: 1 },
+        { httpStatusCode: 200, msg : "Event updated!", id: 2 },
+        { httpStatusCode: 200, msg : "Event deleted!", id: 3 },
+        { httpStatusCode: 400, msg : "Unknown error :(", id: 4 },
     ];
 
     static getResponse(id: number): EventServiceResponse {

@@ -2,19 +2,22 @@ import { useContext, useState } from 'react';
 import { ClientContext } from '../App';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import { IEvent, IUser } from "../models/models";
+import { IEvent, IUser, Permission } from "../models/models";
 import { NavLink, useLoaderData, useNavigate } from 'react-router-dom';
-import { ToastOptions, toast } from 'react-toastify';
+import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 
 function EventPage() {
     interface EventData {
         event: IEvent;
         user: IUser;
+        permissions: Permission[];
     }
 
     const data = useLoaderData() as EventData;
     const client = useContext(ClientContext);
     const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
+    const editPermissions = [Permission.ChangeEventName, Permission.ChangeEventLocation, Permission.ChangeEventDescription, Permission.ChangeEventPrice, Permission.ChangeEventDate];
+    const canEdit = data.permissions.some(p => editPermissions.includes(p));
 
     const [isMember, setIsMember] = useState(data.event.host.members.some(member => member.userId === data.user.id)); 
     const [memberCount, setMemberCount] = useState(data.event.host.members.length);
@@ -32,7 +35,7 @@ function EventPage() {
         <div className="header-row">
             <i id="back-button" onClick={goBack} className="bi bi-arrow-left-short" />
         </div>
-        <i id="options-button" onClick={navOptions} className="bi bi-three-dots-vertical" />
+        <a id="options-button" className="bi bi-three-dots-vertical" />
         </>
     );
 
@@ -70,21 +73,35 @@ function EventPage() {
         <div className="App">
             <Header headerContent={header} />
             <main className="event">
-                <h2>{data.event.name}</h2>
+                <ToastContainer />
+                <div className="event-info-header">
+                    <div className="event-info-block-left">
+                        <h2>{data.event.name}</h2>
 
-                <div className="event-card-row">
-                    <img src={client.defaults.baseURL + data.event.host.picture} className="event-host-img" alt="Host" />
-                    <span>{data.event.host.name}</span>
-                </div>
-                
-                <div className="event-card-row">
-                    <i className="bi bi-calendar3"></i>
-                    <span>{data.event.dateTime.toDateString()} {data.event.dateTime.getHours()}:{data.event.dateTime.getMinutes()}</span>
-                </div>
+                        <div className="event-card-row">
+                            <img src={client.defaults.baseURL + data.event.host.picture} className="event-host-img" alt="Host" />
+                            <span>{data.event.host.name}</span>
+                        </div>
+                        
+                        <div className="event-card-row">
+                            <i className="bi bi-calendar3"></i>
+                            <span>{data.event.dateTime.toLocaleString("en-SE", {dateStyle: "medium", timeStyle: "short"})}</span>
+                        </div>
 
-                <div className="event-card-row">
-                    <i className="bi bi-geo-alt" />
-                    <span>{data.event.location}</span>
+                        <div className="event-card-row">
+                            <i className="bi bi-geo-alt" />
+                            <span>{data.event.location}</span>
+                        </div>
+                    </div>
+                    <div className="event-info-block-picture">
+                        <img src={client.defaults.baseURL + data.event.picture} className="event-picture" alt="Event" />
+                    </div>
+                    <div className="event-info-block-right">
+                        { canEdit &&
+                        <div>
+                            <NavLink to={`/events/${data.event.id}/edit`} className="edit-event-btn">Edit event</NavLink>
+                        </div>}
+                    </div>
                 </div>
 
                 <h3>About</h3>

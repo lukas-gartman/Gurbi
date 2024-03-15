@@ -49,4 +49,6 @@ export enum Permission {
     ChangeEventDescription = "ChangeEventDescription",
     ChangeEventName = "ChangeEventName",
     ChangeEventLocation = "ChangeEventLocation",
+    ChangeEventDate = "ChangeEventDate",
+    DeleteEvent = "DeleteEvent",
 }

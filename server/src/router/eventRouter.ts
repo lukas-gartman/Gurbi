@@ -16,6 +16,34 @@ export function getEventRouter(eventService : IEventService) : Router {
         }
     });
 
+    eventRouter.put("/authorized/organisation/:orgId", async (req : AuthorizedRequest<{orgId: number},{}, { eventId: number, formData: NewEventDTO }>, res : Response<{ messages: string[] }>)  => {
+        try {
+            const eventId = req.body.eventId;
+            const orgId = req.params.orgId;
+            const response = await eventService.updateEvent(req.body.formData, eventId, orgId, req.userId as number);
+            if (response.length == 1) {
+                return res.status(response[0].httpStatusCode).send({ messages: [response[0].msg] });
+            } else {
+                return res.status(response[0].httpStatusCode).send({ messages: response.map(r => r.msg) }); // Assuming that multiple messages = same error status code
+            }
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+    });
+
+    eventRouter.delete("/:eventId/authorized/organisation/:orgId", async (req : AuthorizedRequest<{eventId: number, orgId: number},{}, {}>, res : Response<string>)  => {
+        try {
+            const eventId = req.params.eventId;
+            const orgId = req.params.orgId;
+            const userId = req.userId as number;
+            const response = await eventService.deleteEvent(eventId, orgId, userId);
+            
+            return res.status(response.httpStatusCode).send(response.msg);
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+    });
+
     eventRouter.post("/authorized/following", async (req: AuthorizedRequest<{},{},{orgIds: number[]}>, res : Response<Event[]>) => {
         try {
             const orgIds = req.body.orgIds as number[];

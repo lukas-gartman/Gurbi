@@ -4,6 +4,8 @@ import { EventStorage } from "../db/event.db";
 
 export interface IEventService {
     addEvent(eventData : NewEventDTO, orgId : number, userId : number) : Promise<{response: ServiceResponse, eventId?: number | undefined}>;
+    updateEvent(eventData: NewEventDTO, eventId: number, orgId: number, userId: number): Promise<ServiceResponse[]>;
+    deleteEvent(eventId: number, orgId: number, userId: number): Promise<ServiceResponse>;
     getOrganisationEvents(orgId : number) : Promise<Event[]>;
     getAllEvents() : Promise<Event[]>;
     getEvent(eventId : number) : Promise<Event | undefined>;
@@ -20,9 +22,9 @@ export class EventService implements IEventService {
     }
 
     async addEvent(eventData : NewEventDTO, orgId : number, userId : number) : Promise<{ response: ServiceResponse, eventId?: number | undefined }> {
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.CreateNewEvent)
-        if (!checkedUserPremission.succes) {
-            return { response: checkedUserPremission.serverRes }
+        let checkPerm : { serverRes: ServiceResponse, succes: boolean } = await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.CreateNewEvent);
+        if (!checkPerm.succes) {
+            return { response: checkPerm.serverRes }
         }
 
         let event : Event = eventData as Event;
@@ -35,6 +37,71 @@ export class EventService implements IEventService {
             return { response: EventServiceResponse.getResponse(1), eventId: eventId };
         } catch (e : any) {
             return { response: EventServiceResponse.getResponse(0) };
+        }
+    }
+
+    async updateEvent(eventData: NewEventDTO, eventId: number, orgId: number, userId: number): Promise<ServiceResponse[]> {
+        const errors: ServiceResponse[] = [];
+        const event = await this.eventStorage.getEventById(eventId) as Event;
+        
+        if (event.title !== eventData.title) {
+            const checkTitlePerm = (await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.ChangeEventName))
+            if (!checkTitlePerm.succes) {
+                errors.push(checkTitlePerm.serverRes);
+            }
+        }
+
+        if (event.date !== eventData.date) {
+            const checkDatePerm = (await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.ChangeEventDate))
+            if (!checkDatePerm.succes) {
+                errors.push(checkDatePerm.serverRes);
+            }
+        }
+
+        if (event.location !== eventData.location) {
+            const checkLocationPerm = (await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.ChangeEventLocation))
+            if (!checkLocationPerm.succes) {
+                errors.push(checkLocationPerm.serverRes);
+            }
+        }
+
+        if (event.description !== eventData.description) {
+            const checkDescriptionPerm = (await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.ChangeEventDescription))
+            if (!checkDescriptionPerm.succes) {
+                errors.push(checkDescriptionPerm.serverRes);
+            }
+        }
+
+        if (errors.length != 0) {
+            return errors;
+        }
+
+        const updatedEvent = eventData as Event;
+        updatedEvent.id = eventId;
+        updatedEvent.hostId = orgId;
+
+        try {
+            if (await this.eventStorage.updateEvent(updatedEvent)) {
+                return [EventServiceResponse.getResponse(2)];
+            } else {
+                return [EventServiceResponse.getResponse(4)];
+            }
+        } catch (e : any) {
+            return [EventServiceResponse.getResponse(0)];
+        }
+    }
+
+    async deleteEvent(eventId: number, orgId: number, userId: number): Promise<ServiceResponse> {
+        const checkPerm = (await this.orgPremChecker.memberPermissionCheck(orgId, userId, Permission.DeleteEvent));
+        if (!checkPerm.succes) {
+            return checkPerm.serverRes;
+        }
+
+        try {
+            await this.eventStorage.deleteEventById(eventId);
+            return EventServiceResponse.getResponse(3);
+        } catch {
+            return EventServiceResponse.getResponse(4);
         }
     }
 

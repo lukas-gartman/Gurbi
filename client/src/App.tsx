@@ -1,6 +1,8 @@
+import './stylesheets/App.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 import React from 'react';
 import { createBrowserRouter, Navigate, Outlet, RouterProvider} from "react-router-dom";
-import './stylesheets/App.css';
 import Events from './routes/Events';
 import Event from './routes/Event';
 import Organisations from './routes/Organisations';
@@ -14,6 +16,7 @@ import axios from 'axios';
 import Cookie from 'js-cookie';
 import { IEvent, IOrganisation, IProfile, IUser } from './models/models';
 import NewOrganisation from './routes/NewOrganisation';
+import EditEvent from './routes/EditEvent';
 
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
@@ -116,6 +119,7 @@ const router = createBrowserRouter([
 						const event = (await client.get(`/event/${params.eventId}`)).data;
 						const thehost : IOrganisation = (await client.get(`/organisation/${event.hostId}`)).data;
 						const user: IUser = (await client.get("/user/authorized/me")).data;
+						const permissions = (await client.get(`/organisation/${event.hostId}/user/${user.id}/permissions`)).data;
 
 						let IEvent : IEvent = {
 							host: thehost,
@@ -127,10 +131,35 @@ const router = createBrowserRouter([
 							name: event.title
 						}
 
-						return { event: IEvent, user: user };
+						return { event: IEvent, user: user, permissions: permissions };
 					} catch (error) {
 						console.log("Unable to fetch event: " + error);
 					}
+				}
+			},
+			{
+				path: "/events/:eventId/edit",
+				element: <EditEvent />,
+				loader: async ({ params }) => {
+					const event = (await client.get(`/event/${params.eventId}`)).data;
+					const thehost : IOrganisation = (await client.get(`/organisation/${event.hostId}`)).data;
+					const user = (await client.get("/user/authorized/me")).data;
+					const permissions = (await client.get(`/organisation/${event.hostId}/user/${user.id}/permissions`)).data;
+
+					let IEvent : IEvent = {
+						host: thehost,
+						dateTime: new Date(event.date),
+						description: event.description,
+						id: event.id,
+						location: event.location,
+						picture: event.picture,
+						name: event.title
+					}
+
+					console.log("host:")
+					console.log(IEvent.host)
+
+					return { event: IEvent, permissions: permissions }
 				}
 			},
 			{
