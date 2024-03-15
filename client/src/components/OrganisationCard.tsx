@@ -19,7 +19,7 @@ function OrganisationCard(props: {org: IOrganisation}) {
         </NavLink>
         ) : (
         <div className="organisation-card">
-            <img className="organisation-background" src={client.defaults.baseURL + props.org.banner} alt="Organisation banner" />
+            <img className="organisation-background" src={props.org.banner} alt="Organisation banner" />
             <div className="organisation-card-title">
                 <img className="organisation-card-title-image" src={client.defaults.baseURL + props.org.picture} alt="Organisation" />
                 <span>{props.org.name}</span>

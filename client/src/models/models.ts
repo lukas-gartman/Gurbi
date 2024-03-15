@@ -24,14 +24,6 @@ export interface IEvent {
     picture: string;
 }
 
-// hostId : number
-// id : number
-// title : string
-// location : string
-// description : string
-// date : Date
-// picture : string
-
 export interface IUser {
     id: number;
     name: string;
@@ -46,4 +38,17 @@ export interface IProfile {
     membershipsCount: number;
     followingCount: number;
     savedEvents: IEvent[];
+}
+
+export enum Permission {
+    ChangeOrganisationName = "ChangeOrganisationName",
+    DeleteOrganisation = "DeleteOrganisation", 
+    RoleManipulator = "RoleManipulator", 
+    CreateNewEvent = "CreateNewEvent",
+    ChangeEventPrice = "ChangeEventPrice",
+    ChangeEventDescription = "ChangeEventDescription",
+    ChangeEventName = "ChangeEventName",
+    ChangeEventLocation = "ChangeEventLocation",
+    ChangeEventDate = "ChangeEventDate",
+    DeleteEvent = "DeleteEvent",
 }

@@ -64,7 +64,7 @@ function NewEvent() {
                 <h1>New event</h1>
                 <form className="form" onSubmit={handleSubmit}>
                     <input name="title" type="text" onChange={handleChange} placeholder="Event title" required />
-                    <input name="date" type="date" onChange={handleChange} required />
+                    <input name="date" type="datetime-local" onChange={handleChange} defaultValue={ (new Date(Date.now() - (new Date()).getTimezoneOffset()*60000)).toISOString().slice(0,16) } required />
                     <input name="location" type="text" onChange={handleChange} placeholder="Location" />
                     <textarea name="description" rows={4} onChange={handleChange} placeholder="Description" />
                     <input type="submit" value="Publish event" />

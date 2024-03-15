@@ -11,7 +11,7 @@ import { ToastContainer, ToastOptions, toast } from 'react-toastify';
 // TODO: load baseURL from client (current issue: ClientContext must be inside NewOrganisation element
 //       and the previewOrg object will reset to default if it is not outside)
 const defaultPic = "/public/images/default-org-profile-picture.png";
-const defaultBan = "/public/images/default-org-banner.png";
+const defaultBan = "http://localhost:8080/public/images/default-org-banner.png";
 let previewOrg: IOrganisation = { id: -1, name: "Title", members: [], roles: [], picture: defaultPic, banner: defaultBan, description : "" }
 
 function NewOrganisation() {
@@ -38,13 +38,13 @@ function NewOrganisation() {
 
     const [formData, setFormData] = useState<NewOrganisationFormData>({name: "", description: "", picture: ""});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
-    const [preview, setPreview] = useState<IOrganisation | null>(null);
+    const [preview, setPreview] = useState<IOrganisation | null>(previewOrg);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         if (name === "name") {
             previewOrg.name = value;
-            if (value === "" && previewOrg.picture === defaultPic) {
+            if (value === "" && previewOrg.banner === defaultPic) {
                 setPreview(null);
             } else {
                 previewOrg.name = value;
@@ -58,10 +58,11 @@ function NewOrganisation() {
         const file = e.target.files?.[0];
         if (file) {
             setSelectedFile(file);
+            console.log(selectedFile);
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onloadend = () => {
-                previewOrg.picture = reader.result as string;
+                previewOrg.banner = reader.result as string;
                 setPreview(previewOrg);
             };
         }
@@ -73,7 +74,6 @@ function NewOrganisation() {
         const toastConfig: ToastOptions = { position: "bottom-left", autoClose: 3000, theme: "colored" };
         client.post(client.defaults.baseURL + "/organisation/authorized/new", formData).then(r => {
             if (r.status === 200) {
-                console.log("new orgId is: " + r.data.orgId);
                 nav(`/organisations/${r.data.orgId}`);
             }
         }).catch(err => {

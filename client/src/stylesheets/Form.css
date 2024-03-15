@@ -16,7 +16,7 @@
     border-radius: 5px;
 }
 
-.form > input[type=text], .form > input[type=password], .form > textarea, .form > input[type=date] {
+.form input[type=text], .form input[type=password], .form textarea, .form input[type=datetime-local] {
     border: 2px solid rgb(175, 0, 175);
     padding: 10px;
 }

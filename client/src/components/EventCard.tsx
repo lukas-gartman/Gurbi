@@ -11,7 +11,7 @@ function EventCard(props: {event: IEvent}) {
         <NavLink to={"/events/" + props.event.id} className="event-card">
             <img className="event-img" src={client.defaults.baseURL + props.event.picture} alt="Event" />
             <div className="event-info">
-                <span>{props.event.dateTime.toDateString()} {props.event.dateTime.getHours()}:{props.event.dateTime.getMinutes()}</span>
+                <span>{props.event.dateTime.toLocaleString("en-SE", {dateStyle: "medium", timeStyle: "short"})}</span>
                 <p>{props.event.name}</p>
                 <div className="event-card-row">
                     <img className="event-host-img" src={client.defaults.baseURL + props.event.host.picture} alt="Host" />

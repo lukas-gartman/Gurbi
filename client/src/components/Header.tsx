@@ -15,10 +15,12 @@ function Header({ onSearch, headerContent, headerNav }: IHeader) {
 	const client = useContext(ClientContext);
 	const [user, setUser] = useState<IUser>();
 	useEffect(() => {
-		const loadUser = async () => {
-			setUser((await client.get("/user/authorized/me")).data);
+		if (!user) {
+			const loadUser = async () => {
+				setUser((await client.get("/user/authorized/me")).data);
+			}
+			loadUser();
 		}
-		loadUser();
 	});
 
 	const curr: string = useLocation().pathname.split("/")[1];

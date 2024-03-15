@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import { ClientContext } from '../App';
 import { useContext } from 'react';
 import { ToastContainer, ToastOptions, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 function Profile() {
     const client = useContext(ClientContext);
