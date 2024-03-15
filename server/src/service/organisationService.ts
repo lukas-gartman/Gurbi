@@ -10,6 +10,7 @@ export interface IOrganisationService {
     getMemberPermissions(orguser : OrganisationUser) : Promise<Permission[]>;
     addOrganisation(newOrgData : NewOrganisationData) : Promise<{response: ServiceResponse, orgId?: number | undefined}>;
     deleteOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
+    updateOrganisation(org: Organisation, userId: number): Promise<ServiceResponse[]>;
     addMemberToOrganisation(userId : number, nickName : string, organisationId : number) : Promise<ServiceResponse>;
     removeMemberFromOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse>;
     addRoleToOrganisation(userId : number, organisationId : number, role : Role) : Promise<ServiceResponse>;
@@ -84,7 +85,7 @@ export class OrganisationService implements IOrganisationService {
 
     //Delete an organisation
     async deleteOrganisation(userId : number, organisationId : number) : Promise<ServiceResponse> {
-        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.DeleteOrganisation)
+        let checkedUserPremission : {serverRes:ServiceResponse, succes:boolean} = await this.organisationPermissionChecker.memberPermissionCheck(organisationId, userId, Permission.DeleteOrganisation);
         if (!checkedUserPremission.succes) {
             return checkedUserPremission.serverRes;
         }
@@ -92,6 +93,39 @@ export class OrganisationService implements IOrganisationService {
         await this.organisationStorage.deleteOrganisationById(organisationId);
 
         return OrgServiceResponse.getResponse(202)
+    }
+
+    async updateOrganisation(org: Organisation, userId: number): Promise<ServiceResponse[]> {
+        const errors: ServiceResponse[] = []
+        const oldOrg = await this.organisationStorage.getOrganisationById(org.id);
+        if (!oldOrg) {
+            return [OrgServiceResponse.getResponse(401)];
+        }
+
+        if (oldOrg.name !== org.name) {
+            const checkNamePerm = await this.organisationPermissionChecker.memberPermissionCheck(org.id, userId, Permission.ChangeOrganisationName);
+            if (!checkNamePerm.succes) {
+                errors.push(checkNamePerm.serverRes);
+            }
+        }
+
+        if (oldOrg.description !== org.description) {
+            const checkDescPerm = await this.organisationPermissionChecker.memberPermissionCheck(org.id, userId, Permission.ChangeOrganisationDescription);
+            if (!checkDescPerm.succes) {
+                errors.push(checkDescPerm.serverRes);
+            }
+        }
+
+        if (errors.length != 0) {
+            return errors;
+        }
+
+        if (await this.organisationStorage.updateOrganisation(org)) {
+            return [OrgServiceResponse.getResponse(208)];
+        } else {
+            return [OrgServiceResponse.getResponse(413)];
+        }
+
     }
 
     async addMemberToOrganisation(userId : number, nickName : string, organisationId : number) : Promise<ServiceResponse> {

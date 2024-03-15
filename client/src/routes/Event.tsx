@@ -84,12 +84,12 @@ function EventPage() {
                         </div>
                         
                         <div className="event-card-row">
-                            <i className="bi bi-calendar3"></i>
+                            <i className="bi bi-calendar3 event-info-icon"></i>
                             <span>{data.event.dateTime.toLocaleString("en-SE", {dateStyle: "medium", timeStyle: "short"})}</span>
                         </div>
 
                         <div className="event-card-row">
-                            <i className="bi bi-geo-alt" />
+                            <i className="bi bi-geo-alt event-info-icon" />
                             <span>{data.event.location}</span>
                         </div>
                     </div>
@@ -105,7 +105,7 @@ function EventPage() {
                 </div>
 
                 <h3>About</h3>
-                <p>{data.event.description}</p>
+                <p className="event-description">{data.event.description}</p>
                 
                 <h3>Contact</h3>
                 <div className="event-card-row">

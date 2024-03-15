@@ -42,6 +42,7 @@ export interface IProfile {
 
 export enum Permission {
     ChangeOrganisationName = "ChangeOrganisationName",
+    ChangeOrganisationDescription = "ChangeOrganisationDescription",
     DeleteOrganisation = "DeleteOrganisation", 
     RoleManipulator = "RoleManipulator", 
     CreateNewEvent = "CreateNewEvent",

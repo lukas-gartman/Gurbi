@@ -17,11 +17,26 @@ export function getOrganisationRouter(organisationService : IOrganisationService
         }
     });
     
-    organisationRouter.delete("/authorized", async (req : AuthorizedRequest<{},{},{organisationId : number}>, res : Response<string>) => {
+    organisationRouter.delete("/:orgId/authorized", async (req : AuthorizedRequest<{orgId: number},{},{}>, res : Response<string>) => {
         try {
+            const orgId = req.params.orgId;
             let userId = req.userId as number;
-            let response : ServiceResponse = await organisationService.deleteOrganisation(userId, req.body.organisationId);
+            let response : ServiceResponse = await organisationService.deleteOrganisation(userId, orgId);
             return res.status(response.httpStatusCode).send(response.msg);
+        } catch (e: any) {
+            return res.status(500).send(e.message);
+        }
+    });
+
+    organisationRouter.put("/authorized", async (req : AuthorizedRequest<{},{},Organisation>, res : Response<string[]>) => {
+        try {
+            console.log("The body is\n\n" + req.body.name)
+            const response = await organisationService.updateOrganisation(req.body, req.userId as number);
+            if (response.length === 1) {
+                return res.status(response[0].httpStatusCode).send([response[0].msg]);
+            } else {
+                return res.status(response[0].httpStatusCode).send(response.map(r => r.msg)); // Assuming that multiple messages = same error status code
+            }
         } catch (e: any) {
             return res.status(500).send(e.message);
         }
@@ -47,7 +62,7 @@ export function getOrganisationRouter(organisationService : IOrganisationService
         } catch (e: any) {
             return res.status(500).send(e.message);
         }
-    })
+    });
     
     organisationRouter.post("/authorized/role", async (req : AuthorizedRequest<{},{},{organisationId : number, role : Role}>, res : Response<string>) => {
         try {

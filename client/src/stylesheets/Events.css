@@ -28,6 +28,10 @@
     align-self: center;
 }
 
+.event-description {
+    white-space: pre-wrap;
+}
+
 .event-info {
     display: flex;
     flex-direction: column;
@@ -70,6 +74,11 @@
 .event-host-img {
     width: 25px;
     height: 25px;
+}
+
+.event-info-icon {
+    font-size: 20px;
+    margin-left: 2px;
 }
 
 .event-organiser-img {

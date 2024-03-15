@@ -17,6 +17,7 @@ import Cookie from 'js-cookie';
 import { IEvent, IOrganisation, IProfile, IUser } from './models/models';
 import NewOrganisation from './routes/NewOrganisation';
 import EditEvent from './routes/EditEvent';
+import EditOrganisation from './routes/EditOrganisation';
 
 const client = axios.create({baseURL: "http://localhost:8080", withCredentials: true });
 export const ClientContext = React.createContext(client);
@@ -206,6 +207,20 @@ const router = createBrowserRouter([
 						const permissions = (await client.get(`/organisation/${params.orgId}/user/${user.id}/permissions`)).data;
 						// const events = await client.get(`/event/organisation/${params.orgId}/all`);
 						return { organisation: res.data, user: user, permissions: permissions };
+					} catch(error: any) {
+						console.error("Error fetching organisation:", error);
+					}
+				}
+			},
+			{
+				path: "/organisations/:orgId/edit",
+				element: <EditOrganisation />,
+				loader: async ({ params }) => {
+					try {
+						let org = (await client.get(`/organisation/${params.orgId}`)).data;
+						const user: IUser = (await client.get("/user/authorized/me")).data;
+						const permissions = (await client.get(`/organisation/${params.orgId}/user/${user.id}/permissions`)).data;
+						return { org: org, permissions: permissions };
 					} catch(error: any) {
 						console.error("Error fetching organisation:", error);
 					}

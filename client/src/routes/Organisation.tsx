@@ -83,9 +83,10 @@ function OrganisationPage() {
                             <span id="member-count">{memberCount}</span>
                             { joinButton }
                         </div>
-                        {isMember && data.permissions.some(p => p === Permission.CreateNewEvent) &&
+                        {data.permissions.some(p => p === Permission.CreateNewEvent) &&
                         <div>
                             <NavLink to={`/organisations/${data.organisation.id}/event/new`} className="organisation-new-event-btn">New event</NavLink>
+                            <NavLink to={`/organisations/${data.organisation.id}/edit`} className="organisation-new-event-btn">Edit organisation</NavLink>
                         </div>}
                     </div>
                 </div>
@@ -94,11 +95,11 @@ function OrganisationPage() {
 
                 <h3>Contact</h3>
                 <div>
-                    <i className="bi bi-envelope"></i>
+                    <i className="bi bi-envelope org-info-icon"></i>
                     <span>sample@email.com (no property yet)</span>
                 </div>
                 <div>
-                    <i className="bi bi-globe2"></i>
+                    <i className="bi bi-globe2 org-info-icon"></i>
                     <span>sample URL (no property yet)</span>
                 </div>
 
