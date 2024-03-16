@@ -13,7 +13,7 @@ test("Create new user", async () => {
         repeatPassword: "abc123",
     };
     
-    let answer: userServiceResponses = await UserService.regNewUser(newUser);
+    let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
     expect(answer).toStrictEqual(userServiceResponse.goRes(4));
 })
@@ -28,7 +28,7 @@ test("Create new user without nickname", async () => {
         repeatPassword: "abc123",
     };
     
-    let answer: userServiceResponses = await UserService.regNewUser(newUser);
+    let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
     expect(answer).toStrictEqual(userServiceResponse.goRes(1));
 })
@@ -44,7 +44,7 @@ test("Create new user with nonmatching password", async () => {
         repeatPassword: "123abc", /* Different order */
     };
     
-    let answer: userServiceResponses = await UserService.regNewUser(newUser);
+    let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
     expect(answer).toStrictEqual(userServiceResponse.goRes(2));
 })
@@ -69,7 +69,7 @@ test("Create multiple users with same email", async () => {
     };
     
     await UserService.regNewUser(newUserKalle);
-    let answer: userServiceResponses = await UserService.regNewUser(newUserKajsa);
+    let answer: userServiceResponse = await UserService.regNewUser(newUserKajsa);
     
     expect(answer).toStrictEqual(userServiceResponse.goRes(3));
 })
