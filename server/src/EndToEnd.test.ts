@@ -102,9 +102,9 @@ test("POST /authorized/profile/settings/update_password", async () => {
   let res = await request.post("/user/login").send({email : "jocke@jva.se", password : "123", rememberMe : true});
   const token: string = res.body.token;
   const changePassword = {
-    currentPassword = "123",
-    newPassword = "abc",
-    repeatPassword = "abc",
+    currentPassword: "123",
+    newPassword: "abc",
+    repeatPassword: "abc",
   };
   expect(res1.statusCode).toBe(200);
 })
