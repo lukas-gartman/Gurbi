@@ -106,7 +106,7 @@ test("POST /authorized/profile/settings/update_password", async () => {
     newPassword: "abc",
     repeatPassword: "abc",
   };
-  expect(res1.statusCode).toBe(200);
+  expect(res.statusCode).toBe(200);
 })
 
 test("/organisation/authorized/new", async () => {
