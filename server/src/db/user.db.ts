@@ -43,7 +43,7 @@ export class MongoDBUserStorage implements UserStorage {
 
 	async changePassword(userId: string, newPassword: string): Promise<void>
 	{
-		this.updateUser(this.getUserBysid(userId).encryptedPassword = newPassword);
+		this.updateUser(this.getUserByid(userId).encryptedPassword = newPassword);
 	}
 
     async addUser(newUser: DBUser): Promise<void> {
@@ -59,5 +59,50 @@ export class MongoDBUserStorage implements UserStorage {
     async isEmailExists(email: string): Promise<boolean> {
 	    const existingUser = await this.userModel.findOne({ email : email});
 	    return !!existingUser;
+    }
+}
+
+export class MemoryUserStorage implements UserStorage {
+    private users : DBUser[] = [];
+    private idCounter : number = 0;
+    
+    async getUserById(id: number): Promise<DBUser | null> {
+        try {
+            return JSON.parse(JSON.stringify(this.users.find(user => user.id === id)));
+        } catch (e : any) {
+            return null;
+        }
+    }
+    
+    async getUserByEmail(email: string): Promise<DBUser | null> {
+        try {
+            return JSON.parse(JSON.stringify(this.users.find(user => user.email === email)));
+        } catch (e : any) {
+            return null;
+        }
+    }
+    
+    async updateUser(updatedUser: DBUser): Promise<void> {
+        this.users.splice(this.users.findIndex(user => user.id === updatedUser.id), 1, updatedUser);
+    }
+	
+	async changePassword(userId: string, newPassword: string): Promise<void>
+	{
+		this.updateUser(this.getUserByid(userId).encryptedPassword = newPassword);
+	}
+	
+    async addUser(user: DBUser): Promise<void> {
+        this.idCounter++;
+        user.id = this.idCounter;
+        this.users.push(user);
+    }
+
+    async deleteUserById(id: number): Promise<void> {
+        this.users.splice(this.users.findIndex(user => user.id === id), 1);
+    }
+
+    async isEmailExists(email: string): Promise<boolean> {
+        const existingUser: DBUser | null = await this.getUserByEmail(email);
+        return !!existingUsers;
     }
 }
