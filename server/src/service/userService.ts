@@ -8,6 +8,7 @@ export interface IUserService {
     regNewUser(userInfo : {fullName: string, nickname: string, email: string, password: string, repeatPassword: string}) : Promise<userServiceResponse>;
     loginUser(userInput : {email: string, password: string, rememberMe: boolean}) : Promise<{token: string, succes: boolean}>;
     getUser(userId: number): Promise<IUser | null>;
+    changePassword(userInfo: { userId: string, password: string, repeatPassword: string, newPassword: string }): Promise<userServiceResponse>
 }
 
 export class UserService implements IUserService {
