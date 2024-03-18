@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import { IUserService } from "../service/userService";
 import { AuthorizedRequest, ServiceResponse } from "../model/dataModels";
-import { IUser } from "../model/UserModels";
+import { userServiceResponse, IUser } from "../model/UserModels";
 
 export function getUserRouter(userService : IUserService) : Router {
     const userRouter : Router = express.Router();
