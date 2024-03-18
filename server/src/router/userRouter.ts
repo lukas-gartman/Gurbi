@@ -49,7 +49,7 @@ export function getUserRouter(userService : IUserService) : Router {
                 repeatPassword: req.body.repeatPassword,
                 newPassword: req.body.newPassword
             });
-            return res.status(changePasswordSuccess.httpestatusCode).send(response.msg);
+            return res.status(changePasswordSuccess.httpStatusCode).send(response.msg);
         } catch (e: any) {
             res.status(500).send(e.message);
         }
