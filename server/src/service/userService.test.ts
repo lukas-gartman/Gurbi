@@ -30,7 +30,7 @@ test("Create new user without nickname", async () => {
     
     let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
-    expect(answer).toStrictEqual(userServiceResponse.getResponses(1));
+    expect(answer).toStrictEqual(userServiceResponse.getResponse(1));
 })
 
 test("Create new user with nonmatching password", async () => {
