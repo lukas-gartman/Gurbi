@@ -39,15 +39,15 @@ export class UserService implements IUserService {
     }
     
 	  async changePassword(userInfo: { userId: string, password: string, repeatPassword: string, newPassword: string }): Promise<userServiceResponse> {
-		    if (currentPassword !== this.userStorage.getUserById(userId).encryptedPassword) {
+		    if (userInfo.password !== this.userStorage.getUserById(userInfo.userId).encryptedPassword) {
           return userServiceResponse.getResponse(5);
         }
 		
-        if (newPassword !== repeatPassword) {
+        if (userInfo.newPassword !== userInfo.repeatPassword) {
             return userServiceResponse.getResponse(2);
         }
 
-		    await this.userStorage.changePassword(userId, newPassword);
+		    await this.userStorage.changePassword(userInfo.userId, userInfo.newPassword);
 
 		    return userServiceResponse.getResponse(4);
     }
