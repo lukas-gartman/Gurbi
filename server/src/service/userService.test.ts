@@ -15,7 +15,7 @@ test("Create new user", async () => {
     
     let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
-    expect(answer).toStrictEqual(userServiceResponse.goRes(4));
+    expect(answer).toStrictEqual(userServiceResponse.getResponse(4));
 })
 
 test("Create new user without nickname", async () => {
@@ -30,7 +30,7 @@ test("Create new user without nickname", async () => {
     
     let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
-    expect(answer).toStrictEqual(userServiceResponse.goRes(1));
+    expect(answer).toStrictEqual(userServiceResponse.getResponses(1));
 })
 
 test("Create new user with nonmatching password", async () => {
@@ -46,7 +46,7 @@ test("Create new user with nonmatching password", async () => {
     
     let answer: userServiceResponse = await UserService.regNewUser(newUser);
     
-    expect(answer).toStrictEqual(userServiceResponse.goRes(2));
+    expect(answer).toStrictEqual(userServiceResponse.getResponse(2));
 })
 
 test("Create multiple users with same email", async () => {
@@ -71,5 +71,5 @@ test("Create multiple users with same email", async () => {
     await UserService.regNewUser(newUserKalle);
     let answer: userServiceResponse = await UserService.regNewUser(newUserKajsa);
     
-    expect(answer).toStrictEqual(userServiceResponse.goRes(3));
+    expect(answer).toStrictEqual(userServiceResponse.getResponse(3));
 })
