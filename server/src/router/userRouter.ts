@@ -43,11 +43,7 @@ export function getUserRouter(userService : IUserService) : Router {
 
     userRouter.post("/authorized/profile/settings/update_password", async(req: AuthorizedRequest<{}, {}, { userId: number, currentPassword: string, newPassword: string, repeatPassword: string}>, res: Response<string>) => {
         try {
-            let changePasswordSuccess: userServiceResponse = await userService.changePassword(
-                req.body.userId,
-                req.body.currentPassword,
-                req.body.newPassword,
-                req.body.repeatPassword);
+            let changePasswordSuccess: userServiceResponse = await userService.changePassword(req.body);
             return res.status(changePasswordSuccess.httpestatusCode).send(response.msg);
         } catch (e: any) {
             res.status(500).send(e.message);
